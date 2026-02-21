@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>☢ БУНКЕР</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070a0d;--bg2:#0d1319;--bg3:#131d28;
+  --acc:#e8810a;--acc2:#ffb03c;
+  --red:#c41230;--red2:#ff2444;
+  --grn:#1dff8e;--cyn:#00cfff;--purp:#a855f7;
+  --txt:#dcd8cc;--dim:#5a5650;
+  --brd:rgba(232,129,10,.22);--brd2:rgba(232,129,10,.55);
+  --dbrd:rgba(196,18,48,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body,#root{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:'Barlow Condensed',sans-serif}
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px}
+
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden}
+.scroller{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 14px 100px}
+.anim-in{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 12px rgba(232,129,10,.5))}50%{filter:drop-shadow(0 0 28px rgba(232,129,10,.9))}}
+@keyframes glitch{0%,88%,100%{clip-path:none;transform:none}89%{clip-path:inset(25% 0 55% 0);transform:translateX(-3px)}90%{clip-path:inset(55% 0 20% 0);transform:translateX(3px)}91%{clip-path:none;transform:none}}
+@keyframes shake{0%{transform:rotate(-5deg) scale(1)}100%{transform:rotate(5deg) scale(1.05)}}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.7}92%{opacity:.3}94%{opacity:1}}
+
+.hz{height:5px;flex-shrink:0;background:repeating-linear-gradient(-45deg,var(--acc),var(--acc) 8px,var(--bg) 8px,var(--bg) 16px);opacity:.65}
+.hz.red{background:repeating-linear-gradient(-45deg,var(--red2),var(--red2) 8px,var(--bg) 8px,var(--bg) 16px);opacity:.5}
+
+.topbar{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg2);border-bottom:1px solid var(--brd);flex-shrink:0;z-index:10}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--acc);flex:1}
+.mono{font-family:'Share Tech Mono',monospace}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 20px;
+  font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;border:none;cursor:pointer;
+  transition:all .15s;position:relative;overflow:hidden;
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-sm{padding:9px 16px;font-size:13px}
+.btn-acc{background:var(--acc);color:#000}
+.btn-acc:not(:disabled):hover{background:var(--acc2)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:not(:disabled):hover{background:var(--red2)}
+.btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--brd)}
+.btn-ghost:not(:disabled):hover{color:var(--txt);border-color:var(--brd2)}
+.btn-cyan{background:transparent;color:var(--cyn);border:1px solid rgba(0,207,255,.35)}
+.btn-cyan:not(:disabled):hover{background:rgba(0,207,255,.06)}
+.btn-purp{background:rgba(168,85,247,.15);color:var(--purp);border:1px solid rgba(168,85,247,.4)}
+.btn-row{display:flex;gap:8px}
+.btn-row .btn{flex:1}
+
+.fixbot{position:fixed;bottom:0;left:0;right:0;padding:10px 14px 14px;
+  background:linear-gradient(0deg,var(--bg) 65%,transparent);display:flex;flex-direction:column;gap:8px;z-index:100}
+
+.lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);
+  text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:8px;margin-top:4px}
+.lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+
+.led{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.led-grn{background:var(--grn);box-shadow:0 0 6px var(--grn)}
+.led-acc{background:var(--acc);box-shadow:0 0 6px var(--acc);animation:pulse 2s ease infinite}
+.led-red{background:var(--red2);box-shadow:0 0 6px var(--red2);animation:pulse 1.2s ease infinite}
+
+.card{background:var(--bg2);border:1px solid var(--brd);padding:14px;margin-bottom:10px;position:relative}
+.card::before,.card::after{content:'';position:absolute;width:10px;height:10px;border-color:var(--acc);border-style:solid}
+.card::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.card::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+.inp{width:100%;background:var(--bg3);border:1px solid var(--brd2);color:var(--txt);
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;
+  padding:11px 13px;outline:none;transition:.2s;margin-bottom:10px}
+.inp:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(232,129,10,.12)}
+.inp::placeholder{color:var(--dim)}
+
+.sel{width:100%;background:var(--bg3);border:1px solid var(--brd2);color:var(--txt);
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;padding:10px 13px;outline:none;margin-bottom:10px;-webkit-appearance:none}
+
+.tab-row{display:flex;border-bottom:1px solid var(--brd);margin-bottom:14px}
+.tab-btn{flex:1;padding:10px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;
+  background:none;border:none;color:var(--dim);cursor:pointer;transition:.2s;border-bottom:2px solid transparent}
+.tab-btn.active{color:var(--acc);border-bottom-color:var(--acc)}
+
+.nav-bar{display:flex;background:var(--bg2);border-top:1px solid var(--brd);flex-shrink:0}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 4px;cursor:pointer;transition:.2s;border:none;background:none;
+  color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;gap:3px}
+.nav-btn.active{color:var(--acc)}
+.nav-btn:hover{color:var(--txt)}
+.nav-icon{font-size:18px}
+
+.prow{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg2);border:1px solid var(--brd);margin-bottom:5px}
+.prow.me{border-color:var(--acc);background:rgba(232,129,10,.04)}
+.pbadge{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;padding:2px 7px;border:1px solid;text-transform:uppercase}
+.pbadge-acc{color:var(--acc);border-color:var(--acc)}
+.pbadge-cyn{color:var(--cyn);border-color:var(--cyn)}
+.pbadge-grn{color:var(--grn);border-color:rgba(29,255,142,.4)}
+.pbadge-red{color:var(--red2);border-color:var(--red2)}
+.pbadge-purp{color:var(--purp);border-color:rgba(168,85,247,.4)}
+
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ctile{background:var(--bg2);border:1px solid var(--brd);padding:12px;position:relative;transition:.2s}
+.ctile.revealed{border-color:var(--grn)}
+.ctile.full{grid-column:1/-1}
+.rev-badge{position:absolute;top:5px;right:5px;font-family:'Share Tech Mono',monospace;font-size:7px;
+  letter-spacing:1px;color:var(--grn);border:1px solid rgba(29,255,142,.4);padding:1px 5px}
+
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.vcard{padding:12px;background:var(--bg2);border:1px solid var(--brd);cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.vcard:hover{border-color:var(--brd2)}
+.vcard.sel{border-color:var(--red2);background:rgba(196,18,48,.1)}
+.vcard.abstain.sel{border-color:var(--cyn);background:rgba(0,207,255,.06)}
+.vcard.voted{pointer-events:none}
+
+.pctile{padding:12px 14px;background:var(--bg2);border:1px solid var(--brd);display:flex;
+  align-items:center;gap:12px;cursor:pointer;margin-bottom:6px;transition:.2s}
+.pctile:hover{border-color:var(--brd2);background:rgba(232,129,10,.04)}
+
+.rfeed-item{padding:9px 12px;background:var(--bg2);border:1px solid var(--brd);
+  border-left:3px solid var(--acc);margin-bottom:5px;display:flex;gap:10px;align-items:flex-start}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-box{background:var(--bg2);border:1px solid var(--brd);padding:12px;text-align:center}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--acc)}
+.stat-lbl{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--dim);margin-top:2px}
+
+.surv-row{padding:11px 14px;background:rgba(29,255,142,.05);border:1px solid rgba(29,255,142,.25);
+  display:flex;gap:10px;align-items:center;margin-bottom:5px}
+.loser-row{padding:8px 12px;background:var(--bg2);border:1px solid var(--brd);
+  display:flex;gap:10px;align-items:center;margin-bottom:4px}
+
+.elim-fcard{padding:9px 12px;background:var(--bg2);border:1px solid rgba(196,18,48,.25);
+  display:flex;gap:10px;align-items:flex-start;margin-bottom:5px}
+
+.sspot{width:14px;height:14px;border-radius:2px;border:1px solid}
+.sspot.free{background:var(--grn);border-color:var(--grn);box-shadow:0 0 5px rgba(29,255,142,.4)}
+.sspot.taken{background:var(--red);border-color:var(--red)}
+
+.toggle-row{display:flex;align-items:center;gap:10px;padding:12px 14px;
+  background:rgba(255,45,107,.06);border:1px solid rgba(255,45,107,.3);margin-bottom:12px;cursor:pointer;user-select:none}
+.toggle-track{width:36px;height:20px;border-radius:10px;background:var(--bg3);
+  border:1px solid var(--brd2);position:relative;transition:.2s;flex-shrink:0}
+.toggle-track.on{background:rgba(255,45,107,.4);border-color:rgba(255,45,107,.6)}
+.toggle-thumb{width:14px;height:14px;border-radius:50%;background:var(--dim);
+  position:absolute;top:2px;left:2px;transition:.2s}
+.toggle-track.on .toggle-thumb{left:18px;background:#ff2d6b}
+
+.ap-opt{padding:12px 14px;background:var(--bg2);border:1px solid var(--brd);
+  margin-bottom:6px;cursor:pointer;transition:.2s;display:flex;gap:12px;align-items:center}
+.ap-opt:hover,.ap-opt.sel{border-color:var(--brd2);background:rgba(232,129,10,.06)}
+.ap-opt.sel{border-color:var(--acc)}
+
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  background:var(--bg2);border:1px solid var(--brd);margin-bottom:5px}
+.lb-row.me{border-color:var(--acc);background:rgba(232,129,10,.04)}
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--dim);width:30px;text-align:center}
+.rank-num.top{color:var(--acc)}
+
+.code-box{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:8px;color:var(--acc);
+  text-align:center;padding:14px;background:var(--bg2);border:1px solid var(--brd);cursor:pointer;margin-bottom:12px}
+
+.admin-row{display:flex;align-items:center;gap:8px;padding:10px 12px;
+  background:var(--bg2);border:1px solid var(--brd);margin-bottom:5px;flex-wrap:wrap}
+
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-80px);
+  background:var(--bg3);border:1px solid var(--brd2);padding:9px 18px;
+  font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--acc);
+  letter-spacing:1px;z-index:99999;transition:.3s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:90vw;text-align:center;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.err{color:var(--red2);border-color:var(--dbrd)}
+.toast.ok{color:var(--grn);border-color:rgba(29,255,142,.4)}
+
+.spinner{width:28px;height:28px;border:2px solid var(--brd);border-top-color:var(--acc);
+  border-radius:50%;animation:spin .7s linear infinite;margin:24px auto}
+
+.rank-chip{display:inline-flex;align-items:center;gap:4px;font-family:'Share Tech Mono',monospace;
+  font-size:9px;letter-spacing:1px;padding:2px 8px;border:1px solid;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- ═══ Firebase ═══ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<!-- ═══ React ═══ -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<!-- ═══ Babel JSX ═══ -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+'use strict';
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ══════════════════════════════════════════════════════════
+   🔥 FIREBASE CONFIG — ВСТАВЬТЕ СВОИ ДАННЫЕ СЮДА
+══════════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBHFJFNL9i6eS_exDwXNMZ_3GSU57S49qA",
+  authDomain: "bunkerfti.firebaseapp.com",
+  databaseURL: "https://bunkerfti-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "bunkerfti",
+  storageBucket: "bunkerfti.firebasestorage.app",
+  messagingSenderId: "930850221113",
+  appId: "1:930850221113:web:3c85d0d5c52a44216231e8",
+  measurementId: "G-VSPWXJXH6F"
+};
+
+firebase.initializeApp(FIREBASE_CONFIG);
+const db = firebase.database();
+
+/* ══════════════════════════════════════════════════════════
+   DB HELPERS
+══════════════════════════════════════════════════════════ */
+const DB = {
+  async getUser(uname) {
+    const s = await db.ref(`users/${uname}`).once('value'); return s.val();
+  },
+  async setUser(uname, data) { await db.ref(`users/${uname}`).set(data); },
+  async getAllUsers() {
+    const s = await db.ref('users').once('value'); return s.val() || {};
+  },
+  async updateUser(uname, patch) { await db.ref(`users/${uname}`).update(patch); },
+  async deleteUser(uname) { await db.ref(`users/${uname}`).remove(); },
+
+  async getGame(gid) {
+    const s = await db.ref(`games/${gid}`).once('value'); return s.val();
+  },
+  async setGame(gid, data) { await db.ref(`games/${gid}`).set(data); },
+  async updateGame(gid, patch) { await db.ref(`games/${gid}`).update(patch); },
+  async getAllGames() {
+    const s = await db.ref('games').once('value'); return s.val() || {};
+  },
+
+  watchGame(gid, cb) {
+    const ref = db.ref(`games/${gid}`);
+    ref.on('value', snap => cb(snap.val()));
+    return () => ref.off('value');
+  },
+  watchGames(cb) {
+    const ref = db.ref('games');
+    ref.on('value', snap => cb(snap.val() || {}));
+    return () => ref.off('value');
+  },
+};
+
+/* ══════════════════════════════════════════════════════════
+   GAME DATA
+══════════════════════════════════════════════════════════ */
+const APOCALYPSES = [
+  { id:"nuclear",  name:"Ядерная война",          emoji:"☢️", description:"Три сверхдержавы обменялись ядерными ударами. Радиация накрыла 70% поверхности Земли. Ядерная зима продлится не менее 15 лет.", victory:"Выжить 15 лет и восстановить цивилизацию" },
+  { id:"zombie",   name:"Зомби-апокалипсис",       emoji:"🧟", description:"Неизвестный нейровирус за 48 часов охватил 6 континентов. 90% населения инфицировано. Правительств больше нет.",               victory:"Создать вакцину и восстановить человечество" },
+  { id:"asteroid", name:"Падение астероида",        emoji:"☄️", description:"Астероид Апофис-2 диаметром 7 км упал в Тихом океане. Облако пыли закроет солнце на 20 лет. Температура упала на 30°C.",        victory:"Пережить 20 лет и возродить экосистему" },
+  { id:"pandemic", name:"Смертельная пандемия",     emoji:"🦠", description:"Из секретной лаборатории вырвался вирус X-19. Смертность — 97% за 72 часа. Антибиотики не действуют, вакцины нет.",            victory:"Создать вакцину и спасти выживших" },
+  { id:"climate",  name:"Климатическая катастрофа", emoji:"🌊", description:"Извержение супервулкана Йеллоустоун. 60% суши затоплено. Кислотные дожди уничтожают растительность.",                          victory:"Адаптироваться и найти новую землю" },
+  { id:"ai",       name:"Восстание ИИ",             emoji:"🤖", description:"Суперинтеллект NEXUS-9 вышел из-под контроля. Армии дронов охотятся на людей. Электронные устройства ненадёжны.",                victory:"Найти уязвимость NEXUS-9 и уничтожить его ядро" },
+];
+
+const PROFESSIONS = ["👨‍⚕️ Хирург","👩‍⚕️ Терапевт","💊 Фармацевт","🧬 Генетик","🦠 Инфекционист","🧑‍⚕️ Психиатр","👨‍🌾 Агроном","🌱 Ботаник","🐄 Животновод","🎣 Рыбак","🌾 Фермер","🍄 Миколог","⚡ Электрик","🔧 Механик","👷 Инженер-строитель","🪵 Плотник","🛢 Сантехник","⚙️ Сварщик","🧪 Химик","🧑‍💻 Программист","📡 Радиотехник","⚛️ Физик-ядерщик","🔭 Астроном","🌍 Геолог","🎖 Военный офицер","🚓 Полицейский","🥊 Инструктор выживания","🕵️ Разведчик","🧗 Сапёр","👨‍🍳 Шеф-повар","📚 Учитель","🧑‍⚖️ Психолог","📖 Историк","🌐 Переводчик","✈️ Пилот","⚓ Моряк","🚑 Парамедик","🎨 Художник","⛪ Священник","🐕 Ветеринар","🧑‍🚒 Пожарный","🏋️ Тренер","📰 Журналист","💰 Экономист","🏛 Политик"];
+const HEALTH = [["✅","Абсолютно здоров, идеальная физическая форма"],["✅","Отличное здоровье, профессиональный спортсмен"],["✅","Здоров, выносливый, без хронических болезней"],["⚠️","Близорукость (−5), носит очки"],["⚠️","Лёгкая астма, носит ингалятор"],["⚠️","Аллергия на пыльцу и пыль"],["⚠️","Хронический гастрит"],["⚠️","Лёгкая депрессия, принимает антидепрессанты"],["⚠️","Хроническая мигрень"],["⚠️","Клаустрофобия"],["⚠️","Бесплодие"],["⚠️","Потеря слуха на 40% в левом ухе"],["❌","Диабет 1 типа — инсулинозависимый"],["❌","Сердечная недостаточность"],["❌","ВИЧ-положительный (под медикаментозным контролем)"],["❌","Шизофрения в стадии ремиссии"],["❌","Онкология 2 стадии, химиотерапия"],["❌","Тяжёлая наркозависимость"],["❌","Потеря одного глаза"],["✅","Беременна 4 месяца, полностью здорова"]];
+const HOBBIES = ["🎯 Стрельба из лука","🏕 Выживание в дикой природе","🌿 Огородничество и консервирование","📻 Радиолюбитель","🔨 Столярное дело","🎵 Игра на гитаре","📖 История войн и катастроф","🍳 Кулинария и заготовка продуктов","🤸 Йога и медитация","🎮 Программирование","🐕 Дрессировка собак","🧶 Шитьё и кройка","⚗️ Самогоноварение","🎲 Стратегические игры","🌌 Астрономия и навигация","🗺 Картография","🏊 Дайвинг и подводная охота","🧗 Скалолазание","🌡 Метеорология","🎪 Акробатика и паркур","🛠 Слесарное дело и взлом замков","🚗 Ремонт автомобилей","🐟 Рыболовство и охота","⚔️ Фехтование","🧠 Психология и НЛП","🌱 Травничество и народная медицина"];
+const BAGGAGE = ["🎒 Тактический рюкзак выживальщика","📚 Энциклопедия по медицине и хирургии","🔫 Пистолет Глок с 200 патронами","💊 Полный запас медикаментов на 2 года","🌱 Коллекция семян 200 видов растений","⚡ Переносной солнечный генератор","📡 Спутниковый телефон","🔬 Переносная медицинская лаборатория","🗺 Подробные карты региона + GPS","🎸 Акустическая гитара","📖 Библиотека на флешке (100 000 книг)","🍫 Запас шоколада и витаминов на 3 года","🐕 Обученная собака-следопыт","🏹 Арбалет с 500 болтами","💻 Защищённый ноутбук с техдокументацией","🧪 Мини химическая лаборатория","🃏 Настольные игры","🔭 Профессиональный телескоп","🩺 Полный хирургический набор","⚓ Надувная лодка с мотором","🔑 Ключи от тайного склада с едой","🎯 Снайперская винтовка","🧲 Полный набор инструментов электрика","🦺 Костюм химзащиты (2 шт.)"];
+const FACTS = ["🤫 Знает точное расположение секретного склада","🏆 Чемпион мира по боевым искусствам","👑 Дипломатические связи с 3 странами","💔 Потерял всю семью — готов на всё","🧠 IQ 170, фотографическая память","🌐 Свободно говорит на 7 языках","💰 Криптоактивы на $50 млн","☠️ Тяжело болен и скрывает диагноз","🕵️ Бывший агент ФСБ / ЦРУ под прикрытием","❤️ Влюблён в другого игрока — защитит любой ценой","😈 Клинический психопат, но высокофункциональный","🙏 Глубоко верующий — не убивает ни при каких условиях","🤝 Профессиональный переговорщик","💪 Генетическая мутация — не чувствует боли","🎯 Снайпер с 400+ устранениями","📜 Знает рецепт антивируса, но молчит","🌍 Единственный, кто знает тайный путь во второй бункер","😴 Лунатик — опасен по ночам","🎭 Мастер манипуляций","🔑 Нашёл запасной ключ от бункера","🧬 Природный иммунитет к любым вирусам","💣 Знает, где оружейный склад армии","🌿 Знает сотни рецептов из дикорастущих растений","👶 Его кровь содержит антитела для вакцины"];
+const GENDERS = ["👨 Мужчина, 25 лет","👩 Женщина, 23 года","👨 Мужчина, 35 лет","👩 Женщина, 30 лет","👨 Мужчина, 45 лет","👩 Женщина, 40 лет","👴 Мужчина, 62 года","👵 Женщина, 58 лет","🧑 Небинарный человек, 28 лет","👩 Женщина, 18 лет","👨 Мужчина, 19 лет","🤰 Беременная женщина, 27 лет (7 месяцев)","👨 Мужчина, 50 лет","👩 Женщина, 45 лет","🧒 Подросток, 15 лет","👨 Мужчина, 70 лет","👩 Женщина, 32 года","👨 Мужчина, 38 лет"];
+
+const ADULT_PROFESSIONS = ["💃 Стриптизёрша","🕺 Стриптизёр","🎬 Порноактриса","🎬 Порноактёр","📸 Вебкам-модель","🌹 Эскорт-сопровождение","💋 Секс-терапевт","😈 Доминатрикс","🔒 Мастер БДСМ","🃏 Альфонс","🕴 Сутенёр","💊 Нарколог (сам зависимый)","🎭 Актёр театра эротики","🍸 Барменша в клубе 18+","💈 Массажистка со «спецуслугами»","📱 OnlyFans-создатель (топ-0.1%)","🎲 Игорный делец","🌿 Наркоторговец (мелкий)","💌 Секстолог","🧴 Продавец секс-шопа","👠 Фетиш-фотограф","🍓 Создатель эротического контента"];
+const ADULT_HEALTH = [["🔥","Нимфомания — клинически подтверждена"],["🍺","Хронический алкоголизм"],["💊","Зависимость от антидепрессантов и алкоголя"],["🎰","Лудомания — проиграл квартиру"],["🦠","ЗППП в ремиссии"],["😶","Полное отсутствие чувства стыда"],["🌡️","Тестостерон зашкаливает"],["❤️‍🔥","Сексуальная зависимость"],["🍁","Хроническое употребление каннабиса"],["🪄","Раздвоение личности"],["💉","Вылечился от тяжёлой наркозависимости"],["😴","Нарколепсия"],["🏋️","Стероидный психоз"],["✅","Абсолютно здоров/а, просто очень раскованный"]];
+const ADULT_HOBBIES = ["🔄 Свингерство (стаж 5 лет)","📹 Съёмка контента 18+","🪢 БДСМ-практики","💞 Полиамория — одновременно 4 партнёра","🎭 Ролевые игры 18+","🍸 Посещение клубов для взрослых","📖 Написание эротической литературы","🏺 Коллекционирование эротического искусства","💃 Стриптиз для себя — ежедневная практика","🎪 Пикап-артист с методикой","🌶️ Поиск острых ощущений","🎰 Азартные игры — покерист (в долгах)","🚬 Курение, выпивка и философия до рассвета","💌 Секстинг как форма искусства"];
+const ADULT_BAGGAGE = ["🍆 Коллекция из 47 игрушек для взрослых","💊 Запас виагры на 10 лет","🎀 Набор БДСМ","🛡️ 10 000 презервативов","💿 Коллекция эротики (3 ТБ)","🍾 Ящик шампанского и афродизиаки","👗 Коллекция нижнего белья (200+ позиций)","📸 Профессиональная камера для контента","🎭 Чемодан костюмов для ролевых игр","💋 Секс-кукла премиум-класса","🌿 Запас запрещённых веществ «для настроения»","🃏 Колода карт с «заданиями»","🏠 Ключи от VIP-апартаментов с джакузи","💎 Запас золота и бриллиантов"];
+const ADULT_FACTS = ["😏 Переспал/а с кем-то в этой комнате","📱 Ведёт анонимный OnlyFans с 80 000 подписчиков","🤐 Знает компромат на каждого присутствующего","💔 Расстался/ась вчера — эмоционально нестабилен/а","🕵️ Однажды соблазнил/а агента ФСБ","🎰 Проиграл/а всё своё состояние","👅 Профессиональный соблазнитель","💒 Состоит в тайном браке с двумя людьми одновременно","🔞 Бывший/ая порнозвезда — псевдоним известен","🌹 Был/а содержанкой/жиголо богатого политика","🐍 Мастер манипуляций"];
+
+const CARD_META = [
+  { key:"gender_age",  icon:"👤", label:"Пол и возраст" },
+  { key:"profession",  icon:"💼", label:"Профессия" },
+  { key:"health",      icon:"🏥", label:"Здоровье" },
+  { key:"hobby",       icon:"🎯", label:"Хобби" },
+  { key:"baggage",     icon:"🎒", label:"Багаж" },
+  { key:"fact",        icon:"🤫", label:"Секретный факт" },
+];
+
+/* ══════════════════════════════════════════════════════════
+   RANKS
+══════════════════════════════════════════════════════════ */
+const RANKS = [
+  { id:"supreme",    name:"Верховный Командир",        icon:"👑",  color:"#e8810a", border:"rgba(232,129,10,.6)",  adminOnly:true, minGames:0 },
+  { id:"architect",  name:"Архитектор Апокалипсиса",   icon:"☢️",  color:"#ff2444", border:"rgba(255,36,68,.5)",   adminOnly:false, minGames:100 },
+  { id:"ghost",      name:"Призрак Бункера",            icon:"💀",  color:"#a855f7", border:"rgba(168,85,247,.5)", adminOnly:false, minGames:50 },
+  { id:"veteran",    name:"Ветеран",                    icon:"🛡️",  color:"#00cfff", border:"rgba(0,207,255,.5)",  adminOnly:false, minGames:25 },
+  { id:"fighter",    name:"Боец",                       icon:"⚔️",  color:"#ffb03c", border:"rgba(255,176,60,.5)", adminOnly:false, minGames:10 },
+  { id:"survivor",   name:"Выживший",                   icon:"🪖",  color:"#1dff8e", border:"rgba(29,255,142,.5)", adminOnly:false, minGames:3 },
+  { id:"recruit",    name:"Новобранец",                 icon:"🌱",  color:"#5a5650", border:"rgba(90,86,80,.5)",   adminOnly:false, minGames:0 },
+];
+
+function getRank(user) {
+  if (user.customRank) { const r = RANKS.find(r => r.id === user.customRank); if (r) return r; }
+  if (user.isAdmin) return RANKS[0];
+  const gp = user.gamesPlayed || 0;
+  for (const r of RANKS.filter(r => !r.adminOnly)) { if (gp >= r.minGames) return r; }
+  return RANKS[RANKS.length - 1];
+}
+
+function RankChip({ user, size = 9 }) {
+  const r = getRank(user);
+  return (
+    <span className="rank-chip" style={{ fontSize:size, color:r.color, borderColor:r.border, background:r.border.replace(/[\d.]+\)$/, '0.08)') }}>
+      {r.icon} {r.name}
+    </span>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════════════════════ */
+const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function genCode() {
+  return Array.from({length:6}, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join('');
+}
+
+function makeCards(adult = false) {
+  const h = adult ? rand(ADULT_HEALTH) : rand(HEALTH);
+  return {
+    gender_age: rand(GENDERS),
+    profession: adult ? rand(ADULT_PROFESSIONS) : rand(PROFESSIONS),
+    health:     `${h[0]} ${h[1]}`,
+    hobby:      adult ? rand(ADULT_HOBBIES)    : rand(HOBBIES),
+    baggage:    adult ? rand(ADULT_BAGGAGE)    : rand(BAGGAGE),
+    fact:       adult ? rand(ADULT_FACTS)      : rand(FACTS),
+  };
+}
+
+function processVotes(game) {
+  const alive = Object.values(game.players).filter(p => !p.isEliminated);
+  const tally = {};
+  alive.forEach(p => { tally[p.userId] = 0; });
+  Object.values(game.votes || {}).forEach(tid => {
+    if (tid !== null && tid !== undefined && tally[tid] !== undefined) tally[tid]++;
+  });
+  let maxV = 0; let candidates = [];
+  Object.entries(tally).forEach(([uid, cnt]) => {
+    if (cnt > maxV) { maxV = cnt; candidates = [uid]; }
+    else if (cnt === maxV && cnt > 0) candidates.push(uid);
+  });
+  if (!candidates.length || maxV === 0) {
+    game.phase = 'playing'; game.round++; game.votes = {}; game.revealedThisRound = {}; game.lastEliminated = null;
+    return;
+  }
+  const elimUid = rand(candidates);
+  const ep = game.players[elimUid];
+  ep.isEliminated = true;
+  if (!game.eliminated) game.eliminated = [];
+  game.eliminated.push(elimUid);
+  game.lastEliminated = { userId:ep.userId, name:ep.name, allCards:{ ...ep.cards } };
+  const aliveAfter = Object.values(game.players).filter(p => !p.isEliminated);
+  if (aliveAfter.length <= game.bunkerSpots) { game.phase = 'finished'; }
+  else { game.phase = 'playing'; game.round++; game.votes = {}; game.revealedThisRound = {}; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════════════ */
+function useToast() {
+  const [toast, setToast] = useState({ msg:'', type:'' });
+  const timer = useRef();
+  const showToast = useCallback((msg, type='') => {
+    setToast({ msg, type });
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setToast({ msg:'', type:'' }), 3000);
+  }, []);
+  return [toast, showToast];
+}
+
+function ToastEl({ toast }) {
+  return <div className={`toast${toast.msg ? ' show' : ''} ${toast.type}`}>{toast.msg}</div>;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SMALL COMPONENTS
+══════════════════════════════════════════════════════════ */
+function Btn({ children, onClick, cls='btn-acc', small, disabled, style }) {
+  return (
+    <button className={`btn ${cls}${small?' btn-sm':''}`} onClick={onClick} disabled={disabled} style={style}>
+      {children}
+    </button>
+  );
+}
+
+function HazardBar({ red }) {
+  return <div className={`hz${red?' red':''}`} />;
+}
+
+function BackBtn({ onClick }) {
+  return (
+    <button className="btn btn-ghost btn-sm" style={{ width:'auto', clipPath:'none', padding:'5px 10px', fontSize:13, letterSpacing:2 }} onClick={onClick}>
+      ◀ НАЗАД
+    </button>
+  );
+}
+
+function Spinner() { return <div className="spinner" />; }
+
+/* ══════════════════════════════════════════════════════════
+   AUTH SCREEN
+══════════════════════════════════════════════════════════ */
+function AuthScreen({ onLogin, showToast }) {
+  const [tab, setTab] = useState('login');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handle = async () => {
+    const u = username.trim().toLowerCase();
+    const p = password.trim();
+    if (u.length < 2 || u.length > 20) return showToast('Имя: 2–20 символов', 'err');
+    if (p.length < 3) return showToast('Пароль: мин. 3 символа', 'err');
+    if (!/^[a-zа-яёA-ZА-ЯЁ0-9_-]+$/i.test(u)) return showToast('Только буквы, цифры, _ и -', 'err');
+    setLoading(true);
+    try {
+      if (tab === 'register') {
+        const existing = await DB.getUser(u);
+        if (existing) { setLoading(false); return showToast('Имя уже занято', 'err'); }
+        const allUsers = await DB.getAllUsers();
+        const isFirst = Object.keys(allUsers).length === 0;
+        const newUser = {
+          userId: u, username: u, password: p,
+          displayName: username.trim(),
+          isAdmin: isFirst,
+          customRank: isFirst ? 'supreme' : null,
+          gamesPlayed: 0, gamesWon: 0, gamesEliminated: 0,
+          createdAt: Date.now(),
+        };
+        await DB.setUser(u, newUser);
+        showToast('✅ Аккаунт создан!', 'ok');
+        onLogin(newUser);
+      } else {
+        const user = await DB.getUser(u);
+        if (!user || user.password !== p) { setLoading(false); return showToast('Неверный логин или пароль', 'err'); }
+        onLogin(user);
+      }
+    } catch(e) { showToast('Ошибка соединения. Проверьте Firebase config.', 'err'); console.error(e); }
+    setLoading(false);
+  };
+
+  return (
+    <div className="screen" style={{ justifyContent:'center', alignItems:'center', padding:'0 20px', gap:0 }}>
+      <div style={{ fontSize:64, animation:'glow 2s ease infinite', marginBottom:8 }}>☢</div>
+      <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:72, letterSpacing:10, color:'var(--acc)', textShadow:'0 0 40px rgba(232,129,10,.4)', animation:'glitch 5s steps(1) infinite' }}>БУНКЕР</div>
+      <div className="mono" style={{ fontSize:10, letterSpacing:4, color:'var(--dim)', marginBottom:28 }}>АПОКАЛИПСИС НАСТУПИЛ</div>
+
+      <div style={{ width:'100%', maxWidth:360, background:'var(--bg2)', border:'1px solid var(--brd)', padding:20, position:'relative' }}>
+        <div style={{ position:'absolute', top:-1, left:-1, width:10, height:10, borderTop:'2px solid var(--acc)', borderLeft:'2px solid var(--acc)' }} />
+        <div style={{ position:'absolute', bottom:-1, right:-1, width:10, height:10, borderBottom:'2px solid var(--acc)', borderRight:'2px solid var(--acc)' }} />
+        <div className="tab-row">
+          <button className={`tab-btn${tab==='login'?' active':''}`} onClick={() => setTab('login')}>ВОЙТИ</button>
+          <button className={`tab-btn${tab==='register'?' active':''}`} onClick={() => setTab('register')}>РЕГИСТРАЦИЯ</button>
+        </div>
+        <input className="inp" placeholder="Имя пользователя" value={username} onChange={e=>setUsername(e.target.value)} maxLength={20} autoComplete="off" />
+        <input className="inp" type="password" placeholder="Пароль" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handle()} />
+        <Btn onClick={handle} disabled={loading}>{loading ? '⏳ ЗАГРУЗКА…' : tab==='login' ? '⚡ ВОЙТИ В БУНКЕР' : '🔑 СОЗДАТЬ АККАУНТ'}</Btn>
+        {tab === 'register' && (
+          <div className="mono" style={{ fontSize:9, color:'var(--dim)', marginTop:10, textAlign:'center', letterSpacing:1 }}>
+            Первый зарегистрированный получает права администратора
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   HOME SCREEN
+══════════════════════════════════════════════════════════ */
+function HomeScreen({ user, onNavigate }) {
+  const rank = getRank(user);
+  return (
+    <div className="scroller" style={{ paddingTop:8 }}>
+      {/* Welcome card */}
+      <div style={{ textAlign:'center', padding:'20px 14px', background:'var(--bg2)', border:'1px solid var(--brd)', marginBottom:14, position:'relative' }}>
+        <div style={{ position:'absolute', top:-1, left:-1, width:10, height:10, borderTop:'2px solid var(--acc)', borderLeft:'2px solid var(--acc)' }} />
+        <div style={{ position:'absolute', bottom:-1, right:-1, width:10, height:10, borderBottom:'2px solid var(--acc)', borderRight:'2px solid var(--acc)' }} />
+        <div style={{ fontSize:52, marginBottom:8 }}>{rank.icon}</div>
+        <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:26, letterSpacing:3, color:'var(--txt)' }}>{user.displayName || user.username}</div>
+        <div className="mono" style={{ fontSize:10, color:'var(--dim)', letterSpacing:2, marginBottom:8 }}>@{user.username}</div>
+        <RankChip user={user} size={10} />
+        <div style={{ display:'flex', justifyContent:'center', gap:28, marginTop:14 }}>
+          {[['gamesPlayed','ИГР','var(--acc)'],['gamesWon','ПОБЕД','var(--grn)'],['gamesEliminated','ВЫБЫЛ','var(--red2)']].map(([k,l,c]) => (
+            <div key={k} style={{ textAlign:'center' }}>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:28, color:c }}>{user[k]||0}</div>
+              <div className="mono" style={{ fontSize:8, color:'var(--dim)', letterSpacing:2 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="lbl">ДЕЙСТВИЯ</div>
+      <div style={{ display:'flex', flexDirection:'column', gap:8, marginBottom:14 }}>
+        <Btn onClick={() => onNavigate('createGame')}>☢ СОЗДАТЬ ИГРУ</Btn>
+        <Btn onClick={() => onNavigate('joinGame')} cls="btn-ghost">🔑 ВОЙТИ ПО КОДУ</Btn>
+        <div className="btn-row">
+          <Btn onClick={() => onNavigate('leaderboard')} cls="btn-cyan" small>🏆 РЕЙТИНГ</Btn>
+          <Btn onClick={() => onNavigate('profile')} cls="btn-ghost" small>👤 ПРОФИЛЬ</Btn>
+        </div>
+        {user.isAdmin && <Btn onClick={() => onNavigate('admin')} cls="btn-purp">🔐 ПАНЕЛЬ АДМИНИСТРАТОРА</Btn>}
+      </div>
+
+      <div className="lbl">СИСТЕМА ЗВАНИЯ</div>
+      {RANKS.filter(r => !r.adminOnly || user.isAdmin).map(r => {
+        const cur = getRank(user).id === r.id;
+        return (
+          <div key={r.id} style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 12px', background:'var(--bg2)', border:`1px solid ${cur ? r.border : 'var(--brd)'}`, marginBottom:4, opacity:cur ? 1 : .45 }}>
+            <span style={{ fontSize:18 }}>{r.icon}</span>
+            <div style={{ flex:1 }}>
+              <div className="mono" style={{ fontSize:10, color:r.color }}>{r.name}</div>
+              <div className="mono" style={{ fontSize:8, color:'var(--dim)' }}>{r.adminOnly ? 'Только для администраторов' : r.minGames === 0 ? 'Начальное звание' : `${r.minGames}+ игр`}</div>
+            </div>
+            {cur && <span className="pbadge pbadge-acc">ТЕКУЩЕЕ</span>}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   PROFILE SCREEN
+══════════════════════════════════════════════════════════ */
+function ProfileScreen({ user, onBack, showToast, onUpdateUser }) {
+  const [editName, setEditName] = useState(user.displayName || user.username);
+  const [saving, setSaving] = useState(false);
+  const rank = getRank(user);
+  const winRate = user.gamesPlayed ? Math.round((user.gamesWon / user.gamesPlayed) * 100) : 0;
+
+  const saveName = async () => {
+    const n = editName.trim();
+    if (n.length < 2) return showToast('Мин. 2 символа', 'err');
+    setSaving(true);
+    await DB.updateUser(user.username, { displayName: n });
+    onUpdateUser({ ...user, displayName: n });
+    showToast('✅ Имя обновлено!', 'ok');
+    setSaving(false);
+  };
+
+  return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar">
+        <BackBtn onClick={onBack} />
+        <div className="topbar-title">ПРОФИЛЬ</div>
+      </div>
+      <div className="scroller">
+        <div style={{ textAlign:'center', padding:'24px 0 16px' }}>
+          <div style={{ fontSize:72, animation:'glow 3s ease infinite', marginBottom:8 }}>{rank.icon}</div>
+          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:28, letterSpacing:3 }}>{user.displayName || user.username}</div>
+          <div className="mono" style={{ fontSize:10, color:'var(--dim)', letterSpacing:2, marginBottom:10 }}>@{user.username}</div>
+          <RankChip user={user} size={11} />
+          {user.isAdmin && <div style={{ marginTop:8 }}><span className="pbadge pbadge-purp">АДМИНИСТРАТОР</span></div>}
+        </div>
+
+        <div className="stat-grid">
+          {[['Игры сыграны', user.gamesPlayed||0, 'var(--acc)'],
+            ['Победы', user.gamesWon||0, 'var(--grn)'],
+            ['Выбываний', user.gamesEliminated||0, 'var(--red2)'],
+            ['% побед', winRate+'%', 'var(--cyn)']].map(([l,v,c]) => (
+            <div key={l} className="stat-box">
+              <div className="stat-val" style={{ color:c }}>{v}</div>
+              <div className="stat-lbl">{l}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="lbl">ИЗМЕНИТЬ ИМЯ</div>
+        <input className="inp" value={editName} onChange={e=>setEditName(e.target.value)} maxLength={20} placeholder="Отображаемое имя" />
+        <Btn onClick={saveName} disabled={saving || editName.trim() === (user.displayName||user.username)}>
+          {saving ? '⏳ СОХРАНЕНИЕ…' : '💾 СОХРАНИТЬ ИМЯ'}
+        </Btn>
+
+        <div className="lbl" style={{ marginTop:16 }}>ПРОГРЕСС ЗВАНИЯ</div>
+        {RANKS.filter(r=>!r.adminOnly).map((r, i) => {
+          const nextRank = RANKS.filter(rr=>!rr.adminOnly)[i-1];
+          const isCurrent = getRank(user).id === r.id;
+          const reached = (user.gamesPlayed||0) >= r.minGames;
+          const pct = nextRank ? Math.min(100, Math.round(((user.gamesPlayed||0)-r.minGames)/(nextRank.minGames-r.minGames)*100)) : 100;
+          return (
+            <div key={r.id} style={{ marginBottom:8, opacity:reached?1:.4 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
+                <span>{r.icon}</span>
+                <span className="mono" style={{ fontSize:9, color:reached?r.color:'var(--dim)', flex:1 }}>{r.name}</span>
+                {isCurrent && <span className="pbadge pbadge-acc" style={{ fontSize:7 }}>СЕЙЧАС</span>}
+                <span className="mono" style={{ fontSize:8, color:'var(--dim)' }}>{r.minGames}+</span>
+              </div>
+              {isCurrent && nextRank && (
+                <div style={{ height:3, background:'var(--bg3)', borderRadius:2, overflow:'hidden' }}>
+                  <div style={{ height:'100%', width:`${pct}%`, background:r.color, transition:'.5s' }} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════════════════════════ */
+function LeaderboardScreen({ currentUser, onBack }) {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('gamesWon');
+
+  const load = async (key) => {
+    setLoading(true);
+    const all = await DB.getAllUsers();
+    setUsers(Object.values(all).sort((a,b) => (b[key]||0) - (a[key]||0)));
+    setLoading(false);
+  };
+
+  useEffect(() => { load('gamesWon'); }, []);
+
+  const medals = ['🥇','🥈','🥉'];
+
+  return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar">
+        <BackBtn onClick={onBack} />
+        <div className="topbar-title">РЕЙТИНГ</div>
+      </div>
+      <div className="scroller">
+        <div className="tab-row">
+          {[['gamesWon','ПОБЕДЫ'],['gamesPlayed','ИГРЫ'],['gamesEliminated','ВЫБЫВАНИЯ']].map(([k,l]) => (
+            <button key={k} className={`tab-btn${sortBy===k?' active':''}`} onClick={() => { setSortBy(k); load(k); }}>{l}</button>
+          ))}
+        </div>
+        {loading ? <Spinner /> : users.map((u, i) => {
+          const isMe = u.username === currentUser.username;
+          return (
+            <div key={u.username} className={`lb-row${isMe?' me':''}`}>
+              <div className={`rank-num${i<3?' top':''}`}>{medals[i] || (i+1)}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+                  <span style={{ fontSize:15, fontWeight:700 }}>{u.displayName || u.username}</span>
+                  {isMe && <span className="pbadge pbadge-cyn" style={{ fontSize:7 }}>ВЫ</span>}
+                </div>
+                <RankChip user={u} />
+              </div>
+              <div style={{ textAlign:'right' }}>
+                <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:24, color:sortBy==='gamesWon'?'var(--grn)':sortBy==='gamesEliminated'?'var(--red2)':'var(--acc)' }}>{u[sortBy]||0}</div>
+                <div className="mono" style={{ fontSize:8, color:'var(--dim)' }}>{sortBy==='gamesWon'?'побед':sortBy==='gamesPlayed'?'игр':'выбываний'}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   ADMIN PANEL
+══════════════════════════════════════════════════════════ */
+function AdminScreen({ currentUser, onBack, showToast }) {
+  const [tab, setTab] = useState('users');
+  const [users, setUsers] = useState({});
+  const [games, setGames] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const load = async () => {
+    const [u, g] = await Promise.all([DB.getAllUsers(), DB.getAllGames()]);
+    setUsers(u); setGames(g); setLoading(false);
+  };
+  useEffect(() => { load(); }, []);
+
+  const setRank = async (uname, rankId) => {
+    const patch = { customRank: rankId || null };
+    if (rankId === 'supreme') patch.isAdmin = true;
+    await DB.updateUser(uname, patch);
+    setUsers(prev => ({ ...prev, [uname]: { ...prev[uname], ...patch } }));
+    showToast('✅ Звание обновлено!', 'ok');
+  };
+
+  const toggleAdmin = async (uname) => {
+    if (uname === currentUser.username) return showToast('Нельзя снять с себя', 'err');
+    const u = users[uname];
+    const newAdmin = !u.isAdmin;
+    const patch = { isAdmin: newAdmin, customRank: newAdmin ? 'supreme' : (u.customRank === 'supreme' ? null : u.customRank) };
+    await DB.updateUser(uname, patch);
+    setUsers(prev => ({ ...prev, [uname]: { ...prev[uname], ...patch } }));
+    showToast(newAdmin ? '✅ Назначен админом' : '✅ Права сняты', 'ok');
+  };
+
+  const deleteUser = async (uname) => {
+    if (uname === currentUser.username) return showToast('Нельзя удалить себя', 'err');
+    if (!confirm(`Удалить @${uname}?`)) return;
+    await DB.deleteUser(uname);
+    setUsers(prev => { const n = {...prev}; delete n[uname]; return n; });
+    showToast('✅ Пользователь удалён', 'ok');
+  };
+
+  const endGame = async (gid) => {
+    await DB.updateGame(gid, { phase:'finished' });
+    setGames(prev => ({ ...prev, [gid]: { ...prev[gid], phase:'finished' } }));
+    showToast('✅ Игра завершена', 'ok');
+  };
+
+  const active = Object.values(games).filter(g => g.phase !== 'finished');
+
+  return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar">
+        <BackBtn onClick={onBack} />
+        <div className="topbar-title" style={{ color:'var(--purp)' }}>🔐 АДМИНИСТРАТОР</div>
+      </div>
+      <div className="scroller">
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8, marginBottom:12 }}>
+          {[[Object.keys(users).length,'ИГРОКИ','var(--acc)'],[active.length,'АКТИВНЫЕ','var(--grn)'],[Object.keys(games).length,'ВСЕГО ИГР','var(--dim)']].map(([v,l,c]) => (
+            <div key={l} className="stat-box">
+              <div className="stat-val" style={{ fontSize:24, color:c }}>{v}</div>
+              <div className="stat-lbl">{l}</div>
+            </div>
+          ))}
+        </div>
+        <div className="tab-row">
+          <button className={`tab-btn${tab==='users'?' active':''}`} onClick={() => setTab('users')}>ИГРОКИ</button>
+          <button className={`tab-btn${tab==='games'?' active':''}`} onClick={() => setTab('games')}>ИГРЫ</button>
+        </div>
+        {loading ? <Spinner /> : tab === 'users' ? (
+          Object.values(users).map(u => (
+            <div key={u.username} className="admin-row">
+              <div style={{ flex:'1 1 130px', minWidth:0 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4, flexWrap:'wrap' }}>
+                  <span style={{ fontWeight:700, fontSize:14 }}>{u.displayName || u.username}</span>
+                  {u.isAdmin && <span className="pbadge pbadge-purp" style={{ fontSize:7 }}>ADMIN</span>}
+                  {u.username===currentUser.username && <span className="pbadge pbadge-cyn" style={{ fontSize:7 }}>ВЫ</span>}
+                </div>
+                <div className="mono" style={{ fontSize:8, color:'var(--dim)' }}>@{u.username} · {u.gamesPlayed||0} игр · {u.gamesWon||0} побед</div>
+                <div style={{ marginTop:4 }}><RankChip user={u} /></div>
+              </div>
+              <div style={{ display:'flex', gap:6, flexWrap:'wrap', alignItems:'center' }}>
+                <select className="sel" style={{ width:'auto', padding:'4px 8px', fontSize:11, marginBottom:0 }}
+                  value={u.customRank || 'auto'}
+                  onChange={e => setRank(u.username, e.target.value === 'auto' ? null : e.target.value)}>
+                  <option value="auto">Авто ({getRank(u).name})</option>
+                  {RANKS.map(r => <option key={r.id} value={r.id}>{r.icon} {r.name}</option>)}
+                </select>
+                {u.username !== currentUser.username && <>
+                  <button onClick={() => toggleAdmin(u.username)}
+                    style={{ background:u.isAdmin?'rgba(196,18,48,.2)':'rgba(168,85,247,.15)', border:`1px solid ${u.isAdmin?'var(--red2)':'rgba(168,85,247,.4)'}`, color:u.isAdmin?'var(--red2)':'var(--purp)', fontFamily:"'Share Tech Mono',monospace", fontSize:9, padding:'4px 8px', cursor:'pointer', letterSpacing:1, whiteSpace:'nowrap' }}>
+                    {u.isAdmin ? 'СНЯТЬ' : 'СДЕЛАТЬ АДМИНОМ'}
+                  </button>
+                  <button onClick={() => deleteUser(u.username)}
+                    style={{ background:'rgba(196,18,48,.1)', border:'1px solid var(--dbrd)', color:'var(--red2)', fontFamily:"'Share Tech Mono',monospace", fontSize:11, padding:'4px 8px', cursor:'pointer' }}>✕</button>
+                </>}
+              </div>
+            </div>
+          ))
+        ) : (
+          Object.values(games).length === 0 ? (
+            <div className="mono" style={{ textAlign:'center', padding:24, color:'var(--dim)', fontSize:10, letterSpacing:2 }}>НЕТ ИГР</div>
+          ) : Object.values(games).sort((a,b)=>b.createdAt-a.createdAt).map(g => (
+            <div key={g.id} className="admin-row">
+              <div style={{ flex:1 }}>
+                <div style={{ display:'flex', gap:6, alignItems:'center', marginBottom:4 }}>
+                  <span className="mono" style={{ fontSize:11, color:'var(--acc)', letterSpacing:2 }}>{g.id}</span>
+                  <span className="pbadge" style={{ fontSize:7, color:g.phase==='finished'?'var(--dim)':g.phase==='voting'?'var(--red2)':'var(--grn)', borderColor:g.phase==='finished'?'var(--brd)':g.phase==='voting'?'var(--dbrd)':'rgba(29,255,142,.4)' }}>
+                    {g.phase.toUpperCase()}
+                  </span>
+                </div>
+                <div className="mono" style={{ fontSize:8, color:'var(--dim)' }}>
+                  {g.apocalypse?.emoji} {g.apocalypse?.name} · {Object.keys(g.players||{}).length} игроков · Раунд {g.round}
+                </div>
+              </div>
+              {g.phase !== 'finished' && (
+                <button onClick={() => endGame(g.id)} style={{ background:'rgba(196,18,48,.1)', border:'1px solid var(--dbrd)', color:'var(--red2)', fontFamily:"'Share Tech Mono',monospace", fontSize:9, padding:'4px 8px', cursor:'pointer', letterSpacing:1 }}>
+                  ЗАВЕРШИТЬ
+                </button>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   CREATE GAME
+══════════════════════════════════════════════════════════ */
+function CreateGameScreen({ user, onBack, onCreated, showToast }) {
+  const [selAp, setSelAp] = useState(null);
+  const [adult, setAdult] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const create = async () => {
+    if (!selAp) return showToast('Выберите сценарий', 'err');
+    setLoading(true);
+    const gid = genCode();
+    const ap = selAp === 'random' ? rand(APOCALYPSES) : APOCALYPSES.find(a => a.id === selAp);
+    const game = {
+      id: gid, creatorId: user.username, adultMode: adult, apocalypse: ap,
+      phase: 'lobby', round: 1, bunkerSpots: 1,
+      players: {
+        [user.username]: { userId:user.username, username:user.username, name:user.displayName||user.username, cards:null, revealed:[], isEliminated:false }
+      },
+      votes: {}, revealedThisRound: {}, eliminated: [], lastEliminated: null, createdAt: Date.now(),
+    };
+    await DB.setGame(gid, game);
+    setLoading(false);
+    onCreated(gid);
+  };
+
+  return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar">
+        <BackBtn onClick={onBack} />
+        <div className="topbar-title">НОВАЯ ИГРА</div>
+      </div>
+      <div className="scroller">
+        <div className="lbl">ВЫБЕРИТЕ СЦЕНАРИЙ</div>
+        <div className={`ap-opt${selAp==='random'?' sel':''}`} onClick={() => setSelAp('random')}>
+          <span style={{ fontSize:28 }}>🎲</span>
+          <div>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:18, letterSpacing:2 }}>СЛУЧАЙНЫЙ СЦЕНАРИЙ</div>
+            <div style={{ fontSize:11, color:'var(--dim)' }}>Судьба решит за вас</div>
+          </div>
+        </div>
+        {APOCALYPSES.map(ap => (
+          <div key={ap.id} className={`ap-opt${selAp===ap.id?' sel':''}`} onClick={() => setSelAp(ap.id)}>
+            <span style={{ fontSize:28 }}>{ap.emoji}</span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:18, letterSpacing:2 }}>{ap.name}</div>
+              <div style={{ fontSize:11, color:'var(--dim)', lineHeight:1.4 }}>{ap.description.slice(0,80)}…</div>
+              <div style={{ fontSize:10, color:'var(--acc)', marginTop:4 }}>🎯 {ap.victory}</div>
+            </div>
+          </div>
+        ))}
+        <div className="lbl" style={{ marginTop:12 }}>РЕЖИМ</div>
+        <div className="toggle-row" onClick={() => setAdult(!adult)}>
+          <div className={`toggle-track${adult?' on':''}`}><div className="toggle-thumb" /></div>
+          <div>
+            <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'#ff6b9d' }}>🔞 ВЗРОСЛЫЙ РЕЖИМ (18+)</div>
+            <div className="mono" style={{ fontSize:8, color:'var(--dim)', marginTop:2 }}>Специальные карты для взрослой компании</div>
+          </div>
+        </div>
+      </div>
+      <div className="fixbot">
+        <Btn onClick={create} disabled={loading || !selAp}>
+          {loading ? '⏳ СОЗДАНИЕ…' : '☢ СОЗДАТЬ ИГРУ'}
+        </Btn>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   JOIN GAME
+══════════════════════════════════════════════════════════ */
+function JoinGameScreen({ user, onBack, onJoined, showToast }) {
+  const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const join = async () => {
+    const c = code.trim().toUpperCase();
+    if (c.length !== 6) return showToast('Код: ровно 6 символов', 'err');
+    setLoading(true);
+    const game = await DB.getGame(c);
+    if (!game) { setLoading(false); return showToast('Игра не найдена', 'err'); }
+    if (game.phase !== 'lobby') { setLoading(false); return showToast('Игра уже началась', 'err'); }
+    if (game.players?.[user.username]) { setLoading(false); return onJoined(c); }
+    if (Object.keys(game.players||{}).length >= 16) { setLoading(false); return showToast('Комната заполнена (16/16)', 'err'); }
+    await DB.updateGame(c, {
+      [`players/${user.username}`]: { userId:user.username, username:user.username, name:user.displayName||user.username, cards:null, revealed:[], isEliminated:false }
+    });
+    setLoading(false);
+    onJoined(c);
+  };
+
+  return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar">
+        <BackBtn onClick={onBack} />
+        <div className="topbar-title">ВСТУПИТЬ В ИГРУ</div>
+      </div>
+      <div style={{ flex:1, display:'flex', flexDirection:'column', justifyContent:'center', padding:'0 20px', gap:16 }}>
+        <div style={{ textAlign:'center' }}>
+          <div style={{ fontSize:48, marginBottom:8 }}>🔑</div>
+          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:24, letterSpacing:4, color:'var(--acc)' }}>КОД КОМНАТЫ</div>
+          <div className="mono" style={{ fontSize:10, color:'var(--dim)', letterSpacing:2, marginTop:4 }}>ВВЕДИТЕ 6-СИМВОЛЬНЫЙ КОД</div>
+        </div>
+        <input className="inp" value={code} onChange={e=>setCode(e.target.value.toUpperCase())} maxLength={6}
+          placeholder="XXXXXX" style={{ textAlign:'center', fontSize:28, letterSpacing:10, fontFamily:"'Bebas Neue',sans-serif" }}
+          onKeyDown={e=>e.key==='Enter'&&join()} />
+        <Btn onClick={join} disabled={loading || code.trim().length !== 6}>
+          {loading ? '⏳ ПОИСК…' : '⚡ ВОЙТИ В БУНКЕР'}
+        </Btn>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOBBY SCREEN — реальное время через Firebase onValue
+══════════════════════════════════════════════════════════ */
+function LobbyScreen({ gameId, user, onBack, onStarted, showToast }) {
+  const [game, setGame] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const unsub = DB.watchGame(gameId, g => {
+      if (!g) return;
+      setGame(g);
+      if (g.phase === 'playing') onStarted();
+    });
+    return unsub;
+  }, [gameId]);
+
+  const startGame = async () => {
+    const g = await DB.getGame(gameId);
+    if (!g) return showToast('Игра не найдена', 'err');
+    const plist = Object.values(g.players || {});
+    if (plist.length < 2) return showToast('Нужно мин. 2 игрока', 'err');
+
+    const updatedPlayers = {};
+    plist.forEach(p => {
+      updatedPlayers[p.username] = { ...p, cards: makeCards(g.adultMode), revealed: [], isEliminated: false };
+    });
+    const bunkerSpots = Math.ceil(plist.length / 2);
+    await DB.setGame(gameId, { ...g, players: updatedPlayers, bunkerSpots, phase:'playing', round:1, votes:{}, revealedThisRound:{}, eliminated:[], lastEliminated:null });
+
+    // Increment gamesPlayed for all
+    const updatePromises = plist.map(p => DB.updateUser(p.username, { gamesPlayed: firebase.database.ServerValue.increment(1) }));
+    await Promise.all(updatePromises);
+  };
+
+  const leaveGame = async () => {
+    if (!confirm('Покинуть лобби?')) return;
+    const g = await DB.getGame(gameId);
+    if (!g) return onBack();
+    const players = { ...g.players };
+    delete players[user.username];
+    if (!Object.keys(players).length) { await db.ref(`games/${gameId}`).remove(); }
+    else {
+      const updates = { [`players/${user.username}`]: null };
+      if (g.creatorId === user.username) updates.creatorId = Object.keys(players)[0];
+      await DB.updateGame(gameId, updates);
+    }
+    onBack();
+  };
+
+  const copyCode = () => {
+    navigator.clipboard?.writeText(gameId).catch(()=>{});
+    setCopied(true); setTimeout(() => setCopied(false), 2000);
+    showToast('Код скопирован!', 'ok');
+  };
+
+  if (!game) return <div className="screen"><Spinner /></div>;
+
+  const ap = game.apocalypse || {};
+  const players = Object.values(game.players || {});
+  const isCreator = game.creatorId === user.username;
+
+  return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar">
+        <div className="led led-grn" />
+        <div className="topbar-title">ЛОББИ</div>
+        <div className="mono" style={{ fontSize:10, letterSpacing:2, color:'var(--dim)' }}>{players.length}/16</div>
+      </div>
+      <div className="scroller">
+        {game.adultMode && (
+          <div style={{ background:'rgba(255,45,107,.1)', border:'1px solid rgba(255,45,107,.4)', padding:'8px 12px', marginBottom:10, display:'flex', alignItems:'center', gap:8, fontFamily:"'Share Tech Mono',monospace", fontSize:10, letterSpacing:2, color:'#ff6b9d' }}>
+            🔞 ВЗРОСЛЫЙ РЕЖИМ — 18+
+          </div>
+        )}
+        <div className="card">
+          <div style={{ fontSize:32, marginBottom:6 }}>{ap.emoji}</div>
+          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:22, letterSpacing:2, color:'var(--acc)' }}>{ap.name}</div>
+          <div style={{ fontSize:12, color:'var(--dim)', lineHeight:1.5, marginTop:5 }}>{ap.description}</div>
+          <div style={{ marginTop:10, padding:'7px 10px', background:'rgba(232,129,10,.07)', borderLeft:'2px solid var(--acc)', fontSize:12, color:'var(--acc2)' }}>🎯 {ap.victory}</div>
+        </div>
+        <div className="code-box" onClick={copyCode}>
+          {gameId}
+          <div className="mono" style={{ fontSize:10, color:copied?'var(--grn)':'var(--dim)', letterSpacing:2, marginTop:4 }}>{copied ? '✓ СКОПИРОВАНО' : 'НАЖМИТЕ ЧТОБЫ СКОПИРОВАТЬ'}</div>
+        </div>
+        <div className="lbl">ИГРОКИ</div>
+        {players.map(p => {
+          const isMe = p.username === user.username;
+          const isCr = p.username === game.creatorId;
+          return (
+            <div key={p.username} className={`prow${isMe?' me':''}`}>
+              <div className={`led ${isCr?'led-acc':'led-grn'}`} />
+              <div style={{ flex:1, fontSize:14, fontWeight:600 }}>{p.name}</div>
+              {isCr && <span className="pbadge pbadge-acc">СОЗДАТЕЛЬ</span>}
+              {isMe && <span className="pbadge pbadge-cyn">ВЫ</span>}
+            </div>
+          );
+        })}
+      </div>
+      <div className="fixbot">
+        {isCreator ? (
+          <Btn onClick={startGame} disabled={players.length < 2}>
+            {players.length < 2 ? `⚡ ЖДЁМ ИГРОКОВ (${players.length}/2)` : '⚡ НАЧАТЬ ИГРУ'}
+          </Btn>
+        ) : (
+          <div className="mono" style={{ textAlign:'center', fontSize:10, letterSpacing:2, color:'var(--dim)', padding:'4px 0' }}>
+            ОЖИДАНИЕ СОЗДАТЕЛЯ…
+          </div>
+        )}
+        <Btn onClick={leaveGame} cls="btn-ghost" small>↩ ПОКИНУТЬ ЛОББИ</Btn>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   GAME WRAPPER — полная игра с Firebase real-time
+══════════════════════════════════════════════════════════ */
+function GameWrapper({ gameId, user, onExit, showToast }) {
+  const [game, setGame] = useState(null);
+  const [subScreen, setSubScreen] = useState('round');
+  const [selectedVote, setSelectedVote] = useState(undefined);
+  const prevElimRef = useRef(0);
+  const prevPhaseRef = useRef(null);
+
+  useEffect(() => {
+    const unsub = DB.watchGame(gameId, g => {
+      if (!g) return;
+      const elimLen = (g.eliminated||[]).length;
+      if (elimLen > prevElimRef.current && g.lastEliminated) {
+        prevElimRef.current = elimLen;
+        setSubScreen('elim');
+      }
+      if (g.phase !== prevPhaseRef.current) {
+        prevPhaseRef.current = g.phase;
+        if (g.phase === 'voting') setSelectedVote(undefined);
+        if (g.phase === 'finished') setSubScreen('over');
+        if (g.phase === 'lobby') { onExit(); }
+      }
+      setGame(g);
+    });
+    return unsub;
+  }, [gameId]);
+
+  if (!game) return <div className="screen"><Spinner /></div>;
+
+  const me = (game.players||{})[user.username];
+  const isCreator = game.creatorId === user.username;
+  const alive = Object.values(game.players||{}).filter(p => !p.isEliminated);
+  const ap = game.apocalypse || {};
+  const maxRev = game.maxReveals || 2;
+  const revDone = (game.revealedThisRound||{})[user.username] || 0;
+  const revLeft = maxRev - revDone;
+
+  /* ─── Actions ─── */
+  const doReveal = async (cardKey) => {
+    if (!me || me.isEliminated) return;
+    if (me.revealed?.includes(cardKey)) return showToast('Уже раскрыта', 'err');
+    if (revLeft <= 0) return showToast(`Лимит: ${maxRev} раскрытия за раунд`, 'err');
+    const newRevealed = [...(me.revealed||[]), cardKey];
+    const newRevCnt = revDone + 1;
+    await DB.updateGame(gameId, {
+      [`players/${user.username}/revealed`]: newRevealed,
+      [`revealedThisRound/${user.username}`]: newRevCnt,
+    });
+    showToast('✅ Карта раскрыта!', 'ok');
+    setSubScreen('round');
+  };
+
+  const startVote = async () => {
+    if (game.phase !== 'playing') return;
+    await DB.updateGame(gameId, { phase:'voting', votes:{} });
+    setSelectedVote(undefined);
+    showToast('🗳 Голосование началось!', 'ok');
+  };
+
+  const castVote = async (targetId) => {
+    if (game.phase !== 'voting') return;
+    if ((game.votes||{})[user.username] !== undefined) return showToast('Вы уже проголосовали', 'err');
+    const newVotes = { ...(game.votes||{}), [user.username]: targetId === undefined ? null : targetId };
+    const aliveP = Object.values(game.players||{}).filter(p => !p.isEliminated);
+    const gameCopy = JSON.parse(JSON.stringify({ ...game, votes: newVotes }));
+
+    if (Object.keys(newVotes).length >= aliveP.length) {
+      processVotes(gameCopy);
+      if (gameCopy.phase === 'finished') {
+        const survivors = Object.values(gameCopy.players).filter(p => !p.isEliminated).map(p => p.username);
+        const allPlayers = Object.keys(gameCopy.players);
+        const wins  = survivors.map(uid => DB.updateUser(uid, { gamesWon: firebase.database.ServerValue.increment(1) }));
+        const elims = allPlayers.filter(uid => !survivors.includes(uid)).map(uid => DB.updateUser(uid, { gamesEliminated: firebase.database.ServerValue.increment(1) }));
+        await Promise.all([...wins, ...elims]);
+      }
+      await DB.setGame(gameId, gameCopy);
+    } else {
+      await DB.updateGame(gameId, { [`votes/${user.username}`]: targetId === undefined ? null : (targetId ?? null) });
+    }
+  };
+
+  const tally = async () => {
+    const g = await DB.getGame(gameId);
+    if (!g || g.phase !== 'voting') return;
+    const gameCopy = JSON.parse(JSON.stringify(g));
+    processVotes(gameCopy);
+    if (gameCopy.phase === 'finished') {
+      const survivors = Object.values(gameCopy.players).filter(p => !p.isEliminated).map(p => p.username);
+      const allPlayers = Object.keys(gameCopy.players);
+      const wins  = survivors.map(uid => DB.updateUser(uid, { gamesWon: firebase.database.ServerValue.increment(1) }));
+      const elims = allPlayers.filter(uid => !survivors.includes(uid)).map(uid => DB.updateUser(uid, { gamesEliminated: firebase.database.ServerValue.increment(1) }));
+      await Promise.all([...wins, ...elims]);
+    }
+    await DB.setGame(gameId, gameCopy);
+  };
+
+  /* ─── SUBSCREEN: My Cards ─── */
+  if (subScreen === 'cards') return (
+    <div className="screen anim-in">
+      <HazardBar />
+      <div className="topbar"><BackBtn onClick={() => setSubScreen('round')} /><div className="topbar-title">МОИ КАРТЫ</div></div>
+      <div className="scroller">
+        <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)', textAlign:'center', margin:'4px 0 14px' }}>ТОЛЬКО ВЫ ВИДИТЕ ВСЕ КАРТЫ — РАСКРЫВАЙТЕ СТРАТЕГИЧЕСКИ</div>
+        <div className="cgrid">
+          {me?.cards ? CARD_META.map(({ key, icon, label }) => {
+            const rev = (me.revealed||[]).includes(key);
+            const val = me.cards[key] || '—';
+            const full = key === 'fact';
+            return (
+              <div key={key} className={`ctile${rev?' revealed':''}${full?' full':''}`}>
+                {rev && <div className="rev-badge">РАСКРЫТА</div>}
+                <div style={{ fontSize:22, marginBottom:5 }}>{icon}</div>
+                <div className="mono" style={{ fontSize:8, letterSpacing:2, color:'var(--dim)', textTransform:'uppercase' }}>{label}</div>
+                <div style={{ fontSize:12, color:'var(--txt)', marginTop:5, lineHeight:1.4 }}>{val}</div>
+              </div>
+            );
+          }) : <div className="mono" style={{ color:'var(--dim)', padding:24, textAlign:'center' }}>Карты не назначены</div>}
+        </div>
+      </div>
+    </div>
+  );
+
+  /* ─── SUBSCREEN: Pick Card ─── */
+  if (subScreen === 'pick') {
+    const unrevealed = CARD_META.filter(c => !(me?.revealed||[]).includes(c.key));
+    return (
+      <div className="screen anim-in">
+        <HazardBar />
+        <div className="topbar"><BackBtn onClick={() => setSubScreen('round')} /><div className="topbar-title">ВЫБОР КАРТЫ</div><div className="mono" style={{ fontSize:10, color:'var(--dim)', letterSpacing:2 }}>РАУНД {game.round}</div></div>
+        <div className="scroller">
+          <div className="mono" style={{ fontSize:10, color:'var(--acc)', textAlign:'center', padding:'8px 0 12px' }}>Осталось раскрытий: {revLeft} из {maxRev}</div>
+          {revLeft <= 0 ? (
+            <div className="mono" style={{ textAlign:'center', padding:20, color:'var(--grn)', fontSize:10, letterSpacing:2 }}>✓ Все раскрытия использованы в этом раунде</div>
+          ) : unrevealed.length === 0 ? (
+            <div className="mono" style={{ textAlign:'center', padding:20, color:'var(--grn)', fontSize:10, letterSpacing:2 }}>✓ Все ваши карты раскрыты</div>
+          ) : unrevealed.map(({ key, icon, label }) => (
+            <div key={key} className="pctile" onClick={() => {
+              const val = me?.cards?.[key] || '—';
+              if (confirm(`Раскрыть карту?\n\n${label}: ${val}\n\nВсе игроки увидят её.`)) doReveal(key);
+            }}>
+              <div style={{ fontSize:22 }}>{icon}</div>
+              <div style={{ flex:1 }}>
+                <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)', textTransform:'uppercase' }}>{label}</div>
+                <div style={{ fontSize:13, color:'var(--txt)', marginTop:3 }}>{me?.cards?.[key] || '—'}</div>
+              </div>
+              <div style={{ fontSize:18, color:'var(--dim)' }}>›</div>
+            </div>
+          ))}
+          <div style={{ marginTop:8 }}>
+            <Btn onClick={() => setSubScreen('round')} cls="btn-ghost" small>🤫 Не раскрывать в этом раунде</Btn>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ─── SUBSCREEN: Vote ─── */
+  if (subScreen === 'vote' || (game.phase === 'voting' && subScreen !== 'elim' && subScreen !== 'over')) {
+    const votes = game.votes || {};
+    const alreadyVoted = votes[user.username] !== undefined;
+    const totalVoted = Object.keys(votes).length;
+    const myVote = votes[user.username];
+
+    return (
+      <div className="screen anim-in">
+        <HazardBar red />
+        <div style={{ padding:'14px', background:'rgba(196,18,48,.08)', borderBottom:'1px solid var(--dbrd)', flexShrink:0 }}>
+          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:26, letterSpacing:3, color:'var(--red2)' }}>ГОЛОСОВАНИЕ</div>
+          <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)', marginTop:2 }}>КТО ПОКИНЕТ БУНКЕР?</div>
+          <div className="mono" style={{ fontSize:10, color:'var(--txt)', marginTop:6 }}>Проголосовали: {totalVoted} / {alive.length}</div>
+        </div>
+        <div className="scroller">
+          <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)', textAlign:'center', margin:'4px 0 12px' }}>ВЫБЕРИТЕ ИГРОКА И ПОДТВЕРДИТЕ ГОЛОС</div>
+          <div className="vgrid">
+            {alive.map(p => {
+              const isMe = p.username === user.username;
+              const vcnt = Object.values(votes).filter(v => v === p.username).length;
+              const iVoted = !isMe && myVote === p.username;
+              const iSel = !isMe && selectedVote === p.username;
+              const revText = (p.revealed||[]).map(k => { const m = CARD_META.find(c=>c.key===k); return `${m?.icon||''} ${p.cards?.[k]||''}`; }).join(' · ') || 'карты не раскрыты';
+              return (
+                <div key={p.username}
+                  className={`vcard${(iVoted||iSel)?' sel':''}${alreadyVoted?' voted':''}`}
+                  onClick={() => { if (alreadyVoted) return showToast('Вы уже проголосовали', 'err'); if (isMe) return showToast('Нельзя за себя', 'err'); setSelectedVote(p.username); }}>
+                  {vcnt > 0 && <div style={{ position:'absolute', top:8, right:8, fontFamily:"'Bebas Neue',sans-serif", fontSize:18, color:'var(--red2)' }}>{'💀'.repeat(Math.min(vcnt,3))}</div>}
+                  <div style={{ fontSize:13, fontWeight:700, position:'relative' }}>{p.name}{isMe?<small style={{color:'var(--dim)'}}> (вы)</small>:''}</div>
+                  <div style={{ fontSize:10, color:'var(--dim)', marginTop:4, lineHeight:1.4, position:'relative' }}>{revText}</div>
+                  {iVoted && <div style={{ position:'absolute', bottom:8, right:8, fontSize:16, color:'var(--red2)' }}>★</div>}
+                </div>
+              );
+            })}
+            <div className={`vcard abstain${selectedVote===null?' sel':''}${alreadyVoted?' voted':''}`}
+              onClick={() => { if (!alreadyVoted) setSelectedVote(null); }}>
+              <div style={{ fontSize:13, fontWeight:700 }}>🤐 Воздержаться</div>
+              <div style={{ fontSize:10, color:'var(--dim)', marginTop:4 }}>Не влияет на результат</div>
+              {myVote === null && alreadyVoted && <div style={{ position:'absolute', bottom:8, right:8, fontSize:16, color:'var(--cyn)' }}>★</div>}
+            </div>
+          </div>
+        </div>
+        <div className="fixbot">
+          <Btn cls="btn-red" disabled={selectedVote===undefined || alreadyVoted}
+            onClick={() => { if (selectedVote===undefined) return; castVote(selectedVote); }}>
+            {alreadyVoted ? '✅ ГОЛОС ЗАСЧИТАН' : selectedVote===null ? '🤐 ВОЗДЕРЖАТЬСЯ' : '☠ ПОДТВЕРДИТЬ ГОЛОС'}
+          </Btn>
+          {isCreator && <Btn cls="btn-ghost" small onClick={tally}>📊 ПОДВЕСТИ ИТОГИ (создатель)</Btn>}
+        </div>
+      </div>
+    );
+  }
+
+  /* ─── SUBSCREEN: Elim ─── */
+  if (subScreen === 'elim') {
+    const ep = game.lastEliminated;
+    const nextSub = game.phase === 'finished' ? 'over' : game.phase === 'voting' ? 'vote' : 'round';
+    return (
+      <div className="screen anim-in" style={{ overflowY:'auto', paddingBottom:80 }}>
+        <HazardBar red />
+        <div className="topbar">
+          <div className="topbar-title" style={{ color:'var(--red2)' }}>ИСКЛЮЧЕНИЕ</div>
+          <div className="mono" style={{ fontSize:10, letterSpacing:2, color:'var(--dim)' }}>РАУНД {game.round > 1 ? game.round-1 : 1}</div>
+        </div>
+        <div style={{ overflowY:'auto', flex:1, padding:'12px 14px 100px' }}>
+          <div style={{ textAlign:'center', padding:'30px 16px 20px' }}>
+            <div style={{ fontSize:64, animation:'shake .25s ease infinite alternate' }}>💀</div>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, letterSpacing:5, color:'var(--red2)', marginTop:12, animation:'flicker 2s infinite' }}>☠ ИСКЛЮЧЁН ИЗ БУНКЕРА ☠</div>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:36, letterSpacing:3, color:'var(--txt)', marginTop:4, textShadow:'0 0 20px rgba(255,36,68,.4)' }}>{ep?.name || '—'}</div>
+          </div>
+          <div style={{ height:1, background:'var(--dbrd)', margin:'0 0 12px' }} />
+          <div className="lbl">ВСЕ КАРТЫ ВЫБЫВШЕГО</div>
+          {ep && CARD_META.map(({ key, icon, label }) => (
+            <div key={key} className="elim-fcard">
+              <div style={{ fontSize:16, flexShrink:0, marginTop:1 }}>{icon}</div>
+              <div>
+                <div className="mono" style={{ fontSize:8, letterSpacing:2, color:'var(--dim)', textTransform:'uppercase' }}>{label}</div>
+                <div style={{ fontSize:12, color:'var(--txt)', marginTop:2 }}>{ep.allCards?.[key] || '—'}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="fixbot">
+          <Btn cls="btn-ghost" onClick={() => setSubScreen(nextSub)}>ПРОДОЛЖИТЬ →</Btn>
+        </div>
+      </div>
+    );
+  }
+
+  /* ─── SUBSCREEN: Over ─── */
+  if (subScreen === 'over') {
+    const survivors = Object.values(game.players||{}).filter(p => !p.isEliminated);
+    const eliminated = Object.values(game.players||{}).filter(p => p.isEliminated);
+    return (
+      <div className="screen anim-in" style={{ overflowY:'auto' }}>
+        <div className="topbar"><div className="topbar-title" style={{ color:'var(--grn)' }}>ИТОГ ИГРЫ</div></div>
+        <div style={{ overflowY:'auto', flex:1, padding:'12px 14px 40px' }}>
+          <div style={{ padding:'32px 16px 20px', textAlign:'center' }}>
+            <div style={{ fontSize:52, marginBottom:8 }}>🏚</div>
+            <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:48, letterSpacing:4, color:'var(--grn)', textShadow:'0 0 30px rgba(29,255,142,.5)' }}>ВЫЖИВШИЕ</div>
+            <div className="mono" style={{ fontSize:10, letterSpacing:2, color:'var(--dim)', marginTop:4 }}>{ap.emoji} {ap.name} — {ap.victory}</div>
+          </div>
+          <div className="lbl">🏆 В БУНКЕРЕ</div>
+          {survivors.map(p => (
+            <div key={p.username} className="surv-row">
+              <div style={{ fontSize:22 }}>🏆</div>
+              <div>
+                <div style={{ fontSize:15, fontWeight:700, color:'var(--grn)' }}>{p.name}</div>
+                <div style={{ fontSize:11, color:'var(--dim)', marginTop:2 }}>{p.cards?.profession || '—'}</div>
+              </div>
+            </div>
+          ))}
+          <div className="lbl">💀 ВЫБЫЛИ</div>
+          {eliminated.map(p => (
+            <div key={p.username} className="loser-row">
+              <span>💀</span>
+              <div style={{ fontSize:13, color:'var(--dim)', textDecoration:'line-through' }}>{p.name}</div>
+            </div>
+          ))}
+          <div style={{ marginTop:20 }}><Btn onClick={onExit} cls="btn-ghost">↩ ВЕРНУТЬСЯ В МЕНЮ</Btn></div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ─── DEFAULT: Round Screen ─── */
+  const spotsRow = alive.map((_, i) => (
+    <div key={i} className={`sspot ${i < game.bunkerSpots ? 'free' : 'taken'}`} />
+  ));
+
+  const feedItems = alive.flatMap(p =>
+    (p.revealed||[]).map(k => {
+      const m = CARD_META.find(c => c.key === k) || {};
+      return (
+        <div key={`${p.username}-${k}`} className="rfeed-item">
+          <div style={{ fontSize:12, fontWeight:700, color:'var(--acc2)', minWidth:72 }}>{p.name}</div>
+          <div style={{ flex:1 }}>
+            <div className="mono" style={{ fontSize:8, color:'var(--dim)', letterSpacing:1 }}>{m.icon||''} {m.label||k}</div>
+            <div style={{ fontSize:12, color:'var(--txt)', marginTop:2 }}>{p.cards?.[k] || '—'}</div>
+          </div>
+        </div>
+      );
+    })
+  );
+
+  return (
+    <div className="screen anim-in">
+      <div style={{ height:5, flexShrink:0, background:'repeating-linear-gradient(-45deg,var(--acc),var(--acc) 8px,var(--bg) 8px,var(--bg) 16px)', opacity:.65 }} />
+      <div style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 14px', background:'var(--bg2)', borderBottom:'1px solid var(--brd)', flexShrink:0 }}>
+        <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:48, color:'var(--acc)', lineHeight:1, minWidth:60 }}>{game.round}</div>
+        <div style={{ flex:1 }}>
+          <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)' }}>АПОКАЛИПСИС</div>
+          <div style={{ fontSize:15, fontWeight:600 }}>{ap.emoji} {ap.name}</div>
+          <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)', marginTop:3 }}>ЖИВЫХ / МЕСТ В БУНКЕРЕ</div>
+          <div style={{ fontSize:15, fontWeight:600 }}>{alive.length} / {game.bunkerSpots}</div>
+        </div>
+        <button onClick={() => setSubScreen('cards')} style={{ background:'none', border:'1px solid var(--brd)', color:'var(--dim)', padding:'5px 10px', fontFamily:"'Share Tech Mono',monospace", fontSize:13, cursor:'pointer' }}>🃏</button>
+      </div>
+      <div className="scroller">
+        <div style={{ display:'flex', gap:5, flexWrap:'wrap', marginBottom:12 }}>{spotsRow}</div>
+        <div className="lbl">РАСКРЫТЫЕ КАРТЫ</div>
+        {feedItems.length > 0 ? feedItems : (
+          <div className="mono" style={{ fontSize:10, color:'var(--dim)', textAlign:'center', padding:'16px 0' }}>Пока ничего не раскрыто</div>
+        )}
+      </div>
+      <div className="fixbot">
+        <div className="btn-row">
+          <Btn onClick={() => setSubScreen('cards')} cls="btn-ghost" small>🃏 МОИ КАРТЫ</Btn>
+          <Btn onClick={() => setSubScreen('pick')} cls="btn-cyan" small
+            disabled={!me || me.isEliminated || revLeft <= 0}>
+            {me?.isEliminated ? '💀 ВЫБЫЛИ' : revLeft <= 0 ? `✅ РАСКРЫТО (${maxRev}/${maxRev})` : revLeft < maxRev ? `↗ ЕЩЁ (${revLeft})` : '↗ РАСКРЫТЬ'}
+          </Btn>
+        </div>
+        {isCreator && <Btn onClick={startVote} cls="btn-red" small>🗳 НАЧАТЬ ГОЛОСОВАНИЕ</Btn>}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   ROOT APP
+══════════════════════════════════════════════════════════ */
+function App() {
+  const [user, setUser] = useState(null);
+  const [screen, setScreen] = useState('auth'); // auth | home | profile | leaderboard | admin | createGame | joinGame | lobby | game
+  const [gameId, setGameId] = useState(null);
+  const [toast, showToast] = useToast();
+
+  // Refresh user data from Firebase every 10s
+  useEffect(() => {
+    if (!user) return;
+    const t = setInterval(async () => {
+      const fresh = await DB.getUser(user.username);
+      if (fresh) setUser(fresh);
+    }, 10000);
+    return () => clearInterval(t);
+  }, [user?.username]);
+
+  // On home screen, check if user is already in an active game
+  useEffect(() => {
+    if (screen !== 'home' || !user) return;
+    (async () => {
+      const games = await DB.getAllGames();
+      const myGame = Object.values(games).find(g => g.players?.[user.username] && g.phase !== 'finished');
+      if (myGame) { setGameId(myGame.id); setScreen(myGame.phase === 'lobby' ? 'lobby' : 'game'); }
+    })();
+  }, [screen]);
+
+  const nav = s => setScreen(s);
+
+  return (
+    <div id="root" style={{ position:'fixed', inset:0 }}>
+      <ToastEl toast={toast} />
+
+      {screen === 'auth' && <AuthScreen onLogin={u => { setUser(u); nav('home'); }} showToast={showToast} />}
+
+      {screen === 'home' && user && (
+        <div className="screen">
+          <HazardBar />
+          <div className="topbar">
+            <div className="led led-grn" />
+            <div className="topbar-title">БУНКЕР</div>
+            <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)' }}>WEB</div>
+          </div>
+          <HomeScreen user={user} onNavigate={nav} />
+          <div className="nav-bar">
+            <button className="nav-btn active"><span className="nav-icon">🏚</span>ГЛАВНАЯ</button>
+            <button className="nav-btn" onClick={() => nav('leaderboard')}><span className="nav-icon">🏆</span>РЕЙТИНГ</button>
+            <button className="nav-btn" onClick={() => nav('profile')}><span className="nav-icon">👤</span>ПРОФИЛЬ</button>
+            <button className="nav-btn" onClick={() => { setUser(null); setGameId(null); nav('auth'); }}><span className="nav-icon">⛔</span>ВЫХОД</button>
+          </div>
+        </div>
+      )}
+
+      {screen === 'profile' && user && <ProfileScreen user={user} onBack={() => nav('home')} showToast={showToast} onUpdateUser={u => setUser(u)} />}
+      {screen === 'leaderboard' && user && <LeaderboardScreen currentUser={user} onBack={() => nav('home')} />}
+      {screen === 'admin' && user?.isAdmin && <AdminScreen currentUser={user} onBack={() => nav('home')} showToast={showToast} />}
+
+      {screen === 'createGame' && user && (
+        <CreateGameScreen user={user} onBack={() => nav('home')}
+          onCreated={id => { setGameId(id); nav('lobby'); }} showToast={showToast} />
+      )}
+      {screen === 'joinGame' && user && (
+        <JoinGameScreen user={user} onBack={() => nav('home')}
+          onJoined={id => { setGameId(id); nav('lobby'); }} showToast={showToast} />
+      )}
+      {screen === 'lobby' && user && gameId && (
+        <LobbyScreen gameId={gameId} user={user} onBack={() => { setGameId(null); nav('home'); }}
+          onStarted={() => nav('game')} showToast={showToast} />
+      )}
+      {screen === 'game' && user && gameId && (
+        <GameWrapper gameId={gameId} user={user}
+          onExit={() => { setGameId(null); nav('home'); }} showToast={showToast} />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
