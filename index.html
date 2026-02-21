@@ -457,7 +457,7 @@ function AuthScreen({ onLogin, showToast }) {
     <div className="screen" style={{ justifyContent:'center', alignItems:'center', padding:'0 20px', gap:0 }}>
       <div style={{ fontSize:64, animation:'glow 2s ease infinite', marginBottom:8 }}>☢</div>
       <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:72, letterSpacing:10, color:'var(--acc)', textShadow:'0 0 40px rgba(232,129,10,.4)', animation:'glitch 5s steps(1) infinite' }}>БУНКЕР</div>
-      <div className="mono" style={{ fontSize:10, letterSpacing:4, color:'var(--dim)', marginBottom:28 }}>АПОКАЛИПСИС НАСТУПИЛ</div>
+      <div className="mono" style={{ fontSize:10, letterSpacing:4, color:'var(--dim)', marginBottom:28 }}>АПОКАЛИПСИС НАСТУПИЛ. ОТ ФИЗТЕХА</div>
 
       <div style={{ width:'100%', maxWidth:360, background:'var(--bg2)', border:'1px solid var(--brd)', padding:20, position:'relative' }}>
         <div style={{ position:'absolute', top:-1, left:-1, width:10, height:10, borderTop:'2px solid var(--acc)', borderLeft:'2px solid var(--acc)' }} />
@@ -1409,7 +1409,7 @@ function App() {
           <HazardBar />
           <div className="topbar">
             <div className="led led-grn" />
-            <div className="topbar-title">БУНКЕР</div>
+            <div className="topbar-title">БУНКЕР ФТИ</div>
             <div className="mono" style={{ fontSize:9, letterSpacing:2, color:'var(--dim)' }}>WEB</div>
           </div>
           <HomeScreen user={user} onNavigate={nav} />
