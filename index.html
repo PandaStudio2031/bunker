@@ -82,130 +82,212 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter','SF P
 @keyframes slideUp { from{transform:translateY(100%);opacity:0} to{transform:none;opacity:1} }
 @keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0} }
 
-/* ──────────────── BUNKER GATE ──────────────── */
+/* ══════════════════════════════════════════
+   BUNKER GATE — кинематографическое открытие
+   ══════════════════════════════════════════ */
 #bunker-gate {
-  position:fixed; inset:0; z-index:99000;
-  display:flex; align-items:center; justify-content:center;
-  background:#050508;
-  pointer-events:all;
-  transition:opacity .4s ease .9s;
+  position: fixed; inset: 0; z-index: 99000;
+  background: #03030a;
+  pointer-events: all;
+  transition: opacity .6s ease;
 }
-#bunker-gate.hidden { opacity:0; pointer-events:none; }
-.gate-wrap {
-  position:relative; width:min(340px,88vw); aspect-ratio:3/4;
-  display:flex; flex-direction:column;
+#bunker-gate.hidden { opacity: 0; pointer-events: none; }
+
+/* Фоновый туман */
+#bunker-gate::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(240,165,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(240,165,0,0.04) 0%, transparent 70%);
+  pointer-events: none;
 }
-/* Дверная рама */
-.gate-frame {
-  position:absolute; inset:-12px;
-  border:2px solid rgba(240,165,0,0.35);
-  border-radius:4px;
-  box-shadow:0 0 60px rgba(240,165,0,0.08), inset 0 0 40px rgba(0,0,0,0.6);
-}
-/* Болты по углам */
-.gate-bolt {
-  position:absolute; width:14px; height:14px;
-  border-radius:50%; background:rgba(240,165,0,0.5);
-  box-shadow:0 0 8px rgba(240,165,0,0.4);
-}
-.gate-bolt:nth-child(1){top:-7px;left:-7px}
-.gate-bolt:nth-child(2){top:-7px;right:-7px}
-.gate-bolt:nth-child(3){bottom:-7px;left:-7px}
-.gate-bolt:nth-child(4){bottom:-7px;right:-7px}
-/* Левая и правая половины ворот */
+
+/* Левая и правая створки */
 .gate-left, .gate-right {
-  position:absolute; top:0; bottom:0; width:50%;
-  background:linear-gradient(160deg,#1a1a22 0%,#0d0d14 60%,#111118 100%);
-  overflow:hidden;
-  transition:transform 1.1s cubic-bezier(0.76,0,0.24,1);
+  position: absolute; top: 0; bottom: 0; width: 50%;
+  overflow: hidden;
+  transition: transform 1.4s cubic-bezier(0.86, 0, 0.07, 1);
+  will-change: transform;
 }
-.gate-left  { left:0;  border-right:1px solid rgba(240,165,0,0.15); transform-origin:left center; }
-.gate-right { right:0; border-left:1px solid rgba(240,165,0,0.15);  transform-origin:right center; }
-/* Горизонтальные полосы на воротах */
+.gate-left  { left: 0;  transform-origin: left center; }
+.gate-right { right: 0; transform-origin: right center; }
+
+/* Металлическая текстура створок */
 .gate-left::before, .gate-right::before {
-  content:''; position:absolute; inset:0;
-  background:repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 38px,
-    rgba(240,165,0,0.06) 38px,
-    rgba(240,165,0,0.06) 40px
-  );
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg,
+      #161620 0%, #1c1c28 15%, #131318 30%,
+      #1e1e2a 45%, #111116 60%, #1a1a24 75%, #0e0e14 100%);
 }
-/* Вертикальные рёбра жёсткости */
+/* Горизонтальные рёбра жёсткости */
 .gate-left::after, .gate-right::after {
-  content:''; position:absolute; inset:0;
-  background:repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 28px,
-    rgba(255,255,255,0.03) 28px,
-    rgba(255,255,255,0.03) 30px
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px, transparent 44px,
+    rgba(255,255,255,0.035) 44px, rgba(255,255,255,0.035) 46px,
+    rgba(0,0,0,0.3) 46px, rgba(0,0,0,0.3) 48px,
+    transparent 48px, transparent 92px
   );
 }
-/* Эмблема ☢ в центре */
-.gate-emblem {
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  font-size:52px; line-height:1;
-  filter:drop-shadow(0 0 16px rgba(240,165,0,0.6));
-  animation:gateGlow 2s ease-in-out infinite;
-  z-index:2; pointer-events:none;
-  transition:opacity .3s;
+
+/* Вертикальные болты/рёбра на каждой створке */
+.gate-ribs {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 60px,
+    rgba(255,255,255,0.02) 60px, rgba(255,255,255,0.02) 62px,
+    rgba(0,0,0,0.15) 62px, rgba(0,0,0,0.15) 64px,
+    transparent 64px
+  );
+  pointer-events: none;
 }
-/* Центральная полоса замка */
+
+/* Болты на краях */
+.gate-bolts {
+  position: absolute; top: 0; bottom: 0;
+  display: flex; flex-direction: column;
+  justify-content: space-around; padding: 24px 0;
+  gap: 0; pointer-events: none;
+}
+.gate-left .gate-bolts  { right: 10px; }
+.gate-right .gate-bolts { left: 10px; }
+
+.gate-bolt {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), rgba(120,100,40,0.8));
+  box-shadow: 0 0 4px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+/* Свечение по центральному шву */
 .gate-seam {
-  position:absolute; top:0; bottom:0; left:50%;
-  width:2px; transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,rgba(240,165,0,0.5) 20%,rgba(240,165,0,0.8) 50%,rgba(240,165,0,0.5) 80%,transparent);
-  z-index:3;
-  box-shadow:0 0 12px rgba(240,165,0,0.4);
-  transition:opacity .2s;
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1px; transform: translateX(-50%);
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(240,165,0,0.15) 10%,
+    rgba(240,165,0,0.6) 30%,
+    rgba(240,165,0,1)   50%,
+    rgba(240,165,0,0.6) 70%,
+    rgba(240,165,0,0.15) 90%,
+    transparent 100%);
+  box-shadow: 0 0 8px 2px rgba(240,165,0,0.4), 0 0 20px 4px rgba(240,165,0,0.15);
+  z-index: 10;
+  transition: opacity .25s;
 }
-/* Замок */
+
+/* Центральная эмблема + замок */
+.gate-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20; display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+  transition: opacity .3s ease;
+}
+.gate-emblem {
+  font-size: 56px; line-height: 1;
+  filter: drop-shadow(0 0 20px rgba(240,165,0,0.8));
+  animation: gateGlow 1.8s ease-in-out infinite;
+}
 .gate-lock {
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  width:32px; height:40px; z-index:10;
-  display:flex; flex-direction:column; align-items:center;
+  display: flex; flex-direction: column; align-items: center;
 }
 .gate-lock-arc {
-  width:22px; height:13px;
-  border:3px solid rgba(240,165,0,0.8);
-  border-bottom:none; border-radius:11px 11px 0 0;
-  margin-bottom:-1px;
-  box-shadow:0 0 8px rgba(240,165,0,0.4);
+  width: 26px; height: 14px;
+  border: 3px solid rgba(240,165,0,0.9);
+  border-bottom: none; border-radius: 13px 13px 0 0;
+  box-shadow: 0 0 10px rgba(240,165,0,0.5);
+  transition: transform .4s ease, opacity .4s ease;
 }
 .gate-lock-body {
-  width:28px; height:20px;
-  background:rgba(240,165,0,0.15);
-  border:2px solid rgba(240,165,0,0.7);
-  border-radius:4px;
-  box-shadow:0 0 10px rgba(240,165,0,0.3);
+  width: 34px; height: 22px;
+  background: rgba(240,165,0,0.1);
+  border: 2px solid rgba(240,165,0,0.8);
+  border-radius: 5px;
+  box-shadow: 0 0 14px rgba(240,165,0,0.35);
 }
-/* Световой эффект за воротами */
-.gate-light {
-  position:absolute; inset:0;
-  background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(240,165,0,0.12) 0%, transparent 70%);
-  opacity:0; z-index:1;
-  transition:opacity .5s ease .3s;
+
+/* Круговые полосы (спиннер-замок) */
+.gate-wheel {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 15; pointer-events: none;
+  transition: opacity .3s;
 }
-#bunker-gate.opening .gate-left  { transform:translateX(-100%); }
-#bunker-gate.opening .gate-right { transform:translateX(100%); }
-#bunker-gate.opening .gate-seam  { opacity:0; }
-#bunker-gate.opening .gate-emblem{ opacity:0; }
-#bunker-gate.opening .gate-light { opacity:1; }
-/* Нижний текст */
+.gate-wheel-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(240,165,0,0.2);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.gate-wheel-ring:nth-child(1){ width:90px;  height:90px;  border-color:rgba(240,165,0,0.25); animation:wheelSpin 8s linear infinite; }
+.gate-wheel-ring:nth-child(2){ width:130px; height:130px; border-color:rgba(240,165,0,0.15); animation:wheelSpin 12s linear infinite reverse; }
+.gate-wheel-ring:nth-child(3){ width:170px; height:170px; border-color:rgba(240,165,0,0.08); animation:wheelSpin 18s linear infinite; }
+.gate-wheel-ring::after {
+  content:''; position:absolute; top:-3px; left:50%; transform:translateX(-50%);
+  width:5px; height:5px; border-radius:50%;
+  background:rgba(240,165,0,0.7); box-shadow:0 0 6px rgba(240,165,0,0.8);
+}
+
+/* Вспышка при открытии */
+.gate-flash {
+  position: absolute; inset: 0; z-index: 50;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(240,165,0,0.35) 0%, transparent 70%);
+  opacity: 0; pointer-events: none;
+  transition: opacity .1s;
+}
+
+/* Свет из открытых ворот */
+.gate-glow-bg {
+  position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(240,165,0,0.18) 0%, rgba(240,165,0,0.04) 40%, transparent 70%);
+  opacity: 0; pointer-events: none;
+  transition: opacity .8s ease .2s;
+}
+
+/* Нижний подпись */
 .gate-label {
-  position:absolute; bottom:-32px; left:0; right:0;
-  text-align:center; font-family:'Inter',sans-serif;
-  font-size:11px; font-weight:600; letter-spacing:3px;
-  color:rgba(240,165,0,0.5); text-transform:uppercase;
+  position: absolute; bottom: 10%; left: 0; right: 0;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 5px;
+  color: rgba(240,165,0,0.45); text-transform: uppercase;
+  z-index: 20;
 }
+
+/* Статус-строка */
+.gate-status {
+  position: absolute; bottom: calc(10% - 20px); left: 0; right: 0;
+  text-align: center;
+  font-family: 'Inter', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  color: rgba(240,165,0,0.3); text-transform: uppercase;
+  z-index: 20; transition: opacity .3s;
+}
+
+/* ── Состояние: открытие ── */
+#bunker-gate.opening .gate-left  { transform: translateX(-101%); }
+#bunker-gate.opening .gate-right { transform: translateX(101%); }
+#bunker-gate.opening .gate-seam  { opacity: 0; transition: opacity .15s; }
+#bunker-gate.opening .gate-center { opacity: 0; transition: opacity .2s; }
+#bunker-gate.opening .gate-wheel  { opacity: 0; transition: opacity .2s; }
+#bunker-gate.opening .gate-glow-bg { opacity: 1; }
+#bunker-gate.flashing .gate-flash  { opacity: 1; }
+
+/* ── Анимации ── */
 @keyframes gateGlow {
-  0%,100%{filter:drop-shadow(0 0 12px rgba(240,165,0,.5))}
-  50%{filter:drop-shadow(0 0 28px rgba(240,165,0,.9))}
+  0%,100% { filter: drop-shadow(0 0 14px rgba(240,165,0,.6)); }
+  50%     { filter: drop-shadow(0 0 32px rgba(240,165,0,1));  }
 }
+@keyframes wheelSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+@keyframes statusBlink {
+  0%,100% { opacity: .3; }
+  50%     { opacity: .8; }
+}
+.gate-status { animation: statusBlink 1.4s ease-in-out infinite; }
 
 /* ──────────────── NAV BAR ──────────────── */
 #nav-bar {
@@ -465,6 +547,25 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter','SF P
 .bspot.free  { background:var(--g); box-shadow:0 0 5px var(--g); }
 .bspot.taken { background:rgba(255,255,255,0.15); }
 
+/* ──────────────── SECRET CARD TILE ──────────────── */
+.secret-tile {
+  border-radius: var(--rad);
+  padding: 16px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+.secret-tile:active { transform: scale(.98); }
+.secret-tile-used { opacity: .5; pointer-events: none; }
+.secret-badge {
+  position: absolute; top: 0; right: 0;
+  padding: 4px 10px;
+  border-bottom-left-radius: var(--rad-sm);
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+}
+
 /* ──────────────── ELIM/SURVIVOR ──────────────── */
 .elim-row { padding:12px 16px; background:rgba(255,69,58,0.06); border:1px solid rgba(255,69,58,0.2); border-radius:var(--rad-sm); display:flex; gap:12px; align-items:flex-start; margin-bottom:6px; }
 .surv-row { padding:13px 16px; background:rgba(48,209,88,0.07); border:1px solid rgba(48,209,88,.2); border-radius:var(--rad-sm); display:flex; gap:12px; align-items:center; margin-bottom:6px; }
@@ -495,24 +596,58 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter','SF P
 
 <!-- BUNKER GATE INTRO -->
 <div id="bunker-gate">
-  <div class="gate-wrap">
-    <div class="gate-frame">
+  <!-- Фоновый свет -->
+  <div class="gate-glow-bg"></div>
+  <div class="gate-flash"></div>
+
+  <!-- Левая створка -->
+  <div class="gate-left">
+    <div class="gate-ribs"></div>
+    <div class="gate-bolts">
+      <div class="gate-bolt"></div>
+      <div class="gate-bolt"></div>
       <div class="gate-bolt"></div>
       <div class="gate-bolt"></div>
       <div class="gate-bolt"></div>
       <div class="gate-bolt"></div>
     </div>
-    <div class="gate-light"></div>
-    <div class="gate-left"></div>
-    <div class="gate-right"></div>
-    <div class="gate-seam"></div>
+  </div>
+
+  <!-- Правая створка -->
+  <div class="gate-right">
+    <div class="gate-ribs"></div>
+    <div class="gate-bolts">
+      <div class="gate-bolt"></div>
+      <div class="gate-bolt"></div>
+      <div class="gate-bolt"></div>
+      <div class="gate-bolt"></div>
+      <div class="gate-bolt"></div>
+      <div class="gate-bolt"></div>
+    </div>
+  </div>
+
+  <!-- Центральный шов -->
+  <div class="gate-seam"></div>
+
+  <!-- Вращающиеся кольца замка -->
+  <div class="gate-wheel">
+    <div class="gate-wheel-ring"></div>
+    <div class="gate-wheel-ring"></div>
+    <div class="gate-wheel-ring"></div>
+  </div>
+
+  <!-- Эмблема и замок -->
+  <div class="gate-center">
     <div class="gate-emblem">☢</div>
     <div class="gate-lock">
       <div class="gate-lock-arc"></div>
       <div class="gate-lock-body"></div>
     </div>
-    <div class="gate-label">БУНКЕР ФТИ</div>
   </div>
+
+  <!-- Подписи -->
+  <div class="gate-label">БУНКЕР ФТИ</div>
+  <div class="gate-status" id="gate-status-txt">СИСТЕМА БЕЗОПАСНОСТИ АКТИВНА</div>
 </div>
 
 <div id="app">
@@ -607,6 +742,33 @@ const ADUL_Ho=["🔄 Свингерство","📹 Съёмка контента
 const ADUL_B=["🍆 Коллекция игрушек (47 шт)","💊 Виагра на 10 лет","🎀 Набор БДСМ","🛡️ 10 000 презервативов","💿 Коллекция эротики (3 ТБ)","🍾 Шампанское и афродизиаки","💋 Секс-кукла премиум","🌿 Запрещённые вещества","🏠 VIP-апартаменты с джакузи"];
 const ADUL_F=["😏 Переспал/а с кем-то в этой комнате","📱 Анонимный OnlyFans (80к подп)","🤐 Знает компромат на каждого","💔 Расстался/ась вчера — нестабилен/а","🕵️ Соблазнил/а агента ФСБ","🎰 Проиграл/а всё состояние","💒 Состоит в тайном браке с двумя","🔞 Бывший/ая порнозвезда"];
 
+/* ──────────────── SECRET CARDS ──────────────── */
+const SECRET_CARDS=[
+  // Голосование
+  {id:"double_vote",    icon:"⚡",color:"#f0a500",title:"Двойной удар",      desc:"В этом раунде твой голос считается дважды. Используй мудро.",          type:"vote",    effect:"double_vote"},
+  {id:"no_vote",        icon:"🔇",color:"#ff453a",title:"Немой",             desc:"В этом раунде ты не можешь голосовать. Твой голос аннулируется.",       type:"vote",    effect:"no_vote"},
+  {id:"secret_vote",    icon:"🕵️",color:"#bf5af2",title:"Тайное голосование",desc:"Никто не видит, за кого ты проголосовал — даже после итогов.",          type:"vote",    effect:"secret_vote"},
+  {id:"redirect_vote",  icon:"🔀",color:"#0a84ff",title:"Рикошет",           desc:"Случайный игрок получает твой голос вместо выбранного тобой.",          type:"vote",    effect:"redirect_vote"},
+  // Карты
+  {id:"swap_card",      icon:"🔄",color:"#30d158",title:"Обмен картой",      desc:"Ты можешь обменять одну свою карту с картой любого другого игрока.",     type:"card",    effect:"swap_card"},
+  {id:"steal_reveal",   icon:"👁️",color:"#0a84ff",title:"Шпион",             desc:"Ты видишь одну случайную нераскрытую карту другого игрока тайно.",       type:"card",    effect:"steal_reveal"},
+  {id:"extra_reveal",   icon:"✨",color:"#30d158",title:"Откровение",        desc:"В этом раунде ты можешь раскрыть на одну карту больше обычного.",        type:"card",    effect:"extra_reveal"},
+  {id:"hide_card",      icon:"🌫️",color:"#8e8e93",title:"Туман",             desc:"Одна из твоих уже раскрытых карт становится снова скрытой для всех.",   type:"card",    effect:"hide_card"},
+  // Иммунитет / защита
+  {id:"immunity",       icon:"🛡️",color:"#30d158",title:"Иммунитет",         desc:"Этот раунд ты не можешь быть выгнан из бункера, даже если наберёшь больше всех голосов.", type:"protect", effect:"immunity"},
+  {id:"shield",         icon:"🪖",color:"#0a84ff",title:"Щит",               desc:"Если на тебя направлено 3+ голоса, один голос автоматически аннулируется.", type:"protect", effect:"shield"},
+  // Хаос
+  {id:"random_elim",    icon:"🎲",color:"#ff453a",title:"Рулетка",           desc:"Если голосование заходит в ничью — ты выбираешь, кого выгоняют.",        type:"chaos",   effect:"random_elim"},
+  {id:"sabotage",       icon:"💣",color:"#ff453a",title:"Саботаж",           desc:"Назначь одного игрока. Его раскрытия в этом раунде не учитываются.",     type:"chaos",   effect:"sabotage"},
+  {id:"mirror",         icon:"🪞",color:"#bf5af2",title:"Зеркало",           desc:"Игрок с наибольшим числом голосов за тебя сам получает один штрафной голос.", type:"chaos", effect:"mirror"},
+  // Информация
+  {id:"truth_serum",    icon:"💉",color:"#0a84ff",title:"Сыворотка правды",  desc:"Выбери игрока — он обязан публично раскрыть свою профессию прямо сейчас.", type:"info",  effect:"truth_serum"},
+  {id:"lie_detector",   icon:"📡",color:"#bf5af2",title:"Детектор лжи",      desc:"Ведущий тайно сообщает тебе одну правдивую нераскрытую карту игрока на твой выбор.", type:"info", effect:"lie_detector"},
+  {id:"amnesia",        icon:"🧠",color:"#8e8e93",title:"Амнезия",           desc:"Один игрок на выбор забывает одну свою раскрытую карту — она снова скрывается.", type:"info", effect:"amnesia"},
+];
+const SECRET_TYPE_COLORS={vote:"#f0a500",card:"#30d158",protect:"#0a84ff",chaos:"#ff453a",info:"#bf5af2"};
+const SECRET_TYPE_LABELS={vote:"Голосование",card:"Карты",protect:"Защита",chaos:"Хаос",info:"Информация"};
+
 const CARDS=[
   {key:"gender_age",icon:"👤",label:"Пол и возраст"},
   {key:"profession",icon:"💼",label:"Профессия"},
@@ -614,6 +776,7 @@ const CARDS=[
   {key:"hobby",     icon:"🎯",label:"Хобби"},
   {key:"baggage",   icon:"🎒",label:"Багаж"},
   {key:"fact",      icon:"🤫",label:"Секретный факт"},
+  {key:"secret",    icon:"🃏",label:"Секретная карта"},
 ];
 
 /* ══════════════════════════════════════════════════════════
@@ -647,6 +810,7 @@ const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function genCode(){return Array.from({length:6},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join('')}
 function mkCards(adult=false){
   const h=adult?rnd(ADUL_H):rnd(HEALTH);
+  const sc=rnd(SECRET_CARDS);
   return{
     gender_age:rnd(GEND),
     profession:adult?rnd(ADUL_P):rnd(PROF),
@@ -654,16 +818,57 @@ function mkCards(adult=false){
     hobby:adult?rnd(ADUL_Ho):rnd(HOBBY),
     baggage:adult?rnd(ADUL_B):rnd(BAGG),
     fact:adult?rnd(ADUL_F):rnd(FACTS),
+    secret:sc.id,
   };
 }
 function fmt(ts){const d=new Date(ts);return`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 
 function processVotes(game){
   const alive=Object.values(game.players).filter(p=>!p.isEliminated);
-  const tally={};alive.forEach(p=>{tally[p.userId]=0;});
-  Object.values(game.votes||{}).forEach(tid=>{if(tid!==null&&tid!==undefined&&tally[tid]!==undefined)tally[tid]++;});
+  const tally={};alive.forEach(p=>{tally[p.username]=0;});
+  const doubleVote=game.doubleVote||{};
+  const noVote=game.usedSecrets&&Object.keys(game.usedSecrets).filter(u=>{
+    const sc=SECRET_CARDS.find(s=>s.id===(game.players[u]?.cards?.secret));
+    return sc?.effect==='no_vote'&&game.usedSecrets[u];
+  });
+  const immunity=game.immunity||{};
+  const shield=game.shield||{};
+  const redirectVote=game.usedSecrets&&Object.keys(game.usedSecrets).filter(u=>{
+    const sc=SECRET_CARDS.find(s=>s.id===(game.players[u]?.cards?.secret));
+    return sc?.effect==='redirect_vote'&&game.usedSecrets[u];
+  });
+
+  Object.entries(game.votes||{}).forEach(([voter,tid])=>{
+    if(tid===null||tid===undefined)return;
+    // no_vote — skip
+    if(noVote&&noVote.includes(voter))return;
+    // redirect_vote — vote goes to random alive player
+    let target=tid;
+    if(redirectVote&&redirectVote.includes(voter)){
+      const others=alive.filter(p=>p.username!==voter&&p.username!==tid);
+      if(others.length>0)target=rnd(others).username;
+    }
+    if(tally[target]===undefined)return;
+    const weight=(doubleVote[voter])?2:1;
+    tally[target]+=weight;
+  });
+
+  // immunity — remove from tally
+  Object.keys(immunity).forEach(u=>{delete tally[u];});
+
+  // shield — reduce by 1 if >=3 votes
+  alive.forEach(p=>{
+    const sc=SECRET_CARDS.find(s=>s.id===(p.cards?.secret));
+    if(sc?.effect==='shield'&&game.usedSecrets?.[p.username]&&tally[p.username]>=3){
+      tally[p.username]=Math.max(0,tally[p.username]-1);
+    }
+  });
+
   let maxV=0,cands=[];
   Object.entries(tally).forEach(([uid,cnt])=>{if(cnt>maxV){maxV=cnt;cands=[uid];}else if(cnt===maxV&&cnt>0)cands.push(uid);});
+  // reset secret effects for next round
+  game.doubleVote={};game.immunity={};game.extraReveals={};game.secretVote={};
+
   if(!cands.length||maxV===0){game.phase='playing';game.round++;game.votes={};game.revealedThisRound={};game.lastEliminated=null;return;}
   const eu=rnd(cands);const ep=game.players[eu];
   ep.isEliminated=true;
@@ -1488,7 +1693,47 @@ function GameWrapper({gameId,user,onExit,toast}){
   const ap=game.apocalypse||{};
   const maxRev=game.maxReveals||2;
   const revDone=(game.revealedThisRound||{})[user.username]||0;
-  const revLeft=maxRev-revDone;
+  const extraRev=(game.extraReveals||{})[user.username]||0;
+  const revLeft=(maxRev+extraRev)-revDone;
+  const mySecretCard=me?.cards?.secret?SECRET_CARDS.find(s=>s.id===me.cards.secret):null;
+  const mySecretUsed=!!(game.usedSecrets||{})[user.username];
+
+  const useSecretCard=async(sc)=>{
+    if(!me||me.isEliminated)return toast('Вы выбыли','err');
+    if((game.usedSecrets||{})[user.username])return toast('Карта уже использована','err');
+    const effect=sc.effect;
+    const upd={[`usedSecrets/${user.username}`]:true};
+    // Применяем эффект
+    if(effect==='extra_reveal'){
+      upd[`extraReveals/${user.username}`]=(game.extraReveals?.[user.username]||0)+1;
+      toast(`✨ ${sc.title}: +1 раскрытие в этом раунде!`,'ok');
+    } else if(effect==='double_vote'){
+      upd[`doubleVote/${user.username}`]=true;
+      toast(`⚡ ${sc.title}: твой голос удвоен!`,'ok');
+    } else if(effect==='no_vote'){
+      toast(`🔇 ${sc.title}: ты потерял голос в этом раунде.`,'');
+    } else if(effect==='immunity'){
+      upd[`immunity/${user.username}`]=true;
+      toast(`🛡️ ${sc.title}: ты под защитой в этом раунде!`,'ok');
+    } else if(effect==='secret_vote'){
+      upd[`secretVote/${user.username}`]=true;
+      toast(`🕵️ ${sc.title}: твой голос будет тайным!`,'ok');
+    } else if(effect==='hide_card'){
+      const revealed=me.revealed||[];
+      if(revealed.length>0){
+        const toHide=revealed[Math.floor(Math.random()*revealed.length)];
+        const newRev=revealed.filter(k=>k!==toHide);
+        upd[`players/${user.username}/revealed`]=newRev;
+        const cardLabel=CARDS.find(c=>c.key===toHide)?.label||toHide;
+        toast(`🌫️ ${sc.title}: карта "${cardLabel}" снова скрыта!`,'ok');
+      } else { toast('🌫️ Нет раскрытых карт для скрытия','err'); return; }
+    } else {
+      // Остальные эффекты требуют взаимодействия — информируем
+      toast(`${sc.icon} ${sc.title} активирована! Расскажи всем об эффекте.`,'ok');
+    }
+    await DB.updateGame(gameId,upd);
+    setSub('round');
+  };
 
   const doReveal=async(k)=>{
     if(!me||me.isEliminated)return;
@@ -1521,27 +1766,56 @@ function GameWrapper({gameId,user,onExit,toast}){
   };
 
   /* MY CARDS */
-  if(sub==='cards') return(
-    <div className="sc">
-      <HZ/><div className="tb"><BackBtn onClick={()=>setSub('round')}/><div className="tb-title">МОИ КАРТЫ</div></div>
-      <div className="scr-raw">
-        <div className="mono" style={{fontSize:9,letterSpacing:2,color:'var(--tx3)',textAlign:'center',margin:'4px 0 14px'}}>ТОЛЬКО ВЫ ВИДИТЕ ВСЕ КАРТЫ</div>
-        <div className="cgrid">
-          {me?.cards?CARDS.map(({key,icon,label})=>{
-            const rev=(me.revealed||[]).includes(key);
-            return(
-              <div key={key} className={`ctile${rev?' rev':''}${key==='fact'?' full':''}`}>
-                {rev&&<div className="rev-bdg">РАСКРЫТА</div>}
-                <div style={{fontSize:22,marginBottom:5}}>{icon}</div>
-                <div className="mono" style={{fontSize:8,letterSpacing:2,color:'var(--tx3)',textTransform:'uppercase'}}>{label}</div>
-                <div style={{fontSize:12,color:'var(--tx)',marginTop:5,lineHeight:1.4}}>{me.cards[key]||'—'}</div>
+  if(sub==='cards'){
+    const mySecret=me?.cards?.secret?SECRET_CARDS.find(s=>s.id===me.cards.secret):null;
+    const secretUsed=(game.usedSecrets||{})[user.username];
+    return(
+      <div className="sc">
+        <HZ/><div className="tb"><BackBtn onClick={()=>setSub('round')}/><div className="tb-title">МОИ КАРТЫ</div></div>
+        <div className="scr-raw">
+          <div style={{fontSize:11,color:'var(--tx3)',textAlign:'center',margin:'4px 0 14px'}}>Только вы видите все карты</div>
+          {/* SECRET CARD — highlighted separately */}
+          {mySecret&&(
+            <div style={{
+              background:`linear-gradient(135deg,${mySecret.color}18,${mySecret.color}08)`,
+              border:`1px solid ${mySecret.color}55`,
+              borderRadius:'var(--rad)',
+              padding:'16px',
+              marginBottom:14,
+              position:'relative',
+              overflow:'hidden',
+            }}>
+              <div style={{position:'absolute',top:0,right:0,padding:'4px 10px',background:mySecret.color+'22',borderBottomLeftRadius:'var(--rad-sm)',fontSize:9,fontWeight:700,color:mySecret.color,textTransform:'uppercase',letterSpacing:1}}>
+                {SECRET_TYPE_LABELS[mySecret.type]}
               </div>
-            );
-          }):<div className="mono" style={{color:'var(--tx3)',padding:24,textAlign:'center'}}>Карты не назначены</div>}
+              {secretUsed&&<div style={{position:'absolute',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,.55)',borderRadius:'var(--rad)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:2}}>
+                <span style={{fontSize:12,color:'#8e8e93',fontWeight:700,letterSpacing:1}}>ИСПОЛЬЗОВАНА</span>
+              </div>}
+              <div style={{fontSize:32,marginBottom:6}}>{mySecret.icon}</div>
+              <div style={{fontSize:16,fontWeight:700,color:'#fff',marginBottom:4}}>🃏 {mySecret.title}</div>
+              <div style={{fontSize:12,color:'rgba(255,255,255,.7)',lineHeight:1.5}}>{mySecret.desc}</div>
+              {!secretUsed&&isCreator===false&&<button onClick={()=>useSecretCard(mySecret)} style={{marginTop:12,background:mySecret.color,border:'none',borderRadius:'var(--rad-sm)',color:'#000',fontWeight:700,fontSize:12,padding:'8px 16px',cursor:'pointer',width:'100%'}}>
+                ⚡ Активировать карту
+              </button>}
+            </div>
+          )}
+          <div className="cgrid">
+            {me?.cards?CARDS.filter(c=>c.key!=='secret').map(({key,icon,label})=>{
+              const rev=(me.revealed||[]).includes(key);
+              return(
+                <div key={key} className={`ctile${rev?' rev':''}${key==='fact'?' full':''}`}>
+                  {rev&&<div className="rev-bdg">РАСКРЫТА</div>}
+                  <div style={{fontSize:22,marginBottom:5}}>{icon}</div>
+                  <div className="mono" style={{fontSize:8,letterSpacing:2,color:'var(--tx3)',textTransform:'uppercase'}}>{label}</div>
+                  <div style={{fontSize:12,color:'var(--tx)',marginTop:5,lineHeight:1.4}}>{me.cards[key]||'—'}</div>
+                </div>
+              );
+            }):<div style={{color:'var(--tx3)',padding:24,textAlign:'center'}}>Карты не назначены</div>}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   /* PICK CARD */
   if(sub==='pick'){
@@ -1634,12 +1908,22 @@ function GameWrapper({gameId,user,onExit,toast}){
           </div>
           <div style={{height:1,background:'var(--rb)',margin:'0 0 12px'}}/>
           <div className="lbl">ВСЕ КАРТЫ ВЫБЫВШЕГО</div>
-          {ep&&CARDS.map(({key,icon,label})=>(
+          {ep&&CARDS.filter(c=>c.key!=='secret').map(({key,icon,label})=>(
             <div key={key} className="elim-row">
               <div style={{fontSize:16,flexShrink:0,marginTop:1}}>{icon}</div>
               <div><div className="mono" style={{fontSize:8,letterSpacing:2,color:'var(--tx3)',textTransform:'uppercase'}}>{label}</div><div style={{fontSize:12,color:'var(--tx)',marginTop:2}}>{ep.allCards?.[key]||'—'}</div></div>
             </div>
           ))}
+          {ep?.allCards?.secret&&(()=>{
+            const sc=SECRET_CARDS.find(s=>s.id===ep.allCards.secret);
+            if(!sc)return null;
+            return(
+              <div style={{background:`linear-gradient(135deg,${sc.color}18,${sc.color}08)`,border:`1px solid ${sc.color}44`,borderRadius:'var(--rad-sm)',padding:14,marginBottom:6}}>
+                <div style={{fontSize:11,fontWeight:700,color:sc.color,marginBottom:4}}>🃏 Секретная карта: {sc.title}</div>
+                <div style={{fontSize:12,color:'var(--tx)',lineHeight:1.4}}>{sc.icon} {sc.desc}</div>
+              </div>
+            );
+          })()}
         </div>
         <div className="fixbot"><Btn cls="btn-g" ch="ПРОДОЛЖИТЬ →" onClick={()=>setSub(nextSub)}/></div>
       </div>
@@ -1715,6 +1999,21 @@ function GameWrapper({gameId,user,onExit,toast}){
         {feed.length>0?feed:<div className="mono" style={{fontSize:10,color:'var(--tx3)',textAlign:'center',padding:'16px 0'}}>Пока ничего не раскрыто</div>}
       </div>
       <div className="fixbot">
+        {/* Secret card quick-activate banner */}
+        {mySecretCard&&!mySecretUsed&&!me?.isEliminated&&(
+          <div onClick={()=>setSub('cards')} style={{
+            display:'flex',alignItems:'center',gap:10,padding:'10px 14px',
+            background:`linear-gradient(135deg,${mySecretCard.color}22,${mySecretCard.color}0a)`,
+            border:`1px solid ${mySecretCard.color}44`,borderRadius:'var(--rad-sm)',cursor:'pointer',marginBottom:4,
+          }}>
+            <span style={{fontSize:20}}>{mySecretCard.icon}</span>
+            <div style={{flex:1}}>
+              <div style={{fontSize:11,fontWeight:700,color:mySecretCard.color}}>🃏 {mySecretCard.title}</div>
+              <div style={{fontSize:10,color:'rgba(255,255,255,.5)',marginTop:1}}>Секретная карта не активирована — нажми чтобы открыть</div>
+            </div>
+            <span style={{fontSize:16,color:mySecretCard.color}}>›</span>
+          </div>
+        )}
         <div className="brow">
           <Btn ch="🃏 КАРТЫ" onClick={()=>setSub('cards')} cls="btn-g" sm/>
           <Btn ch={me?.isEliminated?'💀 ВЫБЫЛИ':revLeft<=0?`✅ (${maxRev}/${maxRev})`:revLeft<maxRev?`↗ ЕЩЁ (${revLeft})`:'↗ РАСКРЫТЬ'}
@@ -2023,16 +2322,47 @@ function App(){
 
 ReactDOM.createRoot(document.getElementById('screen-area')).render(<App/>);
 
-// ── BUNKER GATE ANIMATION ──
+// ══ BUNKER GATE — кинематографическая анимация ══
 (function(){
   const gate = document.getElementById('bunker-gate');
+  const statusTxt = document.getElementById('gate-status-txt');
   if(!gate) return;
-  // Небольшая пауза чтобы увидеть ворота, затем открываем
+
+  const setStatus = (txt) => { if(statusTxt) statusTxt.textContent = txt; };
+
+  // Этап 1: показываем ворота (0ms) — уже видно
+  setStatus('СИСТЕМА БЕЗОПАСНОСТИ АКТИВНА');
+
+  // Этап 2: смена статуса — "проверка"
+  setTimeout(()=>{ setStatus('ИДЕНТИФИКАЦИЯ... ████████░░ 80%'); }, 600);
+
+  // Этап 3: авторизация
+  setTimeout(()=>{ setStatus('ДОСТУП РАЗРЕШЁН — ОТКРЫВАЮ ВОРОТА'); }, 1400);
+
+  // Этап 4: дрожание замка перед открытием
+  setTimeout(()=>{
+    const arc = gate.querySelector('.gate-lock-arc');
+    if(arc){ arc.style.transform='translateY(4px)'; arc.style.opacity='0.4'; }
+  }, 1700);
+
+  // Этап 5: вспышка
+  setTimeout(()=>{
+    gate.classList.add('flashing');
+    setTimeout(()=>gate.classList.remove('flashing'), 180);
+  }, 1900);
+
+  // Этап 6: открытие створок
   setTimeout(()=>{
     gate.classList.add('opening');
-    // После открытия скрываем полностью
-    setTimeout(()=>{ gate.classList.add('hidden'); }, 1300);
-  }, 1200);
+    setStatus('');
+  }, 2000);
+
+  // Этап 7: скрыть оверлей
+  setTimeout(()=>{
+    gate.style.transition = 'opacity .5s ease';
+    gate.style.opacity = '0';
+    setTimeout(()=>{ gate.classList.add('hidden'); gate.style.opacity=''; }, 520);
+  }, 3200);
 })();
 </script>
 </body>
