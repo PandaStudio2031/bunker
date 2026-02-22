@@ -571,6 +571,147 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter','SF P
 .surv-row { padding:13px 16px; background:rgba(48,209,88,0.07); border:1px solid rgba(48,209,88,.2); border-radius:var(--rad-sm); display:flex; gap:12px; align-items:center; margin-bottom:6px; }
 .dead-row { padding:10px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:var(--rad-sm); display:flex; gap:10px; align-items:center; margin-bottom:4px; }
 
+/* ──────────────── ELIM SCREEN ANIMATION ──────────────── */
+@keyframes elimSkull  { 0%{transform:scale(0) rotate(-30deg);opacity:0} 55%{transform:scale(1.2) rotate(8deg);opacity:1} 75%{transform:scale(.93) rotate(-2deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
+@keyframes elimName   { 0%{opacity:0;transform:translateY(28px)} 100%{opacity:1;transform:translateY(0)} }
+@keyframes elimCard   { 0%{opacity:0;transform:translateX(-16px)} 100%{opacity:1;transform:translateX(0)} }
+@keyframes elimScan   { 0%{top:-4px} 100%{top:100%} }
+@keyframes elimShake  { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+@keyframes elimGlitch { 0%,88%,100%{clip-path:none;transform:none} 89%{clip-path:inset(18% 0 62% 0);transform:translateX(-5px)} 91%{clip-path:inset(62% 0 8% 0);transform:translateX(5px)} 93%{clip-path:none} }
+@keyframes elimVign   { 0%{opacity:0} 30%{opacity:1} 85%{opacity:1} 100%{opacity:.65} }
+@keyframes redScan    { 0%{background-position:0 0} 100%{background-position:0 60px} }
+@keyframes elimFadeIn { from{opacity:0} to{opacity:1} }
+@keyframes elimFlashW { 0%{opacity:0} 8%{opacity:.55} 25%{opacity:0} }
+
+/* ── WIN SCREEN ── */
+@keyframes winBurst  { 0%{opacity:0;transform:scale(.3) rotate(-15deg)} 60%{transform:scale(1.15) rotate(4deg)} 80%{transform:scale(.95) rotate(-2deg)} 100%{opacity:1;transform:scale(1) rotate(0)} }
+@keyframes winGlow   { 0%,100%{filter:drop-shadow(0 0 24px rgba(48,209,88,.8)) drop-shadow(0 0 60px rgba(48,209,88,.4))} 50%{filter:drop-shadow(0 0 48px rgba(48,209,88,1)) drop-shadow(0 0 100px rgba(48,209,88,.7))} }
+@keyframes winRays   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+@keyframes winFadeIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+@keyframes winScan   { 0%{background-position:0 0} 100%{background-position:0 -80px} }
+@keyframes winPulse  { 0%,100%{opacity:.18} 50%{opacity:.35} }
+@keyframes winFlash  { 0%{opacity:0} 8%{opacity:.45} 25%{opacity:0} }
+@keyframes winCard   { from{opacity:0;transform:translateY(22px) scale(.95)} to{opacity:1;transform:none} }
+
+.win-screen {
+  position:fixed; inset:0; z-index:9000; display:flex; flex-direction:column;
+  background:#00060a; overflow:hidden; animation:elimFadeIn .3s ease;
+}
+.win-rays {
+  position:absolute; inset:-50%; z-index:0; pointer-events:none;
+  background:conic-gradient(from 0deg, transparent 0deg, rgba(48,209,88,.04) 10deg, transparent 20deg, rgba(48,209,88,.02) 30deg, transparent 40deg);
+  animation:winRays 18s linear infinite;
+}
+.win-scanlines {
+  position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(48,209,88,.02) 3px,rgba(48,209,88,.02) 6px);
+  animation:winScan 1.4s linear infinite;
+}
+.win-vignette {
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(ellipse at 50% 40%, transparent 20%, rgba(0,40,20,.75) 100%);
+  animation:elimVign .5s ease .1s both;
+}
+.win-flash {
+  position:absolute; inset:0; pointer-events:none; z-index:3;
+  background:radial-gradient(ellipse at 50% 40%, rgba(48,209,88,.35) 0%, transparent 70%);
+  animation:winFlash .5s ease .05s both;
+}
+.win-particles {
+  position:absolute; inset:0; z-index:4; pointer-events:none; overflow:hidden;
+}
+.win-hero {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:relative; z-index:10; padding:24px 20px 12px; min-height:0;
+}
+.win-trophy {
+  font-size:100px; line-height:1;
+  animation:winBurst .7s cubic-bezier(.34,1.56,.64,1) .1s both, winGlow 2.5s ease 1s infinite;
+}
+.win-cards { position:relative; z-index:10; padding:0 16px 100px; overflow-y:auto; flex-shrink:0; max-height:40vh; }
+.win-player-card {
+  display:flex; align-items:center; gap:14px; padding:14px 16px;
+  background:rgba(48,209,88,.07); border:1px solid rgba(48,209,88,.22);
+  border-radius:var(--rad); margin-bottom:8px;
+  animation:winCard .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.dead-player-card {
+  display:flex; align-items:center; gap:14px; padding:11px 16px;
+  background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--rad); margin-bottom:6px;
+  animation:winCard .4s ease both;
+}
+
+.elim-screen {
+  position:fixed; inset:0; z-index:9000; display:flex; flex-direction:column;
+  background:#060006; overflow:hidden; animation:elimFadeIn .25s ease;
+}
+.elim-scanlines {
+  position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,30,30,.035) 3px,rgba(255,30,30,.035) 6px);
+  animation:redScan 1.2s linear infinite;
+}
+.elim-vignette {
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(160,0,0,.6) 100%);
+  animation:elimVign .4s ease .15s both;
+}
+.elim-flash {
+  position:absolute; inset:0; pointer-events:none; z-index:3;
+  background:radial-gradient(ellipse at 50% 40%, rgba(255,69,58,.45) 0%, rgba(120,0,0,.2) 50%, transparent 80%);
+  animation:elimFlashW .45s ease .05s both;
+}
+.elim-scanner {
+  position:absolute; left:0; right:0; height:2px; z-index:4; pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,69,58,.6) 40%,rgba(255,180,180,.9) 50%,rgba(255,69,58,.6) 60%,transparent 100%);
+  animation:elimScan 2s linear .5s infinite;
+}
+.elim-hero {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:relative; z-index:10; padding:24px 20px 12px; min-height:0;
+}
+.elim-skull {
+  font-size:96px; line-height:1;
+  filter:drop-shadow(0 0 32px rgba(255,69,58,1)) drop-shadow(0 0 80px rgba(255,69,58,.5));
+  animation:elimSkull .55s cubic-bezier(.34,1.56,.64,1) .1s both;
+}
+.elim-skull-shake { animation:elimSkull .55s cubic-bezier(.34,1.56,.64,1) .1s both, elimShake .12s ease .75s 4; }
+.elim-tag {
+  margin-top:14px; font-size:9px; letter-spacing:5px; text-transform:uppercase;
+  color:rgba(255,69,58,.75); font-weight:700;
+  animation:elimName .35s ease .5s both;
+}
+.elim-name {
+  font-size:38px; font-weight:800; color:#fff; text-align:center; line-height:1.1;
+  margin-top:6px;
+  text-shadow:0 0 30px rgba(255,69,58,.8), 0 0 70px rgba(255,69,58,.3);
+  animation:elimName .45s cubic-bezier(.34,1.56,.64,1) .65s both, elimGlitch 4s ease 1.8s infinite;
+}
+.elim-sub {
+  margin-top:8px; font-size:12px; color:rgba(255,255,255,.35); text-align:center;
+  animation:elimName .3s ease .9s both;
+}
+.elim-divider {
+  width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,69,58,.4),transparent);
+  margin:16px 0 0; flex-shrink:0; position:relative; z-index:10;
+}
+.elim-cards {
+  position:relative; z-index:10; overflow-y:auto;
+  background:rgba(4,0,4,.92);
+  padding:14px 14px 110px; flex-shrink:1; min-height:0;
+}
+.elim-card-row {
+  display:flex; align-items:flex-start; gap:12px; padding:10px 14px;
+  background:rgba(255,69,58,.05); border:1px solid rgba(255,69,58,.13);
+  border-radius:var(--rad-sm); margin-bottom:6px;
+  animation:elimCard .3s ease both;
+}
+.elim-continue {
+  position:fixed; bottom:0; left:0; right:0; z-index:9100;
+  padding:12px 16px 30px;
+  background:linear-gradient(0deg,#060006 55%,transparent);
+}
+
 /* ──────────────── ADMIN ROW ──────────────── */
 .adm-row { display:flex; align-items:center; gap:8px; padding:13px 16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:var(--rad-sm); margin-bottom:6px; flex-wrap:wrap; }
 
@@ -595,7 +736,7 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Inter','SF P
 <body>
 
 <!-- BUNKER GATE INTRO -->
-<div id="bunker-gate">
+<div id="bunker-gate" class="hidden">
   <!-- Фоновый свет -->
   <div class="gate-glow-bg"></div>
   <div class="gate-flash"></div>
@@ -769,6 +910,25 @@ const SECRET_CARDS=[
 const SECRET_TYPE_COLORS={vote:"#f0a500",card:"#30d158",protect:"#0a84ff",chaos:"#ff453a",info:"#bf5af2"};
 const SECRET_TYPE_LABELS={vote:"Голосование",card:"Карты",protect:"Защита",chaos:"Хаос",info:"Информация"};
 
+/* ══════════ РОЛИ ══════════ */
+const ROLES=[
+  {id:'leader',icon:'👑',name:'Лидер',color:'#ffd60a',desc:'Твой голос считается дважды. Все знают что ты Лидер только если ты сам раскроешь это.'},
+  {id:'saboteur',icon:'🕷',name:'Саботажник',color:'#ff453a',desc:'Ты хочешь чтобы выжившие не справились. Победишь если в бункер попадут не те люди.'},
+  {id:'medic',icon:'💉',name:'Медик',color:'#30d158',desc:'Один раз за игру можешь спасти любого игрока от исключения — тайно нажав кнопку при голосовании.'},
+  {id:'spy',icon:'🕵️',name:'Шпион',color:'#0a84ff',desc:'Видишь одну скрытую карту каждого игрока. Используй информацию мудро.'},
+  {id:'civilian',icon:'👤',name:'Обычный',color:'var(--tx3)',desc:'Никакой особой роли. Выживи любой ценой.'},
+];
+
+/* ══════════ КОМНАТЫ БУНКЕРА ══════════ */
+const BUNKER_ROOMS=[
+  {id:'med',icon:'🏥',name:'Медпункт',color:'#30d158',bg:'rgba(48,209,88,0.08)',bonus:'Бонус врачам, биологам, химикам: +1 очко защиты',profKeys:['врач','биолог','хирург','медик','химик','фармацевт']},
+  {id:'lab',icon:'🔬',name:'Лаборатория',color:'#0a84ff',bg:'rgba(10,132,255,0.08)',bonus:'Бонус учёным, инженерам, программистам: могут раскрыть +1 карту',profKeys:['учёный','инженер','программист','физик','математик','исследователь']},
+  {id:'farm',icon:'🌱',name:'Ферма',color:'#ffd60a',bg:'rgba(255,214,10,0.08)',bonus:'Бонус агрономам, поварам, биологам: +2 балла к выживанию',profKeys:['агроном','повар','биолог','садовник','ботаник','фермер']},
+  {id:'armory',icon:'⚔️',name:'Оружейная',color:'#ff9f0a',bg:'rgba(255,159,10,0.08)',bonus:'Бонус военным, охранникам, полицейским: голос ×1.5',profKeys:['военный','охранник','полицейский','солдат','офицер','пилот']},
+  {id:'control',icon:'📡',name:'Центр управления',color:'#bf5af2',bg:'rgba(191,90,242,0.08)',bonus:'Бонус программистам, инженерам, хакерам: видят все голоса',profKeys:['программист','хакер','системный','аналитик','оператор']},
+  {id:'storage',icon:'📦',name:'Склад',color:'#ff6b35',bg:'rgba(255,107,53,0.08)',bonus:'Бонус строителям, механикам, водителям: +1 место в бункере',profKeys:['строитель','механик','водитель','слесарь','электрик','сантехник']},
+];
+
 const CARDS=[
   {key:"gender_age",icon:"👤",label:"Пол и возраст"},
   {key:"profession",icon:"💼",label:"Профессия"},
@@ -864,8 +1024,29 @@ function processVotes(game){
     }
   });
 
+  // Лидер (роль): голос ×2
+  alive.forEach(p=>{
+    if(p.role==='leader'&&game.votes?.[p.username]!==undefined&&game.votes?.[p.username]!==null){
+      const tid=game.votes[p.username];
+      if(tally[tid]!==undefined)tally[tid]+=1; // уже +1 базово, добавляем ещё 1
+    }
+  });
+
+  // Сохраняем историю голосований
+  if(game.voteHistory){
+    if(!game.voteLog)game.voteLog={};
+    game.voteLog[`R${game.round}`]={votes:{...game.votes},tally:{...tally}};
+  }
+
   let maxV=0,cands=[];
   Object.entries(tally).forEach(([uid,cnt])=>{if(cnt>maxV){maxV=cnt;cands=[uid];}else if(cnt===maxV&&cnt>0)cands.push(uid);});
+
+  // Медик (роль): спасает одного игрока от исключения
+  if(game.medicSave&&cands.includes(game.medicSave)){
+    cands=cands.filter(c=>c!==game.medicSave);
+  }
+  game.medicSave=null;
+
   // reset secret effects for next round
   game.doubleVote={};game.immunity={};game.extraReveals={};game.secretVote={};
 
@@ -877,7 +1058,7 @@ function processVotes(game){
   game.lastEliminated={userId:ep.userId,name:ep.name,allCards:{...ep.cards}};
   const after=Object.values(game.players).filter(p=>!p.isEliminated);
   if(after.length<=game.bunkerSpots){game.phase='finished';}
-  else{game.phase='playing';game.round++;game.votes={};game.revealedThisRound={};}
+  else{game.phase='playing';game.round++;game.votes={};game.revealedThisRound={};game._autoVotePending=false;game.extraReveals={};}
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -975,12 +1156,13 @@ function ChatView({msgs,me,onSend,title,onClose,extra,extraPadBot=0}){
 ══════════════════════════════════════════════════════════ */
 function AuthScreen({onLogin,toast}){
   const[tab,setTab]=useState('login');
-  const[user,setU]=useState('');
+  const[uname,setU]=useState('');
+  const[dname,setDname]=useState('');
   const[pass,setP]=useState('');
   const[loading,setL]=useState(false);
 
   const go=async()=>{
-    const u=user.trim().toLowerCase(),p=pass.trim();
+    const u=uname.trim().toLowerCase(),p=pass.trim();
     if(u.length<2||u.length>20)return toast('Имя: 2–20 символов','err');
     if(p.length<3)return toast('Пароль: мин. 3 символа','err');
     if(!/^[a-zа-яёA-ZА-ЯЁ0-9_-]+$/i.test(u))return toast('Только буквы, цифры, _ и -','err');
@@ -989,12 +1171,13 @@ function AuthScreen({onLogin,toast}){
       if(tab==='register'){
         const ex=await DB.getUser(u);if(ex){setL(false);return toast('Имя занято','err');}
         const all=await DB.getAllUsers();const first=Object.keys(all).length===0;
-        const nu={userId:u,username:u,password:p,displayName:user.trim(),isAdmin:first,customRank:first?'supreme':null,gamesPlayed:0,gamesWon:0,gamesEliminated:0,createdAt:Date.now()};
-        await DB.setUser(u,nu);toast('✅ Аккаунт создан!','ok');onLogin(nu);
+        const displayName=dname.trim()||u;
+        const nu={userId:u,username:u,password:p,displayName:displayName,isAdmin:first,customRank:first?'supreme':null,gamesPlayed:0,gamesWon:0,gamesEliminated:0,createdAt:Date.now()};
+        await DB.setUser(u,nu);toast('✅ Аккаунт создан!','ok');if(window.triggerGate)window.triggerGate();onLogin(nu);
       }else{
         const usr=await DB.getUser(u);
         if(!usr||usr.password!==p){setL(false);return toast('Неверный логин или пароль','err');}
-        onLogin(usr);
+        if(window.triggerGate)window.triggerGate();onLogin(usr);
       }
     }catch(e){toast('Ошибка соединения','err');console.error(e);}
     setL(false);
@@ -1015,7 +1198,8 @@ function AuthScreen({onLogin,toast}){
           <button className={`tab${tab==='login'?' on':''}`} onClick={()=>setTab('login')}>ВОЙТИ</button>
           <button className={`tab${tab==='register'?' on':''}`} onClick={()=>setTab('register')}>РЕГИСТРАЦИЯ</button>
         </div>
-        <input className="inp" placeholder="Имя пользователя" value={user} onChange={e=>setU(e.target.value)} maxLength={20} autoComplete="off"/>
+        <input className="inp" placeholder="Имя пользователя (логин)" value={uname} onChange={e=>setU(e.target.value)} maxLength={20} autoComplete="off"/>
+        {tab==='register'&&<input className="inp" placeholder="Отображаемое имя (необязательно)" value={dname} onChange={e=>setDname(e.target.value)} maxLength={30} autoComplete="off"/>}
         <input className="inp" type="password" placeholder="Пароль" value={pass} onChange={e=>setP(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()}/>
         <Btn ch={loading?'⏳ ЗАГРУЗКА…':tab==='login'?'⚡ ВОЙТИ В БУНКЕР':'🔑 СОЗДАТЬ АККАУНТ'} onClick={go} disabled={loading}/>
         {tab==='register'&&<div className="mono" style={{fontSize:9,color:'var(--tx3)',marginTop:10,textAlign:'center',letterSpacing:1}}>Первый зарегистрированный — администратор</div>}
@@ -1057,6 +1241,7 @@ function HomeScreen({user,nav}){
         <div className="lbl">ДЕЙСТВИЯ</div>
         <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:4}}>
           <Btn ch="☢ СОЗДАТЬ ИГРУ" onClick={()=>nav('createGame')}/>
+          <Btn ch="🔍 ПОДБОР ИГРОКОВ" onClick={()=>nav('matchmaking')} cls="btn-c"/>
           <Btn ch="🔑 ВОЙТИ ПО КОДУ" onClick={()=>nav('joinGame')} cls="btn-g"/>
           <div className="brow">
             <Btn ch="🏆 РЕЙТИНГ" onClick={()=>nav('leaderboard')} cls="btn-c" sm/>
@@ -1069,16 +1254,118 @@ function HomeScreen({user,nav}){
         {RANKS.filter(r=>!r.adminOnly||user.isAdmin).map(r=>{
           const cur=getRank(user).id===r.id;
           return(
-            <div key={r.id} style={{display:'flex',alignItems:'center',gap:10,padding:'9px 12px',background:cur?'var(--at)':'var(--s1)',border:`1px solid ${cur?r.bdr:'var(--ab)'}`,marginBottom:4,opacity:cur?1:.4,transition:'.2s'}}>
+            <div key={r.id} style={{display:'flex',alignItems:'center',gap:10,padding:'9px 12px',background:cur?'var(--at)':'rgba(255,255,255,0.03)',border:`1px solid ${cur?r.bdr:'rgba(255,255,255,0.07)'}`,borderRadius:'var(--rad-sm)',marginBottom:4,opacity:cur?1:.45,transition:'.2s'}}>
               <span style={{fontSize:18}}>{r.icon}</span>
               <div style={{flex:1}}>
-                <div className="mono" style={{fontSize:10,color:cur?r.color:'var(--tx3)'}}>{r.name}</div>
-                <div className="mono" style={{fontSize:8,color:'var(--tx3)'}}>{r.adminOnly?'Только администраторы':r.min===0?'Начальное звание':`${r.min}+ игр`}</div>
+                <div style={{fontSize:11,fontWeight:600,color:cur?r.color:'var(--tx3)'}}>{r.name}</div>
+                <div style={{fontSize:10,color:'var(--tx3)',marginTop:1}}>{r.adminOnly?'Только администраторы':r.min===0?'Начальное звание':`от ${r.min} игр`}</div>
               </div>
               {cur&&<span className="bdg bdg-a" style={{fontSize:7}}>ТЕКУЩЕЕ</span>}
             </div>
           );
         })}
+
+        {/* ═══════ ИНФОРМАЦИЯ ОБ ИГРЕ ═══════ */}
+        <div className="lbl" style={{marginTop:24}}>ОБ ИГРЕ</div>
+        <div style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad)',padding:16,marginBottom:10}}>
+          <div style={{fontSize:13,color:'var(--tx2)',lineHeight:1.65}}>
+            <b style={{color:'var(--a)'}}>Бункер</b> — социальная игра на выживание. Апокалипсис случился. Осталось одно убежище с ограниченными местами. Игроки раскрывают свои карточки и убеждают остальных, что именно они заслуживают место в бункере.
+            <br/><br/>
+            Каждый раунд игроки <b style={{color:'var(--tx)'}}>раскрывают по 2 карточки</b>, обсуждают и голосуют — кого выгнать. Игра заканчивается, когда оставшихся игроков ≤ числу мест в бункере.
+          </div>
+        </div>
+
+        <div className="lbl">КАК ИГРАТЬ</div>
+        {[
+          ['1','☢','Ведущий создаёт игру, задаёт сценарий апокалипсиса и число мест в бункере'],
+          ['2','🔑','Остальные игроки входят по коду комнаты'],
+          ['3','🃏','Все получают уникальные карточки — профессию, здоровье, хобби, багаж и секретный факт'],
+          ['4','👁','Каждый раунд раскрывай 2 карточки и убеждай остальных взять тебя в бункер'],
+          ['5','🗳','После обсуждения — тайное голосование. Кто набрал больше всего голосов — выбывает'],
+          ['6','🏆','Выжившие, поместившиеся в бункер — победители!'],
+        ].map(([n,icon,text])=>(
+          <div key={n} style={{display:'flex',alignItems:'flex-start',gap:12,padding:'11px 14px',background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.07)',borderRadius:'var(--rad-sm)',marginBottom:6}}>
+            <div style={{width:26,height:26,borderRadius:'50%',background:'var(--at)',border:'1px solid rgba(240,165,0,0.3)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,color:'var(--a)',flexShrink:0}}>{n}</div>
+            <div style={{fontSize:13,color:'var(--tx2)',lineHeight:1.5,paddingTop:3}}><span style={{marginRight:6}}>{icon}</span>{text}</div>
+          </div>
+        ))}
+
+        <div className="lbl">КАРТОЧКИ ПЕРСОНАЖА</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
+          {[
+            ['👤','Пол и возраст','Базовая информация о персонаже'],
+            ['💼','Профессия','Что умеет делать в бункере'],
+            ['🏥','Здоровье','Физическое и психическое состояние'],
+            ['🎯','Хобби','Навыки и увлечения'],
+            ['🎒','Багаж','Что взял с собой'],
+            ['🤫','Секретный факт','Скрытая деталь о персонаже'],
+          ].map(([icon,name,desc])=>(
+            <div key={name} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad)',padding:'12px 12px 10px'}}>
+              <div style={{fontSize:22,marginBottom:6}}>{icon}</div>
+              <div style={{fontSize:12,fontWeight:600,color:'var(--tx)',marginBottom:3}}>{name}</div>
+              <div style={{fontSize:10,color:'var(--tx3)',lineHeight:1.4}}>{desc}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="lbl">🃏 СЕКРЕТНЫЕ КАРТОЧКИ</div>
+        <div style={{background:'rgba(155,89,239,0.08)',border:'1px solid rgba(155,89,239,0.25)',borderRadius:'var(--rad)',padding:16,marginBottom:10}}>
+          <div style={{fontSize:13,color:'var(--tx2)',lineHeight:1.65,marginBottom:12}}>
+            Каждый игрок получает <b style={{color:'var(--p)'}}>одну секретную карточку</b> — уникальную ситуацию или суперспособность, которая действует один раз за игру. Используй её в нужный момент!
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:6}}>
+            {[
+              ['⚡','Двойной удар','Твой голос считается дважды','#f0a500'],
+              ['🛡️','Иммунитет','Нельзя быть выгнанным даже при максимуме голосов','#30d158'],
+              ['🔄','Обмен картой','Меняешь любую карту с другим игроком','#0a84ff'],
+              ['👁️','Шпион','Тайно видишь закрытую карту другого игрока','#bf5af2'],
+              ['↗️','Дополнительное раскрытие','Получаешь +1 раскрытие в этом раунде','#0a84ff'],
+              ['🎲','Рулетка','Все игроки получают случайные карточки заново','#ff9f0a'],
+              ['🔇','Немой','Противник не может голосовать этот раунд','#ff453a'],
+            ].map(([icon,name,desc,color])=>(
+              <div key={name} style={{display:'flex',gap:10,alignItems:'flex-start',padding:'8px 10px',background:'rgba(255,255,255,0.03)',borderRadius:'var(--rad-sm)'}}>
+                <span style={{fontSize:16,flexShrink:0,marginTop:1}}>{icon}</span>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600,color:color||'var(--tx)',marginBottom:2}}>{name}</div>
+                  <div style={{fontSize:10,color:'var(--tx3)',lineHeight:1.4}}>{desc}</div>
+                </div>
+              </div>
+            ))}
+            <div style={{fontSize:10,color:'var(--tx3)',marginTop:4,fontStyle:'italic',textAlign:'center'}}>…и ещё много других секретных карточек!</div>
+          </div>
+        </div>
+
+        <div className="lbl" style={{marginTop:24}}>⚙️ ДОПОЛНИТЕЛЬНЫЕ МЕХАНИКИ</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:14}}>
+          {[
+            {icon:'🎤',name:'Дебаты',desc:'60 сек перед голосованием. Каждый игрок защищает себя по очереди, пока таймер тикает.'},
+            {icon:'📊',name:'История голосований',desc:'После раунда все видят кто за кого голосовал — никаких тайн!'},
+            {icon:'🎭',name:'Роли',desc:'Лидер (x2 голос), Медик (спасает), Саботажник (хочет проиграть), Шпион — раскрываются в финале.'},
+            {icon:'📡',name:'Радиопереговоры',desc:'Приватный чат с любым игроком. Договаривайся тайно прямо во время раунда.'},
+            {icon:'🗺️',name:'Карта бункера',desc:'Комнаты бункера дают бонусы. Медпункт, Лаборатория, Ферма — каждый получает свою.'},
+          ].map(m=>(
+            <div key={m.name} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad-sm)',padding:'14px 12px'}}>
+              <div style={{fontSize:22,marginBottom:6}}>{m.icon}</div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--tx)',marginBottom:4}}>{m.name}</div>
+              <div style={{fontSize:11,color:'var(--tx3)',lineHeight:1.5}}>{m.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="lbl">СОВЕТЫ</div>
+        {[
+          ['💡','Раскрывай сначала сильные карточки — сформируй первое впечатление'],
+          ['🤫','Не спеши с секретной картой — лучший момент — на грани выбывания'],
+          ['👥','Объединяйся с другими игроками против явных угроз'],
+          ['🎭','Можно блефовать — никто не знает твои закрытые карты'],
+        ].map(([icon,text])=>(
+          <div key={text} style={{display:'flex',gap:10,alignItems:'flex-start',padding:'10px 12px',background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)',borderRadius:'var(--rad-sm)',marginBottom:6}}>
+            <span style={{fontSize:15,flexShrink:0}}>{icon}</span>
+            <div style={{fontSize:12,color:'var(--tx2)',lineHeight:1.5}}>{text}</div>
+          </div>
+        ))}
+
+        <div style={{height:8}}/>
       </div>
     </div>
   );
@@ -1386,6 +1673,14 @@ function CreateGameScreen({user,onBack,onCreated,toast}){
   const[adult,setAdult]=useState(false);
   const[globalAdult,setGA]=useState(false);
   const[loading,setL]=useState(false);
+  const[maxRev,setMaxRev]=useState(2);
+  const[autoVote,setAutoVote]=useState(false);
+  const[matchmaking,setMatchmaking]=useState(false);
+  const[debatesOn,setDebates]=useState(false);
+  const[voteHistoryOn,setVoteHistory]=useState(false);
+  const[rolesOn,setRoles]=useState(false);
+  const[radioOn,setRadio]=useState(false);
+  const[bunkerMapOn,setBunkerMap]=useState(false);
 
   useEffect(()=>{
     DB.getSettings().then(s=>{if(s.adultMode)setGA(true);});
@@ -1401,6 +1696,8 @@ function CreateGameScreen({user,onBack,onCreated,toast}){
     await DB.setGame(gid,{
       id:gid,creatorId:user.username,adultMode:adult,apocalypse:ap,
       phase:'lobby',round:1,bunkerSpots:1,
+      maxReveals:maxRev,autoVote,matchmaking,
+      debates:debatesOn,voteHistory:voteHistoryOn,roles:rolesOn,radio:radioOn,bunkerMap:bunkerMapOn,
       players:{[user.username]:{userId:user.username,username:user.username,name:user.displayName||user.username,cards:null,revealed:[],isEliminated:false}},
       votes:{},revealedThisRound:{},eliminated:[],lastEliminated:null,createdAt:Date.now(),
     });
@@ -1436,6 +1733,27 @@ function CreateGameScreen({user,onBack,onCreated,toast}){
             <Tog on={adult} onToggle={()=>setAdult(!adult)} label="🔞 ВЗРОСЛЫЙ РЕЖИМ (18+)" sub="Специальные карты для взрослой компании" dng/>
           </>
         )}
+        <div className="lbl">НАСТРОЙКИ РАУНДА</div>
+        <div style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad)',padding:16,marginBottom:10}}>
+          <div style={{fontSize:13,fontWeight:600,color:'var(--tx)',marginBottom:10}}>🃏 Карт для раскрытия за раунд</div>
+          <div style={{display:'flex',gap:8}}>
+            {[1,2,3,4].map(n=>(
+              <button key={n} onClick={()=>setMaxRev(n)} style={{flex:1,padding:'11px 0',borderRadius:'var(--rad-sm)',border:'none',background:maxRev===n?'var(--a)':'rgba(255,255,255,0.08)',color:maxRev===n?'#000':'var(--tx)',fontFamily:"'Inter',sans-serif",fontSize:17,fontWeight:700,cursor:'pointer',transition:'.15s'}}>
+                {n}
+              </button>
+            ))}
+          </div>
+          <div style={{fontSize:11,color:'var(--tx3)',marginTop:8}}>Сколько карт каждый игрок может открыть за раунд</div>
+        </div>
+        <Tog on={autoVote} onToggle={()=>setAutoVote(v=>!v)} label="🗳 Автоголосование" sub="Голосование начнётся само, как только все выложат карты за раунд"/>
+        <div className="lbl">ПОДБОР ИГРОКОВ</div>
+        <Tog on={matchmaking} onToggle={()=>setMatchmaking(v=>!v)} label="🔍 Открытый подбор" sub="Игру увидят все — любой сможет присоединиться с главного экрана"/>
+        <div className="lbl">⚙️ ДОПОЛНИТЕЛЬНЫЕ МЕХАНИКИ</div>
+        <Tog on={debatesOn} onToggle={()=>setDebates(v=>!v)} label="🎤 Дебаты" sub="Перед голосованием — таймер 60 сек для защитной речи каждого"/>
+        <Tog on={voteHistoryOn} onToggle={()=>setVoteHistory(v=>!v)} label="📊 История голосований" sub="После раунда все видят кто за кого голосовал"/>
+        <Tog on={rolesOn} onToggle={()=>setRoles(v=>!v)} label="🎭 Роли" sub="Лидер, Саботажник, Медик — скрытые роли раскрываются в финале"/>
+        <Tog on={radioOn} onToggle={()=>setRadio(v=>!v)} label="📡 Радиопереговоры" sub="Приватный чат между любыми двумя игроками во время раунда"/>
+        <Tog on={bunkerMapOn} onToggle={()=>setBunkerMap(v=>!v)} label="🗺️ Карта бункера" sub="Комнаты бункера дают бонусы игрокам с подходящей профессией"/>
       </div>
       <div className="fixbot" style={{bottom:0}}>
         <Btn ch={loading?'⏳ СОЗДАНИЕ…':'☢ СОЗДАТЬ ИГРУ'} onClick={create} disabled={loading||!sel}/>
@@ -1447,6 +1765,88 @@ function CreateGameScreen({user,onBack,onCreated,toast}){
 /* ══════════════════════════════════════════════════════════
    JOIN GAME
 ══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   MATCHMAKING SCREEN
+══════════════════════════════════════════════════════════ */
+function MatchmakingScreen({user,onBack,onJoined,toast}){
+  const[games,setGames]=useState({});
+  const[joining,setJoining]=useState(null);
+
+  useEffect(()=>{
+    const ref=db.ref('games');
+    const handler=ref.on('value',snap=>{
+      const all=snap.val()||{};
+      // Показываем только lobby-игры с matchmaking=true, где игрока ещё нет
+      const open={};
+      Object.values(all).forEach(g=>{
+        if(g.phase==='lobby'&&g.matchmaking&&!g.players?.[user.username])
+          open[g.id]=g;
+      });
+      setGames(open);
+    });
+    return()=>ref.off('value',handler);
+  },[]);
+
+  const join=async(gid)=>{
+    if(joining)return;
+    setJoining(gid);
+    const g=await DB.getGame(gid);
+    if(!g||g.phase!=='lobby'){toast('Игра уже началась','err');setJoining(null);return;}
+    if(g.players?.[user.username]){onJoined(gid);return;}
+    await DB.updateGame(gid,{[`players/${user.username}`]:{userId:user.username,username:user.username,name:user.displayName||user.username,cards:null,revealed:[],isEliminated:false}});
+    setJoining(null);
+    onJoined(gid);
+  };
+
+  const list=Object.values(games).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  return(
+    <div className="sc">
+      <HZ/>
+      <div className="tb"><BackBtn onClick={onBack}/><div className="tb-title">ПОДБОР ИГРОКОВ</div><div style={{fontSize:11,color:'var(--tx3)',fontWeight:500}}>{list.length} игр</div></div>
+      <div className="scr" style={{paddingBottom:20}}>
+        {list.length===0?(
+          <div style={{textAlign:'center',padding:'60px 20px'}}>
+            <div style={{fontSize:48,marginBottom:16}}>🔍</div>
+            <div style={{fontSize:17,fontWeight:600,color:'var(--tx)',marginBottom:8}}>Нет открытых игр</div>
+            <div style={{fontSize:13,color:'var(--tx3)',lineHeight:1.6}}>Создайте игру с режимом «Открытый подбор», чтобы любой мог присоединиться</div>
+            <div style={{marginTop:24}}><Btn ch="☢ СОЗДАТЬ ИГРУ" onClick={()=>onBack()} cls="btn-p" sm/></div>
+          </div>
+        ):list.map(g=>{
+          const players=Object.values(g.players||{});
+          const ap=g.apocalypse||{};
+          const isJoining=joining===g.id;
+          return(
+            <div key={g.id} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'var(--rad)',padding:16,marginBottom:10}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+                <span style={{fontSize:28}}>{ap.emoji||'☢'}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:15,fontWeight:700,color:'var(--tx)'}}>{ap.name||'Игра'}</div>
+                  <div style={{fontSize:11,color:'var(--tx3)',marginTop:2}}>Создатель: {g.creatorId} · {players.length} игрок{players.length===1?'':'а'}</div>
+                </div>
+                {g.adultMode&&<span style={{fontSize:10,color:'var(--r)',background:'rgba(255,69,58,0.12)',borderRadius:6,padding:'2px 8px',fontWeight:700}}>18+</span>}
+              </div>
+              <div style={{display:'flex',gap:6,alignItems:'center',marginBottom:12,flexWrap:'wrap'}}>
+                <span style={{fontSize:11,color:'var(--tx3)'}}>🃏 {g.maxReveals||2} карты/раунд</span>
+                {g.autoVote&&<span style={{fontSize:11,color:'var(--g)',background:'rgba(48,209,88,0.1)',borderRadius:6,padding:'2px 8px',fontWeight:600}}>🗳 Авто-голос</span>}
+              </div>
+              <div style={{display:'flex',gap:6,marginBottom:12,flexWrap:'wrap'}}>
+                {players.slice(0,8).map(p=>(
+                  <div key={p.username} style={{fontSize:11,color:'var(--tx2)',background:'rgba(255,255,255,0.07)',borderRadius:20,padding:'3px 10px'}}>{p.name}</div>
+                ))}
+                {players.length>8&&<div style={{fontSize:11,color:'var(--tx3)',padding:'3px 6px'}}>+{players.length-8}</div>}
+              </div>
+              <button onClick={()=>join(g.id)} disabled={!!isJoining} style={{width:'100%',padding:'12px',borderRadius:'var(--rad-sm)',border:'none',background:isJoining?'rgba(255,255,255,0.1)':'var(--a)',color:isJoining?'var(--tx3)':'#000',fontSize:14,fontWeight:700,cursor:isJoining?'not-allowed':'pointer',transition:'.2s',fontFamily:"'Inter',sans-serif"}}>
+                {isJoining?'⏳ Вхожу…':'⚡ ПРИСОЕДИНИТЬСЯ'}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function JoinGameScreen({user,onBack,onJoined,toast}){
   const[code,setC]=useState('');
   const[loading,setL]=useState(false);
@@ -1514,7 +1914,22 @@ function LobbyScreen({gameId,user,onBack,onStarted,toast}){
     const useAdult=!!(g.adultMode&&settings.adultMode);
     const up={};
     pl.forEach(p=>{up[p.username]={...p,cards:mkCards(useAdult),revealed:[],isEliminated:false};});
-    const newGame={...g,players:up,bunkerSpots:Math.ceil(pl.length/2),phase:'playing',round:1,votes:{},revealedThisRound:{},eliminated:[],lastEliminated:null,chat:g.chat||null};
+    // Раздача ролей если включено
+    if(g.roles){
+      const rolePool=[...ROLES.filter(r=>r.id!=='civilian')];
+      const shuffled=[...rolePool].sort(()=>Math.random()-.5);
+      pl.forEach((p,i)=>{
+        const role=shuffled[i]||{id:'civilian',icon:'👤',name:'Обычный',color:'var(--tx3)',desc:'Никакой особой роли. Выживи любой ценой.'};
+        up[p.username].role=role.id;
+      });
+    }
+    // Раздача комнат бункера если включено (храним ОТДЕЛЬНО от players!)
+    let roomAssignData={};
+    if(g.bunkerMap){
+      const rooms=[...BUNKER_ROOMS].sort(()=>Math.random()-.5).slice(0,Math.min(BUNKER_ROOMS.length,pl.length));
+      pl.forEach((p,i)=>{ roomAssignData[p.username]=rooms[i%rooms.length].id; });
+    }
+    const newGame={...g,players:up,bunkerSpots:Math.ceil(pl.length/2),phase:'playing',round:1,votes:{},revealedThisRound:{},eliminated:[],lastEliminated:null,chat:g.chat||null,voteLog:g.voteLog||{},roomAssign:roomAssignData};
     await DB.setGame(gameId,newGame);
     await Promise.all(pl.map(p=>DB.updateUser(p.username,{gamesPlayed:firebase.database.ServerValue.increment(1)})));
   };
@@ -1676,6 +2091,60 @@ function GameWrapper({gameId,user,onExit,toast}){
     return unsub;
   },[gameId,showChat]);
 
+  // Автоголосование: если включено и все живые игроки выложили все карты — запускаем голосование
+  // ВАЖНО: useEffect должен быть ДО любых early return
+  useEffect(()=>{
+    if(!game||game.phase!=='playing'||!game.autoVote||game.creatorId!==user.username)return;
+    const aliveP=Object.values(game.players||{}).filter(p=>!p.isEliminated);
+    const allDone=aliveP.every(p=>{
+      const done=(game.revealedThisRound||{})[p.username]||0;
+      return done>=(game.maxReveals||2);
+    });
+    if(allDone&&aliveP.length>1&&!game._autoVotePending){
+      if(game.debates){
+        DB.updateGame(gameId,{phase:'debates',debateStart:Date.now(),votes:{},_autoVotePending:true});
+      } else {
+        DB.updateGame(gameId,{phase:'voting',votes:{},_autoVotePending:true});
+      }
+    }
+  },[game]);
+
+  // Дебаты: автопереход в голосование через 60 сек (только создатель)
+  useEffect(()=>{
+    if(!game||game.phase!=='debates'||game.creatorId!==user.username)return;
+    const elapsed=Date.now()-(game.debateStart||Date.now());
+    const remaining=Math.max(0,60000-elapsed);
+    const t=setTimeout(()=>{
+      DB.updateGame(gameId,{phase:'voting',votes:{}});
+    },remaining);
+    return()=>clearTimeout(t);
+  },[game?.phase,game?.debateStart]);
+
+  // Радиопереговоры — state ОБЯЗАТЕЛЬНО до early return
+  const[radioTarget,setRadioTarget]=useState(null);
+  const[radioMsgs,setRadioMsgs]=useState([]);
+  const[radioInput,setRadioInput]=useState('');
+  useEffect(()=>{
+    if(!radioTarget||!gameId)return;
+    const radioKey=[user.username,radioTarget].sort().join('_');
+    const ref=DB.db.ref(`radioChats/${gameId}/${radioKey}`);
+    const cb=ref.on('value',snap=>{
+      const d=snap.val();
+      setRadioMsgs(d?Object.values(d).sort((a,b)=>a.ts-b.ts):[]);
+    });
+    return()=>ref.off('value',cb);
+  },[radioTarget,gameId]);
+
+  // Таймер дебатов — ПЕРЕД early return (правила хуков React)
+  const[debateTimeLeft,setDebateTimeLeft]=useState(60);
+  useEffect(()=>{
+    if(!game||game.phase!=='debates')return;
+    const tick=()=>setDebateTimeLeft(Math.max(0,60-Math.floor((Date.now()-(game.debateStart||Date.now()))/1000)));
+    tick();
+    const t=setInterval(tick,1000);
+    return()=>clearInterval(t);
+  },[game?.phase,game?.debateStart]);
+
   if(!game)return<div className="sc"><Spin/></div>;
 
   // Game chat full overlay
@@ -1697,6 +2166,8 @@ function GameWrapper({gameId,user,onExit,toast}){
   const revLeft=(maxRev+extraRev)-revDone;
   const mySecretCard=me?.cards?.secret?SECRET_CARDS.find(s=>s.id===me.cards.secret):null;
   const mySecretUsed=!!(game.usedSecrets||{})[user.username];
+
+  // debateTimeLeft обновляется выше (до early return)
 
   const useSecretCard=async(sc)=>{
     if(!me||me.isEliminated)return toast('Вы выбыли','err');
@@ -1738,12 +2209,23 @@ function GameWrapper({gameId,user,onExit,toast}){
   const doReveal=async(k)=>{
     if(!me||me.isEliminated)return;
     if(me.revealed?.includes(k))return toast('Уже раскрыта','err');
-    if(revLeft<=0)return toast(`Лимит: ${maxRev}','err`);
+    if(revLeft<=0)return toast(`Лимит: ${maxRev} карт за раунд`,'err');
     const nr=[...(me.revealed||[]),k];
     await DB.updateGame(gameId,{[`players/${user.username}/revealed`]:nr,[`revealedThisRound/${user.username}`]:revDone+1});
     toast('✅ Карта раскрыта!','ok');setSub('round');
   };
-  const startVote=async()=>{if(game.phase!=='playing')return;await DB.updateGame(gameId,{phase:'voting',votes:{}});setSelVote(undefined);toast('🗳 Голосование началось!','ok');};
+  const startVote=async()=>{
+    if(game.phase!=='playing')return;
+    if(game.debates){
+      // Сначала дебаты — фаза 'debates' на 60 секунд
+      await DB.updateGame(gameId,{phase:'debates',debateStart:Date.now(),votes:{}});
+      toast('🎤 Дебаты начались! 60 секунд на защиту','ok');
+    } else {
+      await DB.updateGame(gameId,{phase:'voting',votes:{}});
+      setSelVote(undefined);
+      toast('🗳 Голосование началось!','ok');
+    }
+  };
   const castVote=async(tid)=>{
     if(game.phase!=='voting')return;
     if((game.votes||{})[user.username]!==undefined)return toast('Вы уже проголосовали','err');
@@ -1895,37 +2377,56 @@ function GameWrapper({gameId,user,onExit,toast}){
   /* ELIM */
   if(sub==='elim'){
     const ep=game.lastEliminated;
-    const nextSub=game.phase==='finished'?'over':game.phase==='voting'?'vote':'round';
+    const nextSub=game.phase==='finished'?'over':game.phase==='voting'?'vote':game.phase==='debates'?'debates':'round';
+    const elimRound=game.round>1?game.round-1:1;
+    const secretCard=ep?.allCards?.secret?SECRET_CARDS.find(s=>s.id===ep.allCards.secret):null;
     return(
-      <div className="sc">
-        <div className="hz-red"/>
-        <div className="tb"><div className="tb-title" style={{color:'var(--r)'}}>ИСКЛЮЧЕНИЕ</div><div className="mono" style={{fontSize:10,color:'var(--tx3)'}}>РА УНД {game.round>1?game.round-1:1}</div></div>
-        <div className="scr-raw" style={{paddingBottom:90}}>
-          <div style={{textAlign:'center',padding:'30px 16px 20px'}}>
-            <div style={{fontSize:64,animation:'shake .25s ease infinite alternate'}}>💀</div>
-            <div style={{fontFamily:"'Inter',sans-serif",fontSize:13,letterSpacing:1,color:'var(--r)',marginTop:12,animation:'flicker 2s infinite'}}>☠ ИСКЛЮЧЁН ИЗ БУНКЕРА ☠</div>
-            <div style={{fontFamily:"'Inter',sans-serif",fontSize:36,letterSpacing:3,color:'var(--tx)',marginTop:4,textShadow:'0 0 20px rgba(232,53,74,.4)'}}>{ep?.name||'—'}</div>
-          </div>
-          <div style={{height:1,background:'var(--rb)',margin:'0 0 12px'}}/>
-          <div className="lbl">ВСЕ КАРТЫ ВЫБЫВШЕГО</div>
-          {ep&&CARDS.filter(c=>c.key!=='secret').map(({key,icon,label})=>(
-            <div key={key} className="elim-row">
-              <div style={{fontSize:16,flexShrink:0,marginTop:1}}>{icon}</div>
-              <div><div className="mono" style={{fontSize:8,letterSpacing:2,color:'var(--tx3)',textTransform:'uppercase'}}>{label}</div><div style={{fontSize:12,color:'var(--tx)',marginTop:2}}>{ep.allCards?.[key]||'—'}</div></div>
+      <div className="elim-screen">
+        {/* Фоновые эффекты */}
+        <div className="elim-flash"/>
+        <div className="elim-scanlines"/>
+        <div className="elim-vignette"/>
+        <div className="elim-scanner"/>
+
+        {/* Герой — череп + имя */}
+        <div className="elim-hero">
+          <div className="elim-skull elim-skull-shake">💀</div>
+          <div className="elim-tag">☠ исключён из бункера ☠</div>
+          <div className="elim-name">{ep?.name||'—'}</div>
+          <div className="elim-sub">Раунд {elimRound} · Голосов: {Object.values(game.votes||{}).filter(v=>v===ep?.userId).length}</div>
+          <div className="elim-divider"/>
+        </div>
+
+        {/* Карты выбывшего */}
+        <div className="elim-cards">
+          <div style={{fontSize:9,letterSpacing:3,color:'rgba(255,69,58,.6)',textTransform:'uppercase',fontWeight:700,marginBottom:10}}>— Все карты —</div>
+          {ep&&CARDS.filter(c=>c.key!=='secret').map(({key,icon,label},i)=>(
+            <div key={key} className="elim-card-row" style={{animationDelay:`${0.9+i*0.08}s`}}>
+              <div style={{fontSize:20,flexShrink:0,filter:'drop-shadow(0 0 8px rgba(255,69,58,.5))'}}>{icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:8,letterSpacing:2,color:'rgba(255,69,58,.5)',textTransform:'uppercase',marginBottom:3}}>{label}</div>
+                <div style={{fontSize:13,color:'#fff',fontWeight:500}}>{ep.allCards?.[key]||'—'}</div>
+              </div>
             </div>
           ))}
-          {ep?.allCards?.secret&&(()=>{
-            const sc=SECRET_CARDS.find(s=>s.id===ep.allCards.secret);
-            if(!sc)return null;
-            return(
-              <div style={{background:`linear-gradient(135deg,${sc.color}18,${sc.color}08)`,border:`1px solid ${sc.color}44`,borderRadius:'var(--rad-sm)',padding:14,marginBottom:6}}>
-                <div style={{fontSize:11,fontWeight:700,color:sc.color,marginBottom:4}}>🃏 Секретная карта: {sc.title}</div>
-                <div style={{fontSize:12,color:'var(--tx)',lineHeight:1.4}}>{sc.icon} {sc.desc}</div>
-              </div>
-            );
-          })()}
+          {secretCard&&(
+            <div style={{background:`linear-gradient(135deg,${secretCard.color}22,${secretCard.color}08)`,border:`1px solid ${secretCard.color}55`,borderRadius:'var(--rad-sm)',padding:14,marginTop:4,animation:'elimCard .3s ease 1.5s both'}}>
+              <div style={{fontSize:10,fontWeight:700,color:secretCard.color,marginBottom:6,letterSpacing:1}}>🃏 СЕКРЕТНАЯ КАРТА</div>
+              <div style={{fontSize:18,marginBottom:4}}>{secretCard.icon} <span style={{fontSize:14,fontWeight:700,color:'#fff'}}>{secretCard.title}</span></div>
+              <div style={{fontSize:12,color:'rgba(255,255,255,.6)',lineHeight:1.5}}>{secretCard.desc}</div>
+            </div>
+          )}
         </div>
-        <div className="fixbot"><Btn cls="btn-g" ch="ПРОДОЛЖИТЬ →" onClick={()=>setSub(nextSub)}/></div>
+
+        {/* Кнопка продолжить */}
+        <div className="elim-continue">
+          <button onClick={()=>setSub(nextSub)} style={{
+            width:'100%',padding:'15px',border:'none',borderRadius:'var(--rad)',cursor:'pointer',
+            background:'linear-gradient(135deg,rgba(255,69,58,.2),rgba(255,69,58,.08))',
+            border:'1px solid rgba(255,69,58,.3)',color:'#fff',fontSize:15,fontWeight:700,
+            letterSpacing:2,textTransform:'uppercase',transition:'.2s',
+          }}>ПРОДОЛЖИТЬ →</button>
+        </div>
       </div>
     );
   }
@@ -1934,30 +2435,298 @@ function GameWrapper({gameId,user,onExit,toast}){
   if(sub==='over'){
     const surv=Object.values(game.players||{}).filter(p=>!p.isEliminated);
     const dead=Object.values(game.players||{}).filter(p=>p.isEliminated);
+    const iWon=surv.some(p=>p.username===user.username);
+    return(
+      <div className="win-screen">
+        <div className="win-rays"/>
+        <div className="win-scanlines"/>
+        <div className="win-vignette"/>
+        <div className="win-flash"/>
+        <div className="win-hero">
+          <div className="win-trophy">{iWon?'🏆':'🏚'}</div>
+          <div style={{marginTop:16,fontSize:10,letterSpacing:6,textTransform:'uppercase',color:'rgba(48,209,88,.6)',fontWeight:700,animation:'winFadeIn .5s ease .3s both'}}>
+            {ap.emoji} {ap.name}
+          </div>
+          <div style={{fontSize:38,fontWeight:800,letterSpacing:2,color:'#30d158',textShadow:'0 0 40px rgba(48,209,88,.6)',marginTop:8,animation:'winFadeIn .5s ease .45s both'}}>
+            {iWon?'ВЫЖИЛ!':'ИГРА ОКОНЧЕНА'}
+          </div>
+          <div style={{fontSize:13,color:'rgba(255,255,255,.4)',marginTop:6,animation:'winFadeIn .5s ease .6s both'}}>
+            {surv.length} из {Object.keys(game.players||{}).length} попали в бункер
+          </div>
+          <div style={{display:'flex',gap:6,marginTop:18,flexWrap:'wrap',justifyContent:'center',animation:'winFadeIn .5s ease .75s both'}}>
+            {surv.map((p,i)=>(
+              <div key={p.username} style={{display:'flex',alignItems:'center',gap:6,padding:'6px 12px',background:'rgba(48,209,88,.12)',border:'1px solid rgba(48,209,88,.3)',borderRadius:20,animationDelay:`${0.75+i*0.1}s`}}>
+                <span style={{fontSize:16}}>🏆</span>
+                <span style={{fontSize:13,fontWeight:600,color:'#30d158'}}>{p.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="win-cards">
+          <div style={{fontSize:10,letterSpacing:3,color:'rgba(255,255,255,.3)',textTransform:'uppercase',fontWeight:700,textAlign:'center',marginBottom:12}}>В БУНКЕРЕ</div>
+          {surv.map((p,i)=>(
+            <div key={p.username} className="win-player-card" style={{animationDelay:`${0.9+i*0.12}s`}}>
+              <div style={{fontSize:28,filter:'drop-shadow(0 0 10px rgba(48,209,88,.6))'}}>🏆</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:15,fontWeight:700,color:'#30d158'}}>{p.name}</div>
+                <div style={{fontSize:11,color:'rgba(255,255,255,.4)',marginTop:2}}>{p.cards?.profession||'—'}</div>
+              </div>
+              {p.username===user.username&&<div style={{fontSize:9,letterSpacing:2,color:'#30d158',fontWeight:700,background:'rgba(48,209,88,.15)',padding:'3px 8px',borderRadius:8}}>ВЫ</div>}
+            </div>
+          ))}
+          {dead.length>0&&(
+            <>
+              <div style={{fontSize:10,letterSpacing:3,color:'rgba(255,255,255,.3)',textTransform:'uppercase',fontWeight:700,textAlign:'center',margin:'14px 0 10px'}}>ВЫБЫЛИ</div>
+              {dead.map((p,i)=>(
+                <div key={p.username} className="dead-player-card" style={{animationDelay:`${1.1+i*0.08}s`}}>
+                  <div style={{fontSize:22,filter:'grayscale(1)',opacity:.5}}>💀</div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,color:'rgba(255,255,255,.3)',textDecoration:'line-through'}}>{p.name}</div>
+                    <div style={{fontSize:10,color:'rgba(255,255,255,.2)',marginTop:1}}>{p.cards?.profession||'—'}</div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+        <div style={{position:'fixed',bottom:0,left:0,right:0,padding:'12px 16px 28px',background:'linear-gradient(0deg,#00060a 60%,transparent)',zIndex:20}}>
+          <Btn cls="btn-gr" ch="↩ ВЕРНУТЬСЯ В МЕНЮ" onClick={onExit}/>
+        </div>
+      </div>
+    );
+  }
+
+  /* DEBATES */
+  if(sub==='debates'||(game.phase==='debates'&&sub!=='elim'&&sub!=='over')){
+    const debateTime=debateTimeLeft;
+    const alive=Object.values(game.players||{}).filter(p=>!p.isEliminated);
+    const timePerPlayer=Math.max(1,Math.floor(60/alive.length));
+    const elapsed=60-debateTime;
+    const currentSpeakerIdx=Math.min(alive.length-1,Math.floor(elapsed/timePerPlayer));
+    const currentSpeaker=alive[currentSpeakerIdx];
+    const timeInThisSlot=elapsed%timePerPlayer;
+    const slotRemaining=timePerPlayer-timeInThisSlot;
+    const isMyTurn=currentSpeaker&&currentSpeaker.username===user.username;
     return(
       <div className="sc">
-        <div className="tb"><div className="tb-title" style={{color:'var(--g)'}}>ИТОГ ИГРЫ</div></div>
-        <div className="scr-raw" style={{paddingBottom:40}}>
-          <div style={{padding:'32px 16px 20px',textAlign:'center'}}>
-            <div style={{fontSize:52,marginBottom:8}}>🏚</div>
-            <div style={{fontFamily:"'Inter',sans-serif",fontSize:48,letterSpacing:4,color:'var(--g)',textShadow:'0 0 30px rgba(0,212,138,.4)'}}>ВЫЖИВШИЕ</div>
-            <div className="mono" style={{fontSize:10,letterSpacing:2,color:'var(--tx3)',marginTop:4}}>{ap.emoji} {ap.name}</div>
+        <div className="tb"><div className="tb-title">🎤 ДЕБАТЫ</div>
+          <div style={{fontFamily:"'Inter',sans-serif",fontSize:11,color:'var(--tx3)'}}>Раунд {game.round}</div>
+        </div>
+        <div className="scr">
+          {/* Большой таймер */}
+          <div style={{textAlign:'center',padding:'28px 0 20px'}}>
+            <div style={{fontSize:72,fontWeight:800,color:debateTime<=10?'var(--r)':debateTime<=30?'#ff9f0a':'var(--g)',lineHeight:1,fontVariantNumeric:'tabular-nums',transition:'color .3s'}}>{String(debateTime).padStart(2,'0')}</div>
+            <div style={{fontSize:12,color:'var(--tx3)',marginTop:6,fontWeight:500}}>секунд на защиту</div>
+            {/* Timer bar shrinks from full to 0 over 60 seconds */}
+            <div style={{width:'220px',height:4,background:'rgba(255,255,255,0.1)',borderRadius:2,margin:'12px auto 0',overflow:'hidden'}}>
+              <div style={{width:Math.max(0,(debateTime/60)*100)+'%',height:'100%',background:debateTime<=10?'var(--r)':debateTime<=30?'#ff9f0a':'var(--g)',borderRadius:2,transition:'width .5s linear,background .3s'}}/>
+            </div>
           </div>
-          <div className="lbl">🏆 В БУНКЕРЕ</div>
-          {surv.map(p=>(
-            <div key={p.username} className="surv-row">
-              <div style={{fontSize:22}}>🏆</div>
-              <div><div style={{fontSize:15,fontWeight:700,color:'var(--g)'}}>{p.name}</div><div style={{fontSize:11,color:'var(--tx3)',marginTop:2}}>{p.cards?.profession||'—'}</div></div>
+          {/* Current speaker banner */}
+          {isMyTurn&&(
+            <div style={{background:'rgba(48,209,88,0.12)',border:'1px solid rgba(48,209,88,0.4)',borderRadius:'var(--rad-sm)',padding:'12px 16px',marginBottom:14,textAlign:'center',boxShadow:'0 0 18px rgba(48,209,88,0.2)'}}>
+              <div style={{fontSize:20,marginBottom:4}}>🎙️</div>
+              <div style={{fontSize:14,fontWeight:700,color:'var(--g)'}}>Ваша очередь говорить!</div>
+              <div style={{fontSize:12,color:'var(--tx3)',marginTop:4}}>Осталось {slotRemaining} сек</div>
+            </div>
+          )}
+          <div className="lbl">🗣 ПОРЯДОК ВЫСТУПЛЕНИЙ</div>
+          {alive.map((p,i)=>{
+            const isCurrent=i===currentSpeakerIdx;
+            const isMe=p.username===user.username;
+            return(
+              <div key={p.username} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:isCurrent?'rgba(48,209,88,0.08)':isMe?'rgba(240,165,0,0.07)':'rgba(255,255,255,0.04)',border:`1px solid ${isCurrent?'rgba(48,209,88,0.5)':isMe?'rgba(240,165,0,0.25)':'rgba(255,255,255,0.08)'}`,borderRadius:'var(--rad-sm)',marginBottom:6,boxShadow:isCurrent?'0 0 12px rgba(48,209,88,0.25)':'none',transition:'border .3s,box-shadow .3s,background .3s'}}>
+                <div style={{width:28,height:28,borderRadius:'50%',background:isCurrent?'rgba(48,209,88,0.2)':'rgba(255,255,255,0.08)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:isCurrent?18:12,fontWeight:700,color:isCurrent?'var(--g)':'var(--tx3)',flexShrink:0,transition:'background .3s,color .3s'}}>{isCurrent?'🎙️':i+1}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:14,fontWeight:600,color:isCurrent?'var(--g)':isMe?'var(--a)':'var(--tx)'}}>{p.name}{isMe&&' (вы)'}</div>
+                  <div style={{fontSize:11,color:'var(--tx3)'}}>@{p.username}{isCurrent&&<span style={{marginLeft:6,color:'var(--g)',fontWeight:600}}> · {slotRemaining} сек</span>}</div>
+                </div>
+                {isCurrent&&<div style={{fontSize:11,fontWeight:700,color:'var(--g)',background:'rgba(48,209,88,0.15)',border:'1px solid rgba(48,209,88,0.3)',borderRadius:6,padding:'3px 8px'}}>говорит</div>}
+              </div>
+            );
+          })}
+          <div style={{background:'rgba(240,165,0,0.06)',border:'1px solid rgba(240,165,0,0.15)',borderRadius:'var(--rad-sm)',padding:'14px 16px',marginTop:14}}>
+            <div style={{fontSize:13,fontWeight:600,color:'var(--a)',marginBottom:6}}>💡 Правила дебатов</div>
+            <div style={{fontSize:12,color:'var(--tx3)',lineHeight:1.6}}>Каждый игрок получает {timePerPlayer} сек чтобы объяснить почему он нужен в бункере. Убеди других в своей ценности до начала голосования!</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* RADIO */
+  if(sub==='radio'&&game.radio){
+    const alive=Object.values(game.players||{}).filter(p=>!p.isEliminated&&p.username!==user.username);
+    const sendRadio=async()=>{
+      if(!radioInput.trim()||!radioTarget)return;
+      const radioKey=[user.username,radioTarget].sort().join('_');
+      await DB.db.ref(`radioChats/${gameId}/${radioKey}`).push({from:user.username,name:user.displayName||user.username,text:radioInput.trim(),ts:Date.now()});
+      setRadioInput('');
+    };
+    return(
+      <div style={{position:'fixed',inset:0,background:'var(--bg)',display:'flex',flexDirection:'column',zIndex:200,animation:'fadeUp .2s ease'}}>
+        <div className="tb"><BackBtn onClick={()=>setSub('round')}/><div className="tb-title">📡 РАДИО</div></div>
+        {!radioTarget?(
+          <div style={{flex:1,overflowY:'auto',padding:16}}>
+            <div className="lbl">ВЫБЕРИ СОБЕСЕДНИКА</div>
+            {alive.length===0
+              ?<div style={{textAlign:'center',padding:28,color:'var(--tx3)',fontSize:13}}>Нет других живых игроков</div>
+              :alive.map(p=>(
+                <div key={p.username} onClick={()=>setRadioTarget(p.username)}
+                  style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad-sm)',marginBottom:8,cursor:'pointer',transition:'.18s'}}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor='rgba(10,132,255,0.4)'}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor='rgba(255,255,255,0.08)'}>
+                  <div style={{fontSize:28}}>📡</div>
+                  <div><div style={{fontSize:14,fontWeight:600}}>{p.name}</div><div style={{fontSize:11,color:'var(--tx3)'}}>@{p.username}</div></div>
+                </div>
+              ))
+            }
+          </div>
+        ):(
+          <>
+            <div style={{padding:'10px 16px',background:'rgba(10,132,255,0.08)',borderBottom:'1px solid rgba(10,132,255,0.2)',display:'flex',alignItems:'center',gap:10,flexShrink:0}}>
+              <button onClick={()=>setRadioTarget(null)} style={{background:'none',border:'none',color:'var(--tx3)',cursor:'pointer',fontSize:20,lineHeight:1}}>←</button>
+              <div style={{fontSize:14,fontWeight:600,color:'#0a84ff'}}>📡 {(game.players||{})[radioTarget]?.name||radioTarget}</div>
+              <div style={{fontSize:10,color:'var(--tx3)',marginLeft:'auto'}}>🔒 приватный канал</div>
+            </div>
+            <div style={{flex:1,overflowY:'auto',padding:14,display:'flex',flexDirection:'column',gap:8}}>
+              {radioMsgs.length===0&&<div style={{textAlign:'center',color:'var(--tx3)',fontSize:12,marginTop:32,lineHeight:1.8}}>📡 Канал открыт<br/>Говорите тайно</div>}
+              {radioMsgs.map((m,i)=>(
+                <div key={i} className={`bubble ${m.from===user.username?'me':'other'}`}>
+                  {m.from!==user.username&&<div className="bubble-from">{m.name}</div>}
+                  {m.text}
+                </div>
+              ))}
+            </div>
+            <div style={{display:'flex',gap:8,padding:'10px 14px',background:'rgba(255,255,255,0.04)',borderTop:'1px solid rgba(255,255,255,0.08)',flexShrink:0}}>
+              <input className="inp" style={{marginBottom:0,flex:1}} value={radioInput} onChange={e=>setRadioInput(e.target.value)}
+                onKeyDown={e=>e.key==='Enter'&&sendRadio()} placeholder="Тайное сообщение..."/>
+              <button className="chat-send" style={{borderRadius:'var(--rad-sm)'}} onClick={sendRadio}>→</button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  /* BUNKER MAP */
+  if(sub==='map'&&game.bunkerMap){
+    const roomAssign=game.roomAssign||{};
+    const myRoomId=roomAssign[user.username];
+    const myRoom=myRoomId?BUNKER_ROOMS.find(r=>r.id===myRoomId):null;
+    const alive=Object.values(game.players||{}).filter(p=>!p.isEliminated);
+    return(
+      <div className="sc">
+        <div className="tb"><BackBtn onClick={()=>setSub('round')}/><div className="tb-title">🗺️ БУНКЕР</div></div>
+        <div className="scr">
+          {myRoom&&(
+            <div style={{background:myRoom.bg,border:`1px solid ${myRoom.color}44`,borderRadius:'var(--rad)',padding:'16px',marginBottom:16,textAlign:'center'}}>
+              <div style={{fontSize:36,marginBottom:6}}>{myRoom.icon}</div>
+              <div style={{fontSize:16,fontWeight:700,color:myRoom.color,marginBottom:4}}>Ваша комната: {myRoom.name}</div>
+              <div style={{fontSize:12,color:'var(--tx3)',lineHeight:1.5}}>{myRoom.bonus}</div>
+            </div>
+          )}
+          <div className="lbl">🏗️ СХЕМА БУНКЕРА</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:16}}>
+            {BUNKER_ROOMS.map(room=>{
+              const roomPlayers=alive.filter(p=>roomAssign[p.username]===room.id);
+              const isMyRoom=myRoomId===room.id;
+              return(
+                <div key={room.id} style={{background:isMyRoom?room.bg:'rgba(255,255,255,0.03)',border:`1px solid ${isMyRoom?room.color+'66':'rgba(255,255,255,0.08)'}`,borderRadius:'var(--rad-sm)',padding:'12px',transition:'.2s'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                    <span style={{fontSize:20}}>{room.icon}</span>
+                    <span style={{fontSize:12,fontWeight:600,color:isMyRoom?room.color:'var(--tx)'}}>{room.name}</span>
+                  </div>
+                  {roomPlayers.length===0?<div style={{fontSize:10,color:'var(--tx3)'}}>Пусто</div>:
+                  roomPlayers.map(p=>(
+                    <div key={p.username} style={{fontSize:11,color:p.username===user.username?'var(--a)':'var(--tx2)',marginBottom:2}}>
+                      {p.username===user.username?'👤 Вы':p.name}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* VOTE HISTORY */
+  if(sub==='voteHistory'&&game.voteHistory){
+    const log=game.voteLog||{};
+    const rounds=Object.keys(log).sort();
+    return(
+      <div className="sc">
+        <div className="tb"><BackBtn onClick={()=>setSub('round')}/><div className="tb-title">📊 ИСТОРИЯ ГОЛОСОВАНИЙ</div></div>
+        <div className="scr">
+          {rounds.length===0?<div style={{textAlign:'center',padding:28,color:'var(--tx3)',fontSize:13}}>История пуста</div>:
+          rounds.map(r=>{
+            const entry=log[r];
+            const tally=entry.tally||{};
+            const votes=entry.votes||{};
+            return(
+              <div key={r} style={{marginBottom:16}}>
+                <div className="lbl">{r}</div>
+                {Object.entries(votes).filter(([,v])=>v).map(([voter,target])=>{
+                  const vname=game.players[voter]?.name||voter;
+                  const tname=game.players[target]?.name||target;
+                  return(
+                    <div key={voter} style={{display:'flex',alignItems:'center',gap:8,padding:'8px 12px',background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.07)',borderRadius:'var(--rad-sm)',marginBottom:4,fontSize:13}}>
+                      <span style={{color:'var(--tx)',fontWeight:500}}>{vname}</span>
+                      <span style={{color:'var(--tx3)',fontSize:16}}>→</span>
+                      <span style={{color:'var(--r)',fontWeight:500}}>{tname}</span>
+                      {voter===user.username&&<span style={{marginLeft:'auto',fontSize:10,color:'var(--a)'}}>вы</span>}
+                    </div>
+                  );
+                })}
+                <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:6}}>
+                  {Object.entries(tally).sort(([,a],[,b])=>b-a).map(([uid,cnt])=>{
+                    const name=game.players[uid]?.name||uid;
+                    return cnt>0&&<span key={uid} style={{fontSize:11,padding:'3px 10px',background:'rgba(255,69,58,0.1)',border:'1px solid rgba(255,69,58,0.2)',borderRadius:'var(--rad-sm)',color:'var(--r)'}}>☠ {name}: {cnt}</span>;
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  /* MY ROLE */
+  if(sub==='role'&&game.roles){
+    const myRoleId=me?.role||'civilian';
+    const myRole=ROLES.find(r=>r.id===myRoleId)||ROLES[4];
+    return(
+      <div className="sc">
+        <div className="tb"><BackBtn onClick={()=>setSub('round')}/><div className="tb-title">🎭 МОЯ РОЛЬ</div></div>
+        <div className="scr">
+          <div style={{textAlign:'center',padding:'32px 0 24px'}}>
+            <div style={{fontSize:64,marginBottom:12}}>{myRole.icon}</div>
+            <div style={{fontSize:28,fontWeight:800,color:myRole.color,marginBottom:8}}>{myRole.name}</div>
+            <div style={{fontSize:14,color:'var(--tx2)',lineHeight:1.6,maxWidth:280,margin:'0 auto'}}>{myRole.desc}</div>
+          </div>
+          {myRoleId==='medic'&&(
+            <div style={{background:'rgba(48,209,88,0.06)',border:'1px solid rgba(48,209,88,0.2)',borderRadius:'var(--rad-sm)',padding:'14px 16px',marginTop:8}}>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--g)',marginBottom:6}}>💉 Способность: Спасение</div>
+              <div style={{fontSize:12,color:'var(--tx3)',lineHeight:1.5}}>Во время голосования нажми кнопку «💉 Спасти» рядом с игроком которого хочешь защитить. Используется 1 раз за игру.</div>
+              {game.medicUsed?.[user.username]&&<div style={{marginTop:8,fontSize:12,color:'var(--r)'}}>⚠️ Способность уже использована</div>}
+            </div>
+          )}
+          {myRoleId==='spy'&&(
+            <div style={{background:'rgba(10,132,255,0.06)',border:'1px solid rgba(10,132,255,0.2)',borderRadius:'var(--rad-sm)',padding:'14px 16px',marginTop:8}}>
+              <div style={{fontSize:13,fontWeight:600,color:'#0a84ff',marginBottom:6}}>🕵️ Способность: Слежка</div>
+              <div style={{fontSize:12,color:'var(--tx3)',lineHeight:1.5}}>Ты видишь первую скрытую карту каждого игрока в разделе «Игроки».</div>
+            </div>
+          )}
+          <div className="lbl">ВСЕ РОЛИ</div>
+          {ROLES.map(role=>(
+            <div key={role.id} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:role.id===myRoleId?`${role.color}11`:'rgba(255,255,255,0.03)',border:`1px solid ${role.id===myRoleId?role.color+'44':'rgba(255,255,255,0.07)'}`,borderRadius:'var(--rad-sm)',marginBottom:6,opacity:role.id===myRoleId?1:0.5}}>
+              <span style={{fontSize:24}}>{role.icon}</span>
+              <div><div style={{fontSize:13,fontWeight:600,color:role.id===myRoleId?role.color:'var(--tx)'}}>{role.name}</div><div style={{fontSize:11,color:'var(--tx3)'}}>{role.desc}</div></div>
             </div>
           ))}
-          <div className="lbl">💀 ВЫБЫЛИ</div>
-          {dead.map(p=>(
-            <div key={p.username} className="dead-row">
-              <span>💀</span>
-              <div style={{fontSize:13,color:'var(--tx3)',textDecoration:'line-through'}}>{p.name}</div>
-            </div>
-          ))}
-          <div style={{marginTop:20}}><Btn cls="btn-g" ch="↩ ВЕРНУТЬСЯ В МЕНЮ" onClick={onExit}/></div>
         </div>
       </div>
     );
@@ -2019,6 +2788,14 @@ function GameWrapper({gameId,user,onExit,toast}){
           <Btn ch={me?.isEliminated?'💀 ВЫБЫЛИ':revLeft<=0?`✅ (${maxRev}/${maxRev})`:revLeft<maxRev?`↗ ЕЩЁ (${revLeft})`:'↗ РАСКРЫТЬ'}
             onClick={()=>setSub('pick')} cls="btn-c" sm disabled={!me||me.isEliminated||revLeft<=0}/>
         </div>
+        {(game.roles||game.radio||game.bunkerMap||game.voteHistory)&&(
+          <div className="brow" style={{flexWrap:'wrap',gap:6}}>
+            {game.roles&&me&&!me.isEliminated&&<Btn ch="🎭 РОЛЬ" onClick={()=>setSub('role')} cls="btn-g" sm/>}
+            {game.radio&&me&&!me.isEliminated&&<Btn ch="📡 РАДИО" onClick={()=>setSub('radio')} cls="btn-g" sm/>}
+            {game.bunkerMap&&<Btn ch="🗺️ БУНКЕР" onClick={()=>setSub('map')} cls="btn-g" sm/>}
+            {game.voteHistory&&game.voteLog&&Object.keys(game.voteLog).length>0&&<Btn ch="📊 ИСТОРИЯ" onClick={()=>setSub('voteHistory')} cls="btn-g" sm/>}
+          </div>
+        )}
         {isCreator&&<Btn ch="🗳 НАЧАТЬ ГОЛОСОВАНИЕ" onClick={startVote} cls="btn-d" sm/>}
       </div>
     </div>
@@ -2308,6 +3085,7 @@ function App(){
         {screen==='createGame'&&user&&<CreateGameScreen user={user} onBack={()=>nav('home')} onCreated={id=>{setGid(id);nav('lobby');}} toast={showToast}/>}
 
         {screen==='joinGame'&&user&&<JoinGameScreen user={user} onBack={()=>nav('home')} onJoined={id=>{setGid(id);nav('lobby');}} toast={showToast}/>}
+        {screen==='matchmaking'&&user&&<MatchmakingScreen user={user} onBack={()=>nav('home')} onJoined={id=>{setGid(id);nav('lobby');}} toast={showToast}/>}
 
         {screen==='lobby'&&user&&gameId&&<LobbyScreen gameId={gameId} user={user} onBack={()=>{setGid(null);nav('home');}} onStarted={()=>nav('game')} toast={showToast}/>}
 
@@ -2322,48 +3100,43 @@ function App(){
 
 ReactDOM.createRoot(document.getElementById('screen-area')).render(<App/>);
 
-// ══ BUNKER GATE — кинематографическая анимация ══
-(function(){
+// ══ BUNKER GATE — кинематографическая анимация (вызывается после логина) ══
+window.triggerGate = function(){
   const gate = document.getElementById('bunker-gate');
   const statusTxt = document.getElementById('gate-status-txt');
   if(!gate) return;
 
+  // Показываем ворота
+  gate.classList.remove('hidden');
+  gate.classList.remove('opening');
+  gate.classList.remove('flashing');
+  gate.style.opacity = '1';
+  gate.style.transition = '';
+  const arc = gate.querySelector('.gate-lock-arc');
+  if(arc){ arc.style.transform=''; arc.style.opacity=''; }
+
   const setStatus = (txt) => { if(statusTxt) statusTxt.textContent = txt; };
 
-  // Этап 1: показываем ворота (0ms) — уже видно
   setStatus('СИСТЕМА БЕЗОПАСНОСТИ АКТИВНА');
-
-  // Этап 2: смена статуса — "проверка"
   setTimeout(()=>{ setStatus('ИДЕНТИФИКАЦИЯ... ████████░░ 80%'); }, 600);
-
-  // Этап 3: авторизация
   setTimeout(()=>{ setStatus('ДОСТУП РАЗРЕШЁН — ОТКРЫВАЮ ВОРОТА'); }, 1400);
-
-  // Этап 4: дрожание замка перед открытием
   setTimeout(()=>{
-    const arc = gate.querySelector('.gate-lock-arc');
     if(arc){ arc.style.transform='translateY(4px)'; arc.style.opacity='0.4'; }
   }, 1700);
-
-  // Этап 5: вспышка
   setTimeout(()=>{
     gate.classList.add('flashing');
     setTimeout(()=>gate.classList.remove('flashing'), 180);
   }, 1900);
-
-  // Этап 6: открытие створок
   setTimeout(()=>{
     gate.classList.add('opening');
     setStatus('');
   }, 2000);
-
-  // Этап 7: скрыть оверлей
   setTimeout(()=>{
     gate.style.transition = 'opacity .5s ease';
     gate.style.opacity = '0';
     setTimeout(()=>{ gate.classList.add('hidden'); gate.style.opacity=''; }, 520);
   }, 3200);
-})();
+};
 </script>
 </body>
 </html>
