@@ -493,8 +493,8 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 /* ──────────────── SCROLLER ──────────────── */
 .scr     { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:20px 18px calc(76px + 40px); }
 .scr-raw { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:20px 18px 120px; }
-/* В игровом экране нижняя панель фиксирована ~210px */
-.scr.game-scr { padding-bottom: 220px; }
+/* В игровом экране скролл без лишних отступов — hand-area в потоке */
+.scr.game-scr { padding-bottom: 12px; }
 
 /* ──────────────── GLASS CARD (Glassmorphism) ──────────────── */
 .glass-card {
@@ -960,25 +960,23 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 
 /* Контейнер всей игровой области */
 .game-hand-area {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 90;
-  background: linear-gradient(0deg, rgba(8,8,12,0.99) 60%, transparent 100%);
-  padding-bottom: max(14px, env(safe-area-inset-bottom));
-  pointer-events: none;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(0deg, rgba(8,8,12,0.99) 0%, rgba(8,8,12,0.85) 100%);
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255,255,255,0.07);
 }
 
 /* Область с инфой о выбранной карте — верхняя часть */
 .game-card-detail {
-  pointer-events: all;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
   padding: 8px 14px 6px;
-  min-height: 0;
+  min-height: 52px;
   transition: opacity .25s;
-  overflow: hidden;
 }
 .game-card-detail-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
 .game-card-detail-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
@@ -994,9 +992,10 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   font-weight: 600;
   color: var(--tx);
   line-height: 1.4;
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .game-card-detail-hint {
   font-size: 10px;
@@ -1031,10 +1030,9 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 .game-hand {
   flex-shrink: 0;
   position: relative;
-  height: 140px;
-  margin: 0 12px 0;
+  height: 130px;
+  margin: 44px 12px 4px; /* 44px сверху — место для подъёма карты */
   overflow: visible;
-  pointer-events: all;
 }
 
 /* Одна карта в стопке */
@@ -6883,70 +6881,130 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
     const voted=votes[user.username]!==undefined;
     const total=Object.keys(votes).length;
     const myV=votes[user.username];
+    const progress=Math.round((total/Math.max(alive.length,1))*100);
     return(
-      <div className="sc">
-        <div className="hz-red"/>
-        <div style={{padding:'14px',background:'rgba(232,53,74,.07)',borderBottom:'1px solid var(--rb)',flexShrink:0}}>
-          <div style={{fontFamily:"'Inter',sans-serif",fontSize:28,letterSpacing:3,color:'var(--r)'}}>ГОЛОСОВАНИЕ</div>
-          <div className="mono" style={{fontSize:9,letterSpacing:2,color:'var(--tx3)',marginTop:2}}>КТО ПОКИНЕТ БУНКЕР?</div>
-          <div className="mono" style={{fontSize:10,color:'var(--tx)',marginTop:6}}>Проголосовали: {total} / {alive.length}</div>
+      <div className="sc" style={{background:'#08080c'}}>
+        {/* ── ШАПКА ── */}
+        <div style={{flexShrink:0,padding:'14px 16px 10px',background:'linear-gradient(180deg,rgba(232,53,74,.13) 0%,transparent 100%)',borderBottom:'1px solid rgba(232,53,74,.18)'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:6}}>
+            <div style={{fontSize:28,lineHeight:1}}>🗳️</div>
+            <div>
+              <div style={{fontFamily:"'Inter',sans-serif",fontSize:22,fontWeight:900,letterSpacing:2,color:'#ff453a',lineHeight:1}}>ГОЛОСОВАНИЕ</div>
+              <div style={{fontSize:10,color:'rgba(255,255,255,0.4)',letterSpacing:1,marginTop:2}}>КТО ПОКИНЕТ БУНКЕР?</div>
+            </div>
+            <div style={{marginLeft:'auto',textAlign:'right'}}>
+              <div style={{fontSize:18,fontWeight:800,color:'#fff'}}>{total}<span style={{fontSize:11,color:'rgba(255,255,255,0.4)',fontWeight:400}}>/{alive.length}</span></div>
+              <div style={{fontSize:9,color:'rgba(255,255,255,0.4)',letterSpacing:1}}>ГОЛОСОВ</div>
+            </div>
+          </div>
+          {/* Прогресс-бар */}
+          <div style={{height:4,borderRadius:4,background:'rgba(255,255,255,0.08)',overflow:'hidden'}}>
+            <div style={{height:'100%',width:`${progress}%`,background:'linear-gradient(90deg,#ff453a,#ff6b35)',borderRadius:4,transition:'width .4s'}}/>
+          </div>
+          {voted&&<div style={{marginTop:8,fontSize:11,color:'rgba(48,209,88,0.9)',fontWeight:700,letterSpacing:1,display:'flex',alignItems:'center',gap:6}}>
+            <span>✅</span><span>Голос засчитан{myV===null?' (воздержался)':`— против ${alive.find(p=>p.username===myV)?.name||myV}`}</span>
+          </div>}
+          {!voted&&<div style={{marginTop:8,fontSize:11,color:'rgba(255,165,0,0.8)',fontWeight:600,letterSpacing:0.5,display:'flex',alignItems:'center',gap:6}}>
+            <span>👆</span><span>Выберите игрока ниже и нажмите кнопку</span>
+          </div>}
         </div>
-        <div className="scr-raw" style={{paddingBottom:100}}>
-          <div className="mono" style={{fontSize:9,letterSpacing:2,color:'var(--tx3)',textAlign:'center',margin:'4px 0 12px'}}>ВЫБЕРИТЕ ИГРОКА — ПОДТВЕРДИТЕ ГОЛОС</div>
-          <div className="vgrid">
+
+        {/* ── СПИСОК ИГРОКОВ ── */}
+        <div style={{flex:1,overflowY:'auto',WebkitOverflowScrolling:'touch',padding:'10px 12px',paddingBottom:'calc(100px + env(safe-area-inset-bottom,0px))'}}>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
             {alive.map(p=>{
               const isMe=p.username===user.username;
               const vc=Object.values(votes).filter(v=>v===p.username).length;
               const iSel=!isMe&&selVote===p.username;
               const iVot=!isMe&&myV===p.username;
-              const revT=(p.revealed||[]).map(k=>{const m=CARDS.find(c=>c.key===k);return`${m?.icon||''} ${p.cards?.[k]||''}`;}).join(' · ')||'карты не раскрыты';
+              const isChosen=iSel||iVot;
+              const revealed=p.revealed||[];
               return(
-                <div key={p.username} className={`vcard-rich${(iSel||iVot)?' sel':''}${voted?' voted':''}`}
-                  onClick={()=>!voted&&setSelVote(p.username===selVote?undefined:p.username)}>
-                  <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                <div key={p.username}
+                  onClick={()=>!voted&&!isMe&&setSelVote(p.username===selVote?undefined:p.username)}
+                  style={{
+                    borderRadius:16,
+                    border:isChosen?'2px solid #ff453a':isMe?'2px solid rgba(240,165,0,0.4)':'2px solid rgba(255,255,255,0.07)',
+                    background:isChosen?'rgba(232,53,74,.12)':isMe?'rgba(240,165,0,.06)':'rgba(255,255,255,0.04)',
+                    padding:'12px 14px',
+                    cursor:(!voted&&!isMe)?'pointer':'default',
+                    transition:'all .2s',
+                    position:'relative',
+                    WebkitTapHighlightColor:'transparent',
+                  }}>
+                  {/* Метка */}
+                  {isMe&&<div style={{position:'absolute',top:8,right:10,fontSize:9,fontWeight:800,letterSpacing:1,color:'rgba(240,165,0,0.8)',background:'rgba(240,165,0,0.1)',borderRadius:6,padding:'2px 6px'}}>ВЫ</div>}
+                  {iVot&&<div style={{position:'absolute',top:8,right:10,fontSize:9,fontWeight:800,letterSpacing:1,color:'rgba(255,69,58,0.9)',background:'rgba(255,69,58,0.12)',borderRadius:6,padding:'2px 6px'}}>МОЙ ГОЛОС</div>}
+                  {iSel&&!voted&&<div style={{position:'absolute',top:8,right:10,fontSize:9,fontWeight:800,letterSpacing:1,color:'rgba(255,69,58,0.9)',background:'rgba(255,69,58,0.12)',borderRadius:6,padding:'2px 6px'}}>ВЫБРАН</div>}
+                  {/* Аватар + имя + счётчик голосов */}
+                  <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:revealed.length>0?10:0}}>
                     <Avatar name={p.name||p.username} size="sm" avatar={allUsersData?.[p.username]?.avatar} frame={allUsersData?.[p.username]?.equipped?.frame}/>
-                    <div>
-                      <div style={{fontWeight:700,fontSize:13,color:'var(--tx)'}}>{p.name||p.username}</div>
-                      <div style={{fontSize:10,color:'var(--tx3)'}}>@{p.username}</div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:700,fontSize:14,color:'#fff',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{p.name||p.username}</div>
+                      <div style={{fontSize:10,color:'rgba(255,255,255,0.35)',marginTop:1}}>@{p.username}</div>
                     </div>
-                    {(iSel||iVot)&&<div style={{marginLeft:'auto',fontSize:18}}>🎯</div>}
+                    {vc>0&&<div style={{flexShrink:0,background:'rgba(255,69,58,0.15)',border:'1px solid rgba(255,69,58,0.3)',borderRadius:20,padding:'3px 10px',display:'flex',alignItems:'center',gap:4}}>
+                      <span style={{fontSize:13}}>☠</span>
+                      <span style={{fontSize:13,fontWeight:800,color:'#ff453a'}}>{vc}</span>
+                    </div>}
                   </div>
-                  {/* Раскрытые карты игрока */}
-                  {(()=>{
-                    const revealed=p.revealed||[];
-                    if(revealed.length===0) return <div style={{fontSize:10,color:'var(--tx3)',marginTop:6,fontStyle:'italic'}}>Карты не раскрыты</div>;
-                    return(
-                      <div style={{marginTop:8,display:'flex',flexDirection:'column',gap:4}}>
-                        {revealed.map(k=>{
-                          const m=CARDS.find(c=>c.key===k)||{};
-                          const val=p.cards?.[k]||'—';
-                          return(
-                            <div key={k} style={{display:'flex',alignItems:'center',gap:6,background:'rgba(255,255,255,0.04)',borderRadius:8,padding:'5px 8px',border:'1px solid rgba(255,255,255,0.07)'}}>
-                              <span style={{fontSize:14,flexShrink:0}}>{m.icon||'•'}</span>
-                              <div style={{flex:1,minWidth:0}}>
-                                <div style={{fontSize:8,color:'var(--tx3)',fontWeight:700,letterSpacing:1,textTransform:'uppercase'}}>{m.label||k}</div>
-                                <div style={{fontSize:11,color:'var(--tx)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{val}</div>
-                              </div>
+                  {/* Раскрытые карты */}
+                  {revealed.length>0&&(
+                    <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+                      {revealed.map(k=>{
+                        const m=CARDS.find(c=>c.key===k)||{};
+                        const val=p.cards?.[k]||'—';
+                        return(
+                          <div key={k} style={{display:'flex',alignItems:'center',gap:5,background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:8,padding:'4px 8px',minWidth:0,flex:'1 1 calc(50% - 5px)'}}>
+                            <span style={{fontSize:13,flexShrink:0}}>{m.icon||'•'}</span>
+                            <div style={{minWidth:0}}>
+                              <div style={{fontSize:7,color:'rgba(255,255,255,0.35)',fontWeight:800,letterSpacing:1,textTransform:'uppercase'}}>{m.label||k}</div>
+                              <div style={{fontSize:11,color:'#fff',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{val}</div>
                             </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {revealed.length===0&&!isMe&&<div style={{fontSize:10,color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:4}}>Карты ещё не раскрыты</div>}
                 </div>
               );
             })}
-            <div className={`vcard-rich${selVote===null?' abst':''}${voted?' voted':''}`} onClick={()=>{if(!voted)setSelVote(null);}}>
-              <div style={{fontSize:13,fontWeight:700}}>🤐 Воздержаться</div>
-              <div style={{fontSize:10,color:'var(--tx3)',marginTop:4}}>Не влияет на итог</div>
-              {myV===null&&voted&&<div style={{position:'absolute',bottom:8,right:8,fontSize:14,color:'var(--c)'}}>★</div>}
-            </div>
+            {/* Воздержаться */}
+            {!voted&&(
+              <div onClick={()=>setSelVote(selVote===null?undefined:null)}
+                style={{borderRadius:16,border:selVote===null?'2px solid rgba(255,255,255,0.35)':'2px solid rgba(255,255,255,0.07)',background:selVote===null?'rgba(255,255,255,0.08)':'rgba(255,255,255,0.03)',padding:'12px 14px',cursor:'pointer',textAlign:'center',WebkitTapHighlightColor:'transparent',transition:'all .2s'}}>
+                <div style={{fontSize:14,fontWeight:700,color:'rgba(255,255,255,0.7)'}}>🤐 Воздержаться</div>
+                <div style={{fontSize:10,color:'rgba(255,255,255,0.35)',marginTop:3}}>Голос не засчитывается в итоге</div>
+              </div>
+            )}
           </div>
         </div>
-        <div className="fixbot">
-          <Btn cls="btn-d" disabled={selVote===undefined||voted} ch={voted?'✅ ГОЛОС ЗАСЧИТАН':selVote===null?'🤐 ВОЗДЕРЖАТЬСЯ':'☠ ПОДТВЕРДИТЬ ГОЛОС'}
-            onClick={()=>{if(selVote===undefined)return;castVote(selVote);}}/>
-          {isCreator&&<Btn cls="btn-g" sm ch="📊 ПОДВЕСТИ ИТОГИ (создатель)" onClick={tally}/>}
+
+        {/* ── КНОПКА ПОДТВЕРЖДЕНИЯ (фикс снизу) ── */}
+        <div style={{position:'fixed',bottom:0,left:0,right:0,zIndex:200,padding:`12px 16px calc(12px + env(safe-area-inset-bottom,0px))`,background:'linear-gradient(0deg,rgba(8,8,12,1) 60%,transparent)',display:'flex',flexDirection:'column',gap:8}}>
+          {!voted?(
+            <button
+              disabled={selVote===undefined}
+              onClick={()=>{if(selVote===undefined)return;castVote(selVote);}}
+              style={{width:'100%',padding:'16px',borderRadius:16,border:'none',fontFamily:"'Inter',sans-serif",fontSize:15,fontWeight:900,letterSpacing:1,cursor:selVote===undefined?'not-allowed':'pointer',transition:'all .2s',
+                background:selVote===undefined?'rgba(255,255,255,0.06)':selVote===null?'rgba(255,255,255,0.12)':'linear-gradient(135deg,#ff453a,#d63031)',
+                color:selVote===undefined?'rgba(255,255,255,0.3)':'#fff',
+                boxShadow:selVote!==undefined&&selVote!==null?'0 8px 24px rgba(255,69,58,0.35)':'none',
+              }}>
+              {selVote===undefined?'👆 Выберите игрока':selVote===null?'🤐 ВОЗДЕРЖАТЬСЯ':'☠ ГОЛОСОВАТЬ ПРОТИВ '+((alive.find(p=>p.username===selVote)?.name)||selVote||'')}
+            </button>
+          ):(
+            <div style={{padding:'14px',borderRadius:16,background:'rgba(48,209,88,0.1)',border:'1.5px solid rgba(48,209,88,0.3)',textAlign:'center',fontSize:14,fontWeight:700,color:'rgba(48,209,88,0.9)',letterSpacing:1}}>
+              ✅ Голос засчитан · Ждём остальных ({total}/{alive.length})
+            </div>
+          )}
+          {isCreator&&(
+            <button onClick={tally}
+              style={{width:'100%',padding:'12px',borderRadius:14,border:'1.5px solid rgba(48,209,88,0.4)',background:'rgba(48,209,88,0.1)',color:'rgba(48,209,88,0.9)',fontSize:13,fontWeight:700,cursor:'pointer',letterSpacing:1,fontFamily:"'Inter',sans-serif"}}>
+              📊 ПОДВЕСТИ ИТОГИ (только для создателя)
+            </button>
+          )}
         </div>
       </div>
     );
@@ -7598,16 +7656,17 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
         <>
         {/* Раскрытые карты других — в скролле, НЕ в фиксированной панели */}
         <div className="scr game-scr" style={{paddingTop:8}}>
-          {alive.filter(p=>p.username!==user.username&&(p.revealed||[]).length>0).length>0&&(
+          {alive.filter(p=>(p.revealed||[]).length>0).length>0&&(
             <div style={{padding:'0 0 8px'}}>
               <div style={{fontSize:9,color:'var(--tx3)',fontWeight:700,letterSpacing:2,textTransform:'uppercase',marginBottom:6}}>🃏 Раскрытые карты</div>
-              {alive.filter(p=>p.username!==user.username).map(p=>{
+              {[...alive].sort((a,b)=>a.username===user.username?-1:b.username===user.username?1:0).map(p=>{
                 const pRevd=p.revealed||[];
+                const isMe=p.username===user.username;
                 if(!pRevd.length)return null;
                 const pReactions=reactions[p.username]||{};
                 return(
-                  <div key={p.username} style={{marginBottom:8}}>
-                    <div style={{fontSize:10,color:'var(--tx3)',fontWeight:700,letterSpacing:1,marginBottom:4}}>{p.name?.split(' ')[0]||p.username}:</div>
+                  <div key={p.username} style={{marginBottom:8,padding:isMe?'8px 10px':0,background:isMe?'rgba(255,159,10,0.06)':'transparent',borderRadius:isMe?12:0,border:isMe?'1px solid rgba(255,159,10,0.15)':'none'}}>
+                    <div style={{fontSize:10,color:isMe?'var(--a)':'var(--tx3)',fontWeight:700,letterSpacing:1,marginBottom:4}}>{isMe?'👤 Вы (раскрыто)':`${p.name?.split(' ')[0]||p.username}`}:</div>
                     <div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
                       {pRevd.map(k=>{
                         const m=CARDS.find(c=>c.key===k)||{};
@@ -7688,8 +7747,12 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
             const allCards=[...myCards,...(mySecretCard?[{key:'secret',icon:mySecretCard.icon,label:'Секрет'}]:[])];
             const n=allCards.length;
             const cardW=78;
-            const overlap=36; // перекрытие между картами
-            const totalW=cardW+(n-1)*(cardW-overlap);
+            const screenW=Math.min(window.innerWidth||375, 480);
+            // Динамический overlap: карты занимают 90% экрана
+            const maxTotalW=screenW*0.90;
+            const idealOverlap=Math.max(10, cardW - Math.floor((maxTotalW-cardW)/Math.max(n-1,1)));
+            const overlap=n<=4?10:idealOverlap;
+            const totalW=Math.min(cardW+(n-1)*(cardW-overlap), maxTotalW);
             return(
               <div className="game-hand" style={{width:'100%'}}>
                 <div style={{position:'absolute',bottom:0,left:'50%',transform:`translateX(-${totalW/2}px)`,width:totalW,height:130}}>
@@ -7701,7 +7764,7 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
                     const zIndex=isSel?50:i+1;
                     // Небольшой случайный наклон для каждой карты (стабильный, на основе индекса)
                     const angle=(i-(n-1)/2)*3.5;
-                    const liftY=isSel?-38:0;
+                    const liftY=isSel?-40:0;
                     return(
                       <div
                         key={key}
@@ -7739,12 +7802,10 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
         <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--tx3)',fontSize:11}}>Карты не назначены</div>
       )}
 
-      {/* ── НИЖНИЕ КНОПКИ — вне фиксированной панели, для всех состояний ── */}
-      {!me?.cards&&!me?.isEliminated&&(
-        <div className="game-actions-row">
+      {/* ── НИЖНИЕ КНОПКИ — всегда видны (резерв для игроков без карт) ── */}
+      {me?.isEliminated&&(
+        <div className="game-actions-row" style={{paddingBottom:`max(12px,env(safe-area-inset-bottom))`}}>
           <button className="game-action-btn" onClick={()=>setSub('players')}>👥 Игроки</button>
-          {game.roles&&me&&!me.isEliminated&&<button className="game-action-btn" onClick={()=>setSub('role')}>🎭 Роль</button>}
-          {game.bunkerMap&&<button className="game-action-btn" onClick={()=>setSub('map')}>🗺️ Бункер</button>}
           {isCreator&&<button className="game-action-btn primary" onClick={startVote}>🗳 Голосование</button>}
           {user.isAdmin&&<button className="game-action-btn danger" onClick={()=>setSub('adminCheat')}>⚙️</button>}
         </div>
