@@ -2,7 +2,14 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="БУНКЕР">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="msapplication-navbutton-color" content="#0a0a0f">
+<link rel="manifest" href="data:application/json;charset=utf-8,{&quot;name&quot;:&quot;БУНКЕР&quot;,&quot;short_name&quot;:&quot;БУНКЕР&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;fullscreen&quot;,&quot;background_color&quot;:&quot;%230a0a0f&quot;,&quot;theme_color&quot;:&quot;%230a0a0f&quot;,&quot;orientation&quot;:&quot;portrait&quot;}">
 <title>☢ БУНКЕР</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -982,6 +989,236 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   position:absolute; width:320px; height:320px; border-radius:50%;
   background:radial-gradient(circle, rgba(240,165,0,.12) 0%, transparent 70%);
   top:50%; left:50%; transform:translate(-50%,-65%); pointer-events:none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE & PWA FIXES — safe-area, keyboard, touch targets
+   ══════════════════════════════════════════════════════════ */
+
+/* Safe-area для notch / Dynamic Island / home indicator */
+:root {
+  --safe-top:  env(safe-area-inset-top, 0px);
+  --safe-bot:  env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right:env(safe-area-inset-right, 0px);
+}
+
+/* Весь #app занимает полный экран включая notch-зону */
+#app {
+  padding-top: var(--safe-top);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+
+/* Nav bar учитывает home indicator снизу */
+#nav-bar {
+  padding-bottom: max(var(--safe-bot), 8px);
+  height: calc(64px + max(var(--safe-bot), 8px));
+}
+
+/* Топбар — учитываем notch сверху */
+.tb {
+  min-height: 52px;
+}
+
+/* Скроллер — отступ снизу = nav + safe-area */
+.scr {
+  padding-bottom: calc(64px + max(var(--safe-bot), 8px) + 24px);
+}
+.scr-raw {
+  padding-bottom: calc(64px + max(var(--safe-bot), 8px) + 24px);
+}
+
+/* fixbot над навбаром */
+.fixbot-nav {
+  bottom: calc(64px + max(var(--safe-bot), 8px));
+}
+
+/* ──── Клавиатура на мобильных (visual viewport) ──── */
+/* Когда клавиатура открыта, чат не уходит под неё */
+.chat-input {
+  padding-bottom: max(12px, calc(12px + 0px));
+  /* sticky к низу визуального вьюпорта */
+  position: sticky;
+  bottom: 0;
+}
+
+/* Chat: когда фокус на input, нижний отступ для сообщений */
+.chat-msgs {
+  overscroll-behavior: contain;
+}
+
+/* ──── Touch targets — минимум 44px по Apple HIG ──── */
+.nb {
+  min-height: 48px;
+  min-width: 44px;
+}
+.btn {
+  min-height: 48px;
+}
+.btn-sm {
+  min-height: 40px;
+}
+.tab {
+  min-height: 44px;
+  padding: 10px 6px;
+}
+.modal-cls {
+  width: 36px;
+  height: 36px;
+}
+.tog-row {
+  min-height: 52px;
+}
+.chat-send {
+  min-width: 48px;
+  min-height: 44px;
+}
+.nb svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ──── Предотвращаем select text при долгом тапе ──── */
+.nb, .btn, .tab, .vcard, .vcard-rich, .ptile, .prow.hot,
+.tog-row, .ap-opt, .ctile, .fi.hot, .group-card, .react-chip,
+.secret-tile, .avatar-picker-btn {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ──── code-box: не выходит за ширину экрана ──── */
+.code-box {
+  font-size: clamp(24px, 8vw, 38px);
+  letter-spacing: clamp(4px, 2vw, 10px);
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+/* ──── Modal на маленьких экранах ──── */
+.modal-box {
+  max-height: 85vh;
+  /* Учитываем клавиатуру через dvh */
+  max-height: 85dvh;
+}
+
+/* ──── Toast на мобильных: по центру сверху ──── */
+@media (max-width: 480px) {
+  .toast-container {
+    top: max(12px, calc(var(--safe-top) + 4px));
+    left: 12px;
+    right: 12px;
+  }
+  .toast-item {
+    white-space: normal;
+    max-width: 100%;
+  }
+}
+
+/* ──── Avatar picker: 5 колонок на узких экранах ──── */
+@media (max-width: 360px) {
+  .avatar-picker-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .code-box {
+    font-size: 22px;
+    letter-spacing: 3px;
+  }
+  .cgrid, .vgrid {
+    grid-template-columns: 1fr;
+  }
+  .ach-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ──── Splashscreen: корректно на всех размерах ──── */
+.splash-logo { font-size: clamp(60px, 20vw, 90px); }
+.splash-title { font-size: clamp(18px, 6vw, 28px); }
+
+/* ──── Исправляем border-radius '50%' (кавычки — баг) ──── */
+.group-avatar { border-radius: 50% !important; }
+
+/* ──── Убираем hover-эффекты на touch-устройствах ──── */
+@media (hover: none) and (pointer: coarse) {
+  .glass-card:hover,
+  .prow.hot:hover,
+  .fi.hot:hover,
+  .vcard:hover,
+  .vcard-rich:hover,
+  .ptile:hover,
+  .ap-opt:hover,
+  .group-card:hover,
+  .btn-g:hover,
+  .btn-p:hover,
+  .btn-d:hover,
+  .btn-c:hover,
+  .btn-pu:hover,
+  .btn-gr:hover,
+  .react-chip:hover,
+  .react-add:hover,
+  .tog-row:hover,
+  .code-box:hover,
+  .avatar-picker-btn:hover {
+    /* сбрасываем hover — на тачскрине он залипает */
+    background: unset;
+    border-color: unset;
+    transform: unset;
+    filter: unset;
+    box-shadow: unset;
+    color: unset;
+  }
+  /* Возвращаем базовые стили active для тач-фидбека */
+  .btn:active { transform: scale(.96); opacity: .88; }
+  .vcard:active { background: rgba(240,165,0,0.06); border-color: rgba(240,165,0,.35); }
+  .vcard-rich:active { background: rgba(240,165,0,.06); border-color: rgba(240,165,0,.4); }
+  .ptile:active { border-color: rgba(240,165,0,.35); background: rgba(240,165,0,0.05); }
+  .prow.hot:active { border-color: rgba(240,165,0,.25); background: rgba(240,165,0,0.05); }
+  .fi.hot:active { border-color: rgba(240,165,0,.25); background: rgba(240,165,0,0.04); }
+  .group-card:active { border-color: rgba(191,90,242,0.35); background: rgba(191,90,242,0.06); }
+  .react-chip:active { background: rgba(240,165,0,0.12); border-color: rgba(240,165,0,0.3); }
+  .tog-row:active { border-color: rgba(240,165,0,.3); }
+  .avatar-picker-btn:active { background: linear-gradient(135deg,rgba(155,89,239,0.25),rgba(10,132,255,0.2)); border-color: rgba(155,89,239,0.5); transform: scale(1.05); }
+}
+
+/* ──── Полноэкранный режим (добавлено на экран / PWA) ──── */
+@media all and (display-mode: fullscreen),
+       all and (display-mode: standalone) {
+  #app {
+    /* уже занимает весь экран через position:fixed;inset:0 */
+  }
+}
+
+/* ──── Предотвращаем прыжок при фокусе на input (iOS) ──── */
+html {
+  scroll-behavior: auto;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+body {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ──── Убираем синюю обводку на кнопках Android ──── */
+* { outline: none; }
+button, input, select, textarea { -webkit-appearance: none; appearance: none; }
+input, textarea { font-size: 16px; } /* предотвращаем zoom при фокусе на iOS */
+.inp { font-size: 16px; }
+.sel { font-size: 16px; }
+.notes-area { font-size: 16px; }
+
+/* ──── Плавный скролл внутри контейнеров ──── */
+.scr, .scr-raw, .chat-msgs, .modal-bd {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
 }
 </style>
 </head>
@@ -5074,6 +5311,77 @@ window.triggerGate = function(){
     setTimeout(()=>{ gate.classList.add('hidden'); gate.style.opacity=''; }, 520);
   }, 3200);
 };
+</script>
+
+<script>
+/* ══════════════════════════════════════════════
+   MOBILE PWA ENHANCEMENTS
+   ══════════════════════════════════════════════ */
+
+/* 1. Виртуальная клавиатура — подтягиваем контент вверх */
+(function() {
+  // Используем visualViewport API если доступен
+  if (window.visualViewport) {
+    function onViewportResize() {
+      var vv = window.visualViewport;
+      var app = document.getElementById('app');
+      if (!app) return;
+      // Высота визуального вьюпорта (без клавиатуры)
+      var vh = vv.height;
+      // Смещение сверху (когда клавиатура открыта)
+      var offsetTop = vv.offsetTop;
+      app.style.height = vh + 'px';
+      app.style.top = offsetTop + 'px';
+      app.style.position = 'fixed';
+      // Скроллим чат вниз при открытии клавиатуры
+      var chatMsgs = document.querySelector('.chat-msgs');
+      if (chatMsgs) {
+        setTimeout(function() {
+          chatMsgs.scrollTop = chatMsgs.scrollHeight;
+        }, 100);
+      }
+    }
+    window.visualViewport.addEventListener('resize', onViewportResize);
+    window.visualViewport.addEventListener('scroll', onViewportResize);
+  }
+
+  /* 2. Предотвращаем bounce-скролл страницы на iOS */
+  document.addEventListener('touchmove', function(e) {
+    if (e.target.closest('.scr, .scr-raw, .chat-msgs, .modal-bd, .notes-area')) return;
+    e.preventDefault();
+  }, { passive: false });
+
+  /* 3. Быстрый тап без задержки 300ms на старых Android */
+  document.addEventListener('touchstart', function(){}, { passive: true });
+
+  /* 4. Скрываем адресную строку при старте (для браузеров без PWA) */
+  function hideAddressBar() {
+    if (document.documentElement.scrollHeight <= window.innerHeight) return;
+    window.scrollTo(0, 1);
+  }
+  window.addEventListener('load', function() {
+    setTimeout(hideAddressBar, 500);
+  });
+  window.addEventListener('orientationchange', function() {
+    setTimeout(hideAddressBar, 600);
+  });
+
+  /* 5. Блокируем системный context menu на долгом тапе */
+  document.addEventListener('contextmenu', function(e) {
+    if (!e.target.closest('input, textarea, [contenteditable]')) {
+      e.preventDefault();
+    }
+  });
+
+  /* 6. Фикс — при фокусе на input скроллим к нему */
+  document.addEventListener('focusin', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      setTimeout(function() {
+        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 350);
+    }
+  });
+})();
 </script>
 </body>
 </html>
