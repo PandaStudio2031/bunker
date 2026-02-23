@@ -698,17 +698,50 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 .fixbot-nav { bottom:var(--nav-h); }
 
 /* ──────────────── CHAT ──────────────── */
-.chat-msgs { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:8px; }
-.bubble { max-width:82%; padding:10px 14px; font-size:14px; line-height:1.45; word-break:break-word; border:none; border-radius:var(--rad); }
-.bubble.me     { background:rgba(240,165,0,.15); color:var(--tx); align-self:flex-end; border-bottom-right-radius:4px; }
-.bubble.other  { background:rgba(255,255,255,0.07); color:var(--tx); align-self:flex-start; border-bottom-left-radius:4px; }
-.bubble.system { background:rgba(10,132,255,.07); color:var(--c); align-self:center; font-size:11px; max-width:92%; text-align:center; border-radius:var(--rad); }
-.bubble-from   { font-family:'Inter',sans-serif; font-size:10px; font-weight:600; color:var(--tx2); margin-bottom:4px; }
-.bubble-time   { font-family:'Inter',sans-serif; font-size:10px; color:rgba(255,255,255,0.25); margin-top:4px; text-align:right; }
-.chat-input    { display:flex; gap:8px; padding:10px 12px 12px; background:rgba(12,12,20,0.9); border-top:1px solid rgba(255,255,255,0.06); flex-shrink:0; }
-.chat-input .inp { flex:1; margin-bottom:0; font-size:14px; }
-.chat-send { background:var(--a); color:#000; border:none; padding:10px 16px; font-family:'Inter',sans-serif; font-size:16px; font-weight:700; border-radius:var(--rad-sm); cursor:pointer; flex-shrink:0; transition:.2s; }
+.chat-msgs { flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:4px; }
+.chat-day-div { text-align:center; font-size:10px; color:rgba(255,255,255,0.25); margin:8px 0; letter-spacing:1px; }
+.bubble-wrap { display:flex; flex-direction:column; max-width:84%; }
+.bubble-wrap.me { align-self:flex-end; align-items:flex-end; }
+.bubble-wrap.other { align-self:flex-start; align-items:flex-start; }
+.bubble-wrap.system { align-self:center; align-items:center; max-width:92%; }
+.bubble { padding:10px 14px; font-size:14px; line-height:1.5; word-break:break-word; border:none; border-radius:18px; position:relative; }
+.bubble.me     { background:linear-gradient(135deg,rgba(240,165,0,.22),rgba(240,130,0,.15)); color:var(--tx); border-bottom-right-radius:4px; }
+.bubble.other  { background:rgba(255,255,255,0.08); color:var(--tx); border-bottom-left-radius:4px; }
+.bubble.system { background:rgba(10,132,255,.08); color:var(--c); font-size:11px; text-align:center; border-radius:var(--rad); padding:6px 14px; }
+.bubble-from   { font-size:11px; font-weight:700; color:var(--a); margin-bottom:3px; padding:0 2px; }
+.bubble-meta   { display:flex; align-items:center; gap:6px; margin-top:4px; padding:0 2px; }
+.bubble-time   { font-size:10px; color:rgba(255,255,255,0.22); }
+.bubble-reactions { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.bubble-reaction { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:20px; padding:2px 8px; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:3px; transition:.15s; -webkit-tap-highlight-color:transparent; }
+.bubble-reaction:active { background:rgba(255,255,255,0.16); transform:scale(1.1); }
+.bubble-reaction-count { font-size:11px; color:rgba(255,255,255,0.5); }
+.bubble-reaction.mine { background:rgba(240,165,0,0.15); border-color:rgba(240,165,0,0.4); }
+/* Цитата */
+.bubble-quote { background:rgba(255,255,255,0.06); border-left:3px solid var(--a); border-radius:6px; padding:6px 10px; margin-bottom:8px; font-size:11px; color:rgba(255,255,255,0.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* Голосовое сообщение */
+.bubble-voice { display:flex; align-items:center; gap:10px; min-width:160px; }
+.bubble-voice-btn { width:34px; height:34px; border-radius:50%; border:none; background:var(--a); color:#000; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.bubble-voice-bar { flex:1; height:24px; position:relative; display:flex; align-items:center; gap:1.5px; }
+.bubble-voice-wave { width:3px; border-radius:2px; background:rgba(255,255,255,0.25); transition:height .15s; }
+.bubble-voice-wave.active { background:var(--a); }
+.bubble-voice-dur { font-size:11px; color:rgba(255,255,255,0.4); flex-shrink:0; }
+/* Панель цитирования */
+.chat-quote-bar { display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(240,165,0,0.08); border-top:1px solid rgba(240,165,0,0.2); font-size:12px; color:rgba(255,255,255,0.6); }
+.chat-quote-bar-text { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-quote-close { background:none; border:none; color:rgba(255,255,255,0.4); font-size:18px; cursor:pointer; padding:0 4px; }
+/* Эмодзи-пикер реакции */
+.reaction-picker { position:absolute; z-index:200; background:rgba(18,18,28,0.98); border:1px solid rgba(255,255,255,0.12); border-radius:28px; padding:8px 12px; display:flex; gap:8px; box-shadow:0 8px 32px rgba(0,0,0,0.6); bottom:calc(100% + 6px); }
+.reaction-picker.right { right:0; }
+.reaction-picker.left { left:0; }
+/* Инпут-панель */
+.chat-input { display:flex; align-items:flex-end; gap:8px; padding:10px 12px 12px; background:rgba(12,12,20,0.95); border-top:1px solid rgba(255,255,255,0.07); flex-shrink:0; backdrop-filter:blur(10px); }
+.chat-input .inp { flex:1; margin-bottom:0; font-size:14px; border-radius:22px; padding:11px 16px; min-height:44px; max-height:120px; }
+.chat-send { background:var(--a); color:#000; border:none; width:42px; height:42px; border-radius:50%; font-size:18px; font-weight:700; cursor:pointer; flex-shrink:0; transition:.2s; display:flex; align-items:center; justify-content:center; }
 .chat-send:disabled { opacity:.3; cursor:not-allowed; }
+/* Кнопка голосового */
+.chat-voice-btn { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); color:var(--tx2); border:none; width:42px; height:42px; border-radius:50%; font-size:18px; cursor:pointer; flex-shrink:0; transition:.2s; display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; }
+.chat-voice-btn.recording { background:rgba(255,59,48,0.25); border:2px solid rgba(255,59,48,0.6); animation:neonPulse 1s ease infinite; }
+@keyframes levelUp { 0%{opacity:0;transform:translateY(20px) scale(.8)} 20%{opacity:1;transform:translateY(-10px) scale(1.1)} 80%{opacity:1;transform:translateY(-10px) scale(1.05)} 100%{opacity:0;transform:translateY(-40px) scale(.9)} }
 
 /* ──────────────── FRIENDS ITEMS ──────────────── */
 .fi { display:flex; align-items:center; gap:12px; padding:13px 16px; background:rgba(255,255,255,0.04); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); border-radius:14px; margin-bottom:8px; transition:.18s; }
@@ -760,6 +793,14 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 }
 .ava-lg { width:72px; height:72px; font-size:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; margin:0 auto 12px; }
 .ava-sm { width:28px; height:28px; font-size:12px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; flex-shrink:0; }
+.ava-pulse-dot {
+  position:absolute;
+  bottom:1px; right:1px;
+  width:8px; height:8px;
+  background:#30d158;
+  border-radius:50%;
+  border:2px solid var(--bg,#0a0a0f);
+}
 .ava-pulse::after {
   content:''; position:absolute; bottom:1px; right:1px;
   width:9px; height:9px; border-radius:50%;
@@ -2052,16 +2093,27 @@ function ThemeSwitcher(){
    ACHIEVEMENTS
 ══════════════════════════════════════════════════════════ */
 const ACHIEVEMENTS=[
-  {id:'firstblood',icon:'🩸',name:'Первая кровь',desc:'Сыграть первую игру'},
-  {id:'survivor',icon:'🏆',name:'Выживший',desc:'Выиграть первую игру'},
-  {id:'veteran',icon:'🎖',name:'Ветеран',desc:'Сыграть 10 игр'},
-  {id:'champion',icon:'👑',name:'Чемпион',desc:'Выиграть 5 игр'},
-  {id:'immortal',icon:'♾',name:'Бессмертный',desc:'Выиграть 10 игр'},
-  {id:'unlucky',icon:'💀',name:'Невезучий',desc:'Быть выбытым 5 раз'},
-  {id:'chatty',icon:'💬',name:'Болтун',desc:'Отправить 50 сообщений'},
-  {id:'popular',icon:'❤️',name:'Популярный',desc:'Получить 10 запросов в друзья'},
-  {id:'strategist',icon:'🧠',name:'Стратег',desc:'Выиграть, не раскрыв все карты'},
-  {id:'social',icon:'👥',name:'Социальный',desc:'Иметь 5 друзей'},
+  // Игровые
+  {id:'firstblood',  icon:'🩸', name:'Первая кровь',    desc:'Сыграть первую игру',          cat:'game'},
+  {id:'survivor',    icon:'🏆', name:'Выживший',         desc:'Выиграть первую игру',          cat:'game'},
+  {id:'veteran',     icon:'🎖', name:'Ветеран',           desc:'Сыграть 10 игр',               cat:'game'},
+  {id:'champion',    icon:'👑', name:'Чемпион',           desc:'Выиграть 5 игр',               cat:'game'},
+  {id:'immortal',    icon:'♾', name:'Бессмертный',       desc:'Выиграть 10 игр',              cat:'game'},
+  {id:'legend',      icon:'🌟', name:'Легенда',           desc:'Выиграть 25 игр',              cat:'game'},
+  {id:'unlucky',     icon:'💀', name:'Невезучий',         desc:'Быть выбытым 5 раз',           cat:'game'},
+  {id:'strategist',  icon:'🧠', name:'Стратег',           desc:'Выиграть, не раскрыв все карты', cat:'game'},
+  {id:'secretmaster',icon:'🃏', name:'Мастер секретов',  desc:'Активировать секретную карту',  cat:'game'},
+  {id:'openbook',    icon:'📖', name:'Открытая книга',   desc:'Раскрыть все карты в одной игре', cat:'game'},
+  // Социальные
+  {id:'chatty',      icon:'💬', name:'Болтун',            desc:'Отправить 50 сообщений',       cat:'social'},
+  {id:'popular',     icon:'❤️', name:'Популярный',        desc:'Получить 10 запросов в друзья', cat:'social'},
+  {id:'social',      icon:'👥', name:'Социальный',        desc:'Иметь 5 друзей',               cat:'social'},
+  {id:'connector',   icon:'🤝', name:'Коннектор',         desc:'Пригласить 3 друзей в игру',   cat:'social'},
+  // Прогресс
+  {id:'shopper',     icon:'🛍', name:'Шопоголик',         desc:'Купить предмет в магазине',     cat:'progress'},
+  {id:'collector',   icon:'🎨', name:'Коллекционер',      desc:'Купить 5 предметов в магазине', cat:'progress'},
+  {id:'lvl10',       icon:'⬆️', name:'Ветеран уровня',    desc:'Достичь 10 уровня',            cat:'progress'},
+  {id:'dailystreak', icon:'🔥', name:'Стрик недели',      desc:'Получить ежедневный бонус 7 дней подряд', cat:'progress'},
 ];
 
 async function checkAndAwardAchievements(username,userData,extraContext){
@@ -2070,17 +2122,28 @@ async function checkAndAwardAchievements(username,userData,extraContext){
   const games=userData.gamesPlayed||0;
   const wins=userData.gamesWon||0;
   const elims=userData.gamesEliminated||0;
+  const lvl=getLevel(userData.xp||0).level;
+  const purchasedCount=Object.keys(userData.purchased||{}).length;
+  const loginStreak=userData.loginStreak||0;
   if(games>=1&&!earned.firstblood)toAward.firstblood=Date.now();
   if(wins>=1&&!earned.survivor)toAward.survivor=Date.now();
   if(games>=10&&!earned.veteran)toAward.veteran=Date.now();
   if(wins>=5&&!earned.champion)toAward.champion=Date.now();
   if(wins>=10&&!earned.immortal)toAward.immortal=Date.now();
+  if(wins>=25&&!earned.legend)toAward.legend=Date.now();
   if(elims>=5&&!earned.unlucky)toAward.unlucky=Date.now();
+  if(lvl>=10&&!earned.lvl10)toAward.lvl10=Date.now();
+  if(purchasedCount>=1&&!earned.shopper)toAward.shopper=Date.now();
+  if(purchasedCount>=5&&!earned.collector)toAward.collector=Date.now();
+  if(loginStreak>=7&&!earned.dailystreak)toAward.dailystreak=Date.now();
   if(extraContext){
     if(extraContext.msgsSent>=50&&!earned.chatty)toAward.chatty=Date.now();
     if(extraContext.friendReqsReceived>=10&&!earned.popular)toAward.popular=Date.now();
     if(extraContext.friendsCount>=5&&!earned.social)toAward.social=Date.now();
     if(extraContext.wonWithoutAllCards&&!earned.strategist)toAward.strategist=Date.now();
+    if(extraContext.usedSecret&&!earned.secretmaster)toAward.secretmaster=Date.now();
+    if(extraContext.revealedAll&&!earned.openbook)toAward.openbook=Date.now();
+    if(extraContext.invitesSent>=3&&!earned.connector)toAward.connector=Date.now();
   }
   if(Object.keys(toAward).length>0){
     const upd={};
@@ -2093,21 +2156,162 @@ async function checkAndAwardAchievements(username,userData,extraContext){
 
 function AchievementsPanel({userData}){
   const earned=userData?.achievements||{};
+  const cats=[
+    {id:'game',   label:'🎮 Игровые'},
+    {id:'social', label:'👥 Социальные'},
+    {id:'progress',label:'📈 Прогресс'},
+  ];
+  const earnedCount=Object.keys(earned).length;
+  const total=ACHIEVEMENTS.length;
   return(
-    <div className="ach-grid">
-      {ACHIEVEMENTS.map(a=>{
-        const isEarned=!!earned[a.id];
-        const ts=earned[a.id];
+    <div>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+        <div style={{fontSize:11,color:'var(--tx3)'}}>Получено: <span style={{color:'var(--a)',fontWeight:700}}>{earnedCount}</span> / {total}</div>
+        <div style={{height:6,flex:1,maxWidth:140,background:'rgba(255,255,255,0.08)',borderRadius:3,overflow:'hidden',marginLeft:10}}>
+          <div style={{height:'100%',width:`${Math.round(earnedCount/total*100)}%`,background:'linear-gradient(90deg,var(--a),#ffd700)',borderRadius:3,transition:'width .5s ease'}}/>
+        </div>
+      </div>
+      {cats.map(cat=>{
+        const catAchs=ACHIEVEMENTS.filter(a=>a.cat===cat.id);
         return(
-          <div key={a.id} className={`ach-card${isEarned?' earned':' locked'}`}>
-            {isEarned&&<div className="ach-earned-badge">✓</div>}
-            <div className="ach-icon">{a.icon}</div>
-            <div className="ach-name">{a.name}</div>
-            <div className="ach-desc">{a.desc}</div>
-            {isEarned&&ts&&<div style={{fontSize:9,color:'var(--tx3)',marginTop:4}}>{new Date(ts).toLocaleDateString('ru')}</div>}
+          <div key={cat.id} style={{marginBottom:14}}>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--tx3)',letterSpacing:1,marginBottom:6}}>{cat.label}</div>
+            <div className="ach-grid">
+              {catAchs.map(a=>{
+                const isEarned=!!earned[a.id];
+                const ts=earned[a.id];
+                return(
+                  <div key={a.id} className={`ach-card${isEarned?' earned':' locked'}`} style={{position:'relative',overflow:'hidden'}}>
+                    {isEarned&&<div style={{position:'absolute',top:6,right:6,width:16,height:16,borderRadius:'50%',background:'var(--g)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,fontWeight:700,color:'#000'}}>✓</div>}
+                    <div className="ach-icon" style={{filter:isEarned?'none':'grayscale(1)',opacity:isEarned?1:0.35,transition:'all .3s'}}>{a.icon}</div>
+                    <div className="ach-name" style={{color:isEarned?'var(--tx)':'var(--tx3)'}}>{a.name}</div>
+                    <div className="ach-desc">{a.desc}</div>
+                    {isEarned&&ts&&<div style={{fontSize:9,color:'var(--g)',marginTop:4,fontWeight:600}}>{new Date(ts).toLocaleDateString('ru')}</div>}
+                    {!isEarned&&<div style={{fontSize:9,color:'var(--tx3)',marginTop:4}}>🔒 Не получено</div>}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   DAILY BONUS
+══════════════════════════════════════════════════════════ */
+const DAILY_BONUS_REWARDS=[
+  {day:1, coins:50,  icon:'🪙', label:'День 1'},
+  {day:2, coins:75,  icon:'🪙', label:'День 2'},
+  {day:3, coins:100, icon:'💎', label:'День 3'},
+  {day:4, coins:125, icon:'🪙', label:'День 4'},
+  {day:5, coins:150, icon:'💎', label:'День 5'},
+  {day:6, coins:200, icon:'🌟', label:'День 6'},
+  {day:7, coins:350, icon:'👑', label:'День 7 (бонус!)'},
+];
+
+function DailyBonusModal({user, onClose, onUpdate, toast}){
+  const[claimed, setClaimed]=useState(false);
+  const[reward, setReward]=useState(null);
+  const[streak, setStreak]=useState(0);
+  const[loading, setLoading]=useState(true);
+  const[alreadyClaimed, setAlreadyClaimed]=useState(false);
+
+  useEffect(()=>{
+    (async()=>{
+      const ud=await DB.getUser(user.username);
+      const today=new Date().toDateString();
+      const lastBonus=ud?.lastDailyBonus;
+      const curStreak=ud?.loginStreak||0;
+      if(lastBonus===today){setAlreadyClaimed(true);setStreak(curStreak);}
+      else{setStreak(curStreak);}
+      setLoading(false);
+    })();
+  },[]);
+
+  const claim=async()=>{
+    if(claimed||alreadyClaimed)return;
+    const ud=await DB.getUser(user.username);
+    const today=new Date().toDateString();
+    const yesterday=new Date(Date.now()-86400000).toDateString();
+    const lastBonus=ud?.lastDailyBonus;
+    if(lastBonus===today){setAlreadyClaimed(true);return;}
+    // Считаем стрик
+    let newStreak=(lastBonus===yesterday)?(ud?.loginStreak||0)+1:1;
+    if(newStreak>7)newStreak=1; // цикл 7 дней
+    const dayReward=DAILY_BONUS_REWARDS[(newStreak-1)%7];
+    await DB.addCoins(user.username,dayReward.coins);
+    await DB.updateUser(user.username,{lastDailyBonus:today,loginStreak:newStreak});
+    // XP за ежедневный вход
+    await DB.addXP(user.username, XP_REWARDS.daily||50);
+    // Проверка достижений
+    const newUd=await DB.getUser(user.username);
+    if(newUd)await checkAndAwardAchievements(user.username,{...newUd,loginStreak:newStreak},null);
+    setReward(dayReward);setStreak(newStreak);setClaimed(true);
+    if(onUpdate){const fresh=await DB.getUser(user.username);if(fresh)onUpdate(fresh);}
+    toast(`🎁 +${dayReward.coins} монет! День ${newStreak} стрика!`,'ok');
+  };
+
+  if(loading)return null;
+
+  return(
+    <div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()} style={{zIndex:99999}}>
+      <div className="modal-box" style={{borderRadius:'var(--rad-lg) var(--rad-lg) 0 0',overflow:'hidden',paddingBottom:'env(safe-area-inset-bottom,0px)'}}>
+        {/* Шапка */}
+        <div style={{background:'linear-gradient(135deg,rgba(240,165,0,0.2),rgba(240,165,0,0.05))',borderBottom:'1px solid rgba(240,165,0,0.2)',padding:'20px 18px 16px',position:'relative'}}>
+          <div style={{fontSize:40,textAlign:'center',marginBottom:8}}>🎁</div>
+          <div style={{fontSize:18,fontWeight:800,color:'var(--a)',textAlign:'center',letterSpacing:1}}>ЕЖЕДНЕВНЫЙ БОНУС</div>
+          <div style={{fontSize:11,color:'var(--tx3)',textAlign:'center',marginTop:4}}>Заходи каждый день за наградой!</div>
+          <button onClick={onClose} style={{position:'absolute',top:14,right:14,background:'rgba(255,255,255,0.1)',border:'none',color:'var(--tx2)',width:28,height:28,borderRadius:'50%',fontSize:14,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+        </div>
+        <div className="modal-bd">
+          {/* Стрик */}
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:6,marginBottom:16,padding:'10px 14px',background:'rgba(240,165,0,0.06)',border:'1px solid rgba(240,165,0,0.18)',borderRadius:'var(--rad-sm)'}}>
+            <span style={{fontSize:20}}>🔥</span>
+            <div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--a)'}}>Стрик: {streak} {streak===7?'🎉':''}дней</div>
+              <div style={{fontSize:10,color:'var(--tx3)'}}>Заходи каждый день — стрик растёт!</div>
+            </div>
+          </div>
+          {/* Сетка дней */}
+          <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4,marginBottom:16}}>
+            {DAILY_BONUS_REWARDS.map((r,i)=>{
+              const dayNum=i+1;
+              const isCurrentDay=dayNum===((streak%7)||7)||dayNum===streak;
+              const isPast=dayNum<streak||(claimed&&dayNum===streak);
+              const isFuture=dayNum>streak&&!claimed;
+              return(
+                <div key={dayNum} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:3,padding:'8px 4px',background:isCurrentDay?'rgba(240,165,0,0.15)':isPast?'rgba(48,209,88,0.08)':'rgba(255,255,255,0.03)',border:`1px solid ${isCurrentDay?'rgba(240,165,0,0.5)':isPast?'rgba(48,209,88,0.25)':'rgba(255,255,255,0.07)'}`,borderRadius:8,transition:'.2s'}}>
+                  <div style={{fontSize:16,filter:isFuture?'grayscale(1)':'none',opacity:isFuture?0.4:1}}>{isPast?'✅':r.icon}</div>
+                  <div style={{fontSize:7,fontWeight:700,color:isCurrentDay?'var(--a)':isPast?'var(--g)':'var(--tx3)',textAlign:'center',lineHeight:1.2}}>+{r.coins}</div>
+                  <div style={{fontSize:6,color:'var(--tx3)',textAlign:'center'}}>Д{dayNum}</div>
+                </div>
+              );
+            })}</div>
+          {/* Текущая награда */}
+          {claimed&&reward?(
+            <div style={{textAlign:'center',padding:'16px',background:'rgba(48,209,88,0.08)',border:'1px solid rgba(48,209,88,0.25)',borderRadius:'var(--rad)',animation:'winFadeIn .4s ease'}}>
+              <div style={{fontSize:36,marginBottom:6}}>{reward.icon}</div>
+              <div style={{fontSize:20,fontWeight:800,color:'var(--g)'}}>+{reward.coins} монет!</div>
+              <div style={{fontSize:11,color:'var(--tx3)',marginTop:4}}>День {streak} — продолжай стрик!</div>
+            </div>
+          ):alreadyClaimed?(
+            <div style={{textAlign:'center',padding:'14px',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad)'}}>
+              <div style={{fontSize:24,marginBottom:6}}>✅</div>
+              <div style={{fontSize:14,fontWeight:700,color:'var(--g)'}}>Уже получено сегодня!</div>
+              <div style={{fontSize:11,color:'var(--tx3)',marginTop:4}}>Приходи завтра за следующим бонусом</div>
+            </div>
+          ):(
+            <button onClick={claim} style={{width:'100%',padding:'14px',background:'linear-gradient(135deg,var(--a),#ffc235)',border:'none',borderRadius:'var(--rad)',color:'#000',fontSize:15,fontWeight:800,cursor:'pointer',letterSpacing:1,transition:'.2s',fontFamily:"'Inter',sans-serif"}}>
+              🎁 ПОЛУЧИТЬ БОНУС
+            </button>
+          )}
+          {/* Отступ для нижней навигации */}
+          <div style={{height:'var(--nav-h,76px)'}}/>
+        </div>
+      </div>
     </div>
   );
 }
@@ -2240,7 +2444,16 @@ const BEST_CARDS_BY_SCENARIO = {
   },
 };
 
-const PROF=["👨‍⚕️ Хирург","👩‍⚕️ Терапевт","💊 Фармацевт","🧬 Генетик","🦠 Инфекционист","🧑‍⚕️ Психиатр","👨‍🌾 Агроном","🌱 Ботаник","🐄 Животновод","🎣 Рыбак","🌾 Фермер","🍄 Миколог","⚡ Электрик","🔧 Механик","👷 Инженер-строитель","🪵 Плотник","⚙️ Сварщик","🧪 Химик","🧑‍💻 Программист","📡 Радиотехник","⚛️ Физик-ядерщик","🔭 Астроном","🌍 Геолог","🎖 Военный офицер","🚓 Полицейский","🥊 Инструктор выживания","🕵️ Разведчик","🧗 Сапёр","👨‍🍳 Шеф-повар","📚 Учитель","🧑‍⚖️ Психолог","📖 Историк","✈️ Пилот","⚓ Моряк","🚑 Парамедик","🐕 Ветеринар","🧑‍🚒 Пожарный","🏋️ Тренер","💰 Экономист","🏛 Политик","🌋 Вулканолог","🔬 Нанотехнолог","🧲 Физик-магнетолог","🏗️ Архитектор","🌿 Фитотерапевт","🐺 Зоолог","🧫 Биохимик","🛡️ Кибербезопасник","🎯 Снайпер","⛏️ Шахтёр","🧭 Навигатор","🌐 Лингвист","💡 Изобретатель","🧊 Криогеник","🔐 Криптограф"];
+const PROF=["👨‍⚕️ Хирург","👩‍⚕️ Терапевт","💊 Фармацевт","🧬 Генетик","🦠 Инфекционист","🧑‍⚕️ Психиатр","👨‍🌾 Агроном","🌱 Ботаник","🐄 Животновод","🎣 Рыбак","🌾 Фермер","🍄 Миколог","⚡ Электрик","🔧 Механик","👷 Инженер-строитель","🪵 Плотник","⚙️ Сварщик","🧪 Химик","🧑‍💻 Программист","📡 Радиотехник","⚛️ Физик-ядерщик","🔭 Астроном","🌍 Геолог","🎖 Военный офицер","🚓 Полицейский","🥊 Инструктор выживания","🕵️ Разведчик","🧗 Сапёр","👨‍🍳 Шеф-повар","📚 Учитель","🧑‍⚖️ Психолог","📖 Историк","✈️ Пилот","⚓ Моряк",
+/* Смешные и необычные */
+"🎪 Дрессировщик блох","🤡 Профессиональный аниматор на детских праздниках","🪄 Фокусник-неудачник","🎭 Актёр массовки","🧸 Тестировщик мягких игрушек","🍕 Дегустатор пиццы","🛋️ Диванный аналитик","📺 Смотритель Netflix","🦆 Утковод","🐌 Специалист по улиткам","🧻 Аудитор туалетной бумаги","🪣 Эксперт по вёдрам","🔮 Ясновидящий (не всегда)","🃏 Профессиональный картёжник","🎲 Мастер настольных игр","🛸 Уфолог","👻 Охотник за привидениями","🧿 Специалист по сглазу","🪬 Продавец амулетов","🌚 Ночной сторож кладбища","🦷 Зубная фея (по совместительству)","🎠 Оператор карусели","🏖️ Строитель замков из песка","🦜 Переводчик с попугайского","🐉 Дракон-ведущий на свадьбах","🧙 Волшебник (уровень Хогвартс)","🕹️ Киберспортсмен-пенсионер","🎮 Стример с 3 подписчиками","🤸 Йог-неудачник","🧘 Медитатор (засыпает на 5-й минуте)",
+"🚀 Астронавт-любитель","🌮 Тако-сомелье","🧆 Мастер по фалафелю","🫙 Хранитель солений","🥒 Огуречный аналитик","🍌 Бананолог","🥑 Адвокат авокадо","☕ Кофейный философ","🧋 Специалист по боба-чаю","🍜 Нудл-мастер","🎂 Архитектор тортов","🧁 Кекс-дизайнер","🍭 Инспектор по леденцам","🍩 Пончик-критик","🥐 Круассан-аналитик",
+"🚲 Велосипедный странник","🛴 Самокатчик-профессионал","🛶 Гондольер без лицензии","🪂 Парашютист-теоретик","🏹 Лучник (в основном промахивается)","🤼 Борец за диван","🏋️ Поднимает гантели раз в год","⛷️ Горнолыжник-понедельщик","🏄 Сёрфер из Сибири","🤿 Дайвер в луже",
+"📸 Инстаграм-фотограф закатов","🎨 Художник NFT","✍️ Автор неопубликованного романа","🎵 Музыкант в переходе","🎤 Рэпер без альбома","🎻 Скрипач-самоучка","🥁 Барабанщик (соседи в ярости)","🎺 Трубач на балконе","📝 Ведёт дневник с 2007 года","📚 Читает аннотации вместо книг",
+"🔍 Детектив по открыткам","📦 Специалист по распаковке","🛒 Эксперт по скидкам","🏷️ Охотник за акциями","💳 Коллекционер дисконтных карт","🗂️ Архивариус мемов","📊 Аналитик собственного настроения","🧮 Считает калории (приблизительно)","🗺️ Навигатор без GPS","🧭 Эксперт по заблуждениям",
+"🌵 Кактусовод","🌺 Разговаривает с цветами","🐈 Котовладелец (скорее наоборот)","🐕 Выгульщик чужих собак","🐟 Аквариумный психолог","🦎 Владелец ящерицы-рептилоида","🐇 Кроликовед-любитель","🦔 Специалист по ёжикам","🐢 Черепаховод со стажем","🦋 Коллекционер бабочек",
+/* Серьёзные (оставшиеся) */
+"🚑 Парамедик","🐕 Ветеринар","🧑‍🚒 Пожарный","🏋️ Тренер","💰 Экономист","🏛 Политик","🌋 Вулканолог","🔬 Нанотехнолог","🧲 Физик-магнетолог","🏗️ Архитектор","🌿 Фитотерапевт","🐺 Зоолог","🧫 Биохимик","🛡️ Кибербезопасник","🎯 Снайпер","⛏️ Шахтёр","🌐 Лингвист","💡 Изобретатель","🧊 Криогеник","🔐 Криптограф"];
 const HEALTH=[["✅","Абсолютно здоров, идеальная физическая форма"],["✅","Отличное здоровье, профессиональный спортсмен"],["✅","Здоров, выносливый, без хронических болезней"],["⚠️","Близорукость (−5), носит очки"],["⚠️","Лёгкая астма, носит ингалятор"],["⚠️","Аллергия на пыльцу и пыль"],["⚠️","Хронический гастрит"],["⚠️","Лёгкая депрессия, принимает антидепрессанты"],["⚠️","Хроническая мигрень"],["⚠️","Клаустрофобия"],["⚠️","Бесплодие"],["❌","Диабет 1 типа — инсулинозависимый"],["❌","Сердечная недостаточность"],["❌","ВИЧ-положительный (под контролем)"],["❌","Шизофрения в ремиссии"],["❌","Онкология 2 стадии"],["❌","Тяжёлая наркозависимость"],["✅","Абсолютно здорова, регулярно занимается спортом"]];
 const FEMALE_HEALTH=[["🤰","Беременна 4 месяца, полностью здорова"],["🤰","Беременна 7 месяцев, осложнений нет"],["🤰","Беременна 2 месяца — ещё никто не знает"]];
 const HOBBY=["🎯 Стрельба из лука","🏕 Выживание в дикой природе","🌿 Огородничество","📻 Радиолюбитель","🔨 Столярное дело","🎵 Игра на гитаре","📖 История войн","🍳 Кулинария и заготовки","🤸 Йога и медитация","🎮 Программирование","🐕 Дрессировка собак","🧶 Шитьё","⚗️ Самогоноварение","🎲 Стратегические игры","🌌 Астрономия","🗺 Картография","🏊 Дайвинг","🧗 Скалолазание","🎪 Паркур","🛠 Слесарное дело","🚗 Ремонт авто","🐟 Рыболовство и охота","⚔️ Фехтование","🧠 Психология","🌱 Травничество","🏹 Стрельба из лука (элит)","🎯 Метание ножей","🔭 Любительская астрономия","🛖 Постройка укрытий","🌊 Сёрфинг","🧪 Домашняя химия","🐝 Пчеловодство","🌾 Заготовка еды","🎤 Ораторское искусство","🏇 Верховая езда","🤿 Подводная охота","🎻 Игра на скрипке","🛶 Байдарочный туризм","🔥 Выживание в экстремальном холоде","🗡️ Боевые искусства","🧬 Биохакинг","📡 Радиолюбительство (позывной)","⚡ Электроника DIY"];
@@ -2336,7 +2549,26 @@ function RChip({user,size=9}){
 }
 
 /* ══════════════════════════════════════════════════════════
-   CARD PACKS DATA (для генерации карточек в игре)
+  УРОВНИ И XP
+══════════════════════════════════════════════════════════ */
+const XP_PER_LEVEL=i=>100+i*50; // XP нужно для уровня i
+const getLevel=xp=>{let lvl=1,acc=0;while(acc+XP_PER_LEVEL(lvl)<=xp){acc+=XP_PER_LEVEL(lvl);lvl++;}return{level:lvl,currentXP:xp-acc,neededXP:XP_PER_LEVEL(lvl)};};
+const XP_REWARDS={game:30,win:80,reveal:5,secret:20,daily:50,chat:2};
+const LEVEL_REWARDS=[
+ {level:5,reward:'🖼 Рамка Серебряная',item:{id:'frame_silver',slot:'frame'}},
+ {level:10,reward:'🎭 Аватар Детектив',item:{id:'prem_detective',slot:'avatar'}},
+ {level:15,reward:'🪙 500 монет',coins:500},
+ {level:20,reward:'🖼 Рамка Неоновая',item:{id:'frame_neon',slot:'frame'}},
+ {level:25,reward:'🎭 Аватар Дракон',item:{id:'prem_dragon',slot:'avatar'}},
+ {level:30,reward:'🪙 1000 монет',coins:1000},
+ {level:40,reward:'🖼 Рамка Огненная',item:{id:'frame_fire',slot:'frame'}},
+ {level:50,reward:'🏆 Рамка Бриллиант',item:{id:'frame_diamond',slot:'frame'}},
+ {level:75,reward:'🪙 2000 монет',coins:2000},
+ {level:100,reward:'👑 Рамка Золотая Легенда',item:{id:'frame_gold',slot:'frame'}},
+];
+
+/* ══════════════════════════════════════════════════════════
+  CARD PACKS DATA (для генерации карточек в игре)
 ══════════════════════════════════════════════════════════ */
 const CARD_PACKS_DATA={
   default:{id:'default',name:'Классика',emoji:'🏠',cost:0,color:'#888',
@@ -2372,24 +2604,27 @@ const CARD_PACKS_DATA={
 ══════════════════════════════════════════════════════════ */
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function genCode(){return Array.from({length:6},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*32)]).join('')}
-function mkCards(adult=false, packId='default'){
-  const pack=CARD_PACKS_DATA[packId]||CARD_PACKS_DATA['default'];
+/* PROF_SERIOUS — только серьёзные (первые 55 элементов PROF) */
+const PROF_SERIOUS=PROF.filter(p=>!['🎪','🤡','🪄','🎭','🧸','🍕','🛋️','📺','🦆','🐌','🧻','🪣','🔮','🃏','🎲','🛸','👻','🧿','🪬','🌚','🦷','🎠','🏖️','🦜','🐉','🧙','🕹️','🎮','🤸','🧘','🚀','🌮','🧆','🫙','🥒','🍌','🥑','☕','🧋','🍜','🎂','🧁','🍭','🍩','🥐','🚲','🛴','🛶','🪂','🏹','🤼','⛷️','🏄','🤿','📸','🎨','✍️','🎵','🎤','🎻','🥁','🎺','📝','🔍','📦','🛒','🏷️','💳','🗂️','📊','🧮','🗺️','🌵','🌺','🐈','🐇','🦔','🐢','🦋','🐟','🦎'].some(em=>p.startsWith(em)));
+function mkCards(adult=false, packId='default', funnyProf=false){
+  // 'pack_default' in shop maps to 'default' in CARD_PACKS_DATA
+  const resolvedPackId = packId==='pack_default'?'default':packId;
+  const pack=CARD_PACKS_DATA[resolvedPackId]||CARD_PACKS_DATA['default'];
   const sc=rnd(SECRET_CARDS);
   const gendPool=adult?[...GEND,...ADUL_G]:GEND;
   const gender_age=rnd(gendPool);
-  // Определяем пол по строке — если женщина/беременная/трансгендер → можно добавить беременность в здоровье
   const isFemale=/Женщина|Беременная|🤰|👩|👵|🏳️‍⚧️/.test(gender_age);
   let h;
   if(adult){
     h=rnd(ADUL_H);
   } else {
-    // Для женщин с 15% шансом добавляем FEMALE_HEALTH (беременность)
     const healthPool=pack.health||HEALTH;
     h=(isFemale&&Math.random()<0.15)?rnd(FEMALE_HEALTH):rnd(healthPool);
   }
+  const profPool=adult?ADUL_P:(pack.prof||(funnyProf?PROF:PROF_SERIOUS));
   return{
     gender_age,
-    profession:adult?rnd(ADUL_P):rnd(pack.prof||PROF),
+    profession:rnd(profPool),
     health:{0:h[0],1:h[1]},
     hobby:adult?rnd(ADUL_Ho):rnd(pack.hobby||HOBBY),
     baggage:adult?rnd(ADUL_B):rnd(pack.baggage||BAGG),
@@ -2579,24 +2814,86 @@ function isSameMinute(ts1,ts2){
   return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()&&a.getHours()===b.getHours()&&a.getMinutes()===b.getMinutes();
 }
 const QUICK_EMOJI=['👍','❤️','😂','😮','😢','🔥','💯','👏'];
+function VoiceMessage({audioUrl,duration}){
+  const[playing,setPlaying]=useState(false);
+  const[progress,setProgress]=useState(0);
+  const audioRef=useRef(null);
+  const bars=Array.from({length:28},(_,i)=>Math.random()*0.7+0.3);
+  const toggle=()=>{
+    if(!audioRef.current){audioRef.current=new Audio(audioUrl);}
+    const a=audioRef.current;
+    if(playing){a.pause();setPlaying(false);}
+    else{
+      a.play().catch(()=>{});setPlaying(true);
+      a.ontimeupdate=()=>setProgress(a.duration?a.currentTime/a.duration:0);
+      a.onended=()=>{setPlaying(false);setProgress(0);};
+    }
+  };
+  const fmtDur=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+  return(
+    <div className="bubble-voice">
+      <button className="bubble-voice-btn" onClick={toggle}>{playing?'⏸':'▶'}</button>
+      <div className="bubble-voice-bar">
+        {bars.map((h,i)=>(
+          <div key={i} className={`bubble-voice-wave${playing&&i/bars.length<=progress?' active':''}`}
+            style={{height:`${h*100}%`,opacity:i/bars.length<=progress?1:0.35}}/>
+        ))}
+      </div>
+      <span className="bubble-voice-dur">{fmtDur(duration||0)}</span>
+    </div>
+  );
+}
+
 function ChatView({msgs,me,onSend,title,onClose,extra,extraPadBot=0,onlineStatus}){
   const[text,setT]=useState('');
   const[reacting,setReacting]=useState(null);
   const[reactions,setReactions]=useState({});
+  const[quoting,setQuoting]=useState(null);
+  const[recording,setRecording]=useState(false);
+  const[recDur,setRecDur]=useState(0);
   const bot=useRef();
   const inputRef=useRef();
+  const mediaRec=useRef(null);
+  const recTimer=useRef(null);
+  const recChunks=useRef([]);
   useEffect(()=>{if(bot.current)bot.current.scrollIntoView({behavior:'smooth'})},[msgs.length]);
-  const send=()=>{const t=text.trim();if(!t)return;onSend(t);setT('');setTimeout(()=>inputRef.current?.focus(),50);};
+  const send=()=>{
+    const t=text.trim();if(!t)return;
+    const msg=quoting?`> ${quoting.from}: ${quoting.text}\n${t}`:t;
+    onSend(msg);setT('');setQuoting(null);
+    setTimeout(()=>inputRef.current?.focus(),50);
+  };
   const handleKey=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}};
   const addReaction=(msgKey,emoji)=>{
     setReactions(prev=>{
       const cur=prev[msgKey]||{};
-      const cnt=(cur[emoji]||0);
-      if(cnt===0)return{...prev,[msgKey]:{...cur,[emoji]:1}};
-      const next={...cur};delete next[emoji];
-      return{...prev,[msgKey]:next};
+      if(cur[emoji]){const n={...cur};delete n[emoji];return{...prev,[msgKey]:n};}
+      return{...prev,[msgKey]:{...cur,[emoji]:(cur[emoji]||0)+1}};
     });
     setReacting(null);
+  };
+  const startVoice=async()=>{
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      recChunks.current=[];
+      const mr=new MediaRecorder(stream,{mimeType:'audio/webm'});
+      mr.ondataavailable=e=>{if(e.data.size>0)recChunks.current.push(e.data);};
+      mr.onstop=()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        const blob=new Blob(recChunks.current,{type:'audio/webm'});
+        const url=URL.createObjectURL(blob);
+        const dur=recDur;
+        onSend('__voice__',{audioUrl:url,duration:dur});
+        setRecDur(0);
+      };
+      mr.start();mediaRec.current=mr;
+      setRecording(true);
+      let s=0;recTimer.current=setInterval(()=>{s++;setRecDur(s);if(s>=60)stopVoice();},1000);
+    }catch(e){alert('Нет доступа к микрофону');}
+  };
+  const stopVoice=()=>{
+    if(mediaRec.current&&mediaRec.current.state!=='inactive')mediaRec.current.stop();
+    clearInterval(recTimer.current);setRecording(false);
   };
 
   // group messages: show date divider when day changes
@@ -2626,42 +2923,61 @@ function ChatView({msgs,me,onSend,title,onClose,extra,extraPadBot=0,onlineStatus
         </div>
         {extra}
       </div>
-      <div className="chat-msgs" style={{paddingBottom: extraPadBot>0 ? extraPadBot+8 : 8}} onClick={()=>setReacting(null)}>
-        {msgs.length===0&&<div style={{textAlign:'center',color:'var(--tx3)',fontSize:12,marginTop:48,lineHeight:2}}>💬<br/>Нет сообщений<br/><span style={{fontSize:10}}>Напишите первым!</span></div>}
+      <div className="chat-msgs" style={{paddingBottom:extraPadBot>0?extraPadBot+8:8}} onClick={()=>{setReacting(null);}}>
+        {msgs.length===0&&<div style={{textAlign:'center',color:'var(--tx3)',fontSize:13,marginTop:60,lineHeight:2.2}}>💬<br/>Нет сообщений<br/><span style={{fontSize:11,opacity:.6}}>Напишите первым!</span></div>}
         {grouped.map(item=>{
           if(item.type==='date')return(
-            <div key={item.key} style={{textAlign:'center',margin:'8px 0',position:'relative'}}>
-              <span style={{background:'rgba(255,255,255,0.07)',color:'var(--tx3)',fontSize:10,padding:'3px 10px',borderRadius:10,fontFamily:"'Inter',sans-serif"}}>{item.label}</span>
-            </div>
+            <div key={item.key} className="chat-day-div">{item.label}</div>
           );
           const{m,hideName}=item;
           const isMe=m.from===me.username,isSys=m.from==='system';
           const msgKey=m.id||String(m.ts);
           const msgReactions=reactions[msgKey]||{};
           const hasReactions=Object.keys(msgReactions).filter(e=>msgReactions[e]>0).length>0;
+          const isVoice=m.text==='__voice__'&&m.audioUrl;
+          // Разбираем цитату
+          let quoteText=null,mainText=m.text;
+          if(typeof m.text==='string'&&m.text.startsWith('> ')){
+            const nl=m.text.indexOf('\n');
+            if(nl>0){quoteText=m.text.slice(2,nl);mainText=m.text.slice(nl+1);}
+          }
           return(
-            <div key={msgKey} style={{display:'flex',flexDirection:'column',alignItems:isSys?'center':isMe?'flex-end':'flex-start',marginBottom:hasReactions?16:0}}>
+            <div key={msgKey} className={`bubble-wrap${isSys?' system':isMe?' me':' other'}`}
+              style={{marginBottom:hasReactions?6:2}}>
+              {!isMe&&!isSys&&!hideName&&<div className="bubble-from">{m.fromName||m.from}</div>}
               <div
                 className={`bubble ${isSys?'system':isMe?'me':'other'}`}
-                style={{position:'relative',cursor:'pointer'}}
+                style={{cursor:isSys?'default':'pointer',position:'relative'}}
                 onClick={e=>{e.stopPropagation();if(!isSys)setReacting(reacting===msgKey?null:msgKey);}}
+                onContextMenu={e=>{e.preventDefault();if(!isSys)setQuoting({from:m.fromName||m.from,text:mainText?.slice(0,80)||''});}}
               >
-                {!isMe&&!isSys&&!hideName&&<div className="bubble-from">{m.fromName||m.from}</div>}
-                <span style={{whiteSpace:'pre-wrap'}}>{m.text}</span>
-                {!isSys&&<div className="bubble-time">{fmtMsgTime(m.ts)}</div>}
+                {quoteText&&<div className="bubble-quote">💬 {quoteText}</div>}
+                {isVoice
+                  ?<VoiceMessage audioUrl={m.audioUrl} duration={m.duration||0}/>
+                  :<span style={{whiteSpace:'pre-wrap'}}>{mainText}</span>
+                }
                 {reacting===msgKey&&!isSys&&(
-                  <div onClick={e=>e.stopPropagation()} style={{position:'absolute',bottom:'calc(100% + 6px)',right:isMe?0:'auto',left:isMe?'auto':0,display:'flex',gap:4,background:'rgba(20,20,32,0.97)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:12,padding:'6px 10px',zIndex:10,boxShadow:'0 4px 24px rgba(0,0,0,0.5)',flexWrap:'nowrap'}}>
+                  <div onClick={e=>e.stopPropagation()} className={`reaction-picker${isMe?' right':' left'}`}>
                     {QUICK_EMOJI.map(emoji=>(
-                      <button key={emoji} onClick={()=>addReaction(msgKey,emoji)} style={{background:'none',border:'none',fontSize:18,cursor:'pointer',padding:'2px',lineHeight:1,borderRadius:6,transition:'.15s'}}>{emoji}</button>
+                      <button key={emoji} onClick={()=>addReaction(msgKey,emoji)}
+                        style={{background:'none',border:'none',fontSize:20,cursor:'pointer',padding:'2px 1px',lineHeight:1,borderRadius:6,transition:'.15s'}}>
+                        {emoji}
+                      </button>
                     ))}
                   </div>
                 )}
               </div>
+              <div className="bubble-meta">
+                {!isSys&&<span className="bubble-time">{fmtMsgTime(m.ts)}</span>}
+                {!isSys&&!isMe&&<button style={{background:'none',border:'none',color:'rgba(255,255,255,0.25)',fontSize:10,cursor:'pointer',padding:'0 2px'}}
+                  onClick={()=>setQuoting({from:m.fromName||m.from,text:mainText?.slice(0,80)||''})}>↩</button>}
+              </div>
               {hasReactions&&(
-                <div style={{display:'flex',gap:4,marginTop:4,flexWrap:'wrap',justifyContent:isMe?'flex-end':'flex-start'}}>
+                <div className="bubble-reactions">
                   {Object.entries(msgReactions).filter(([,c])=>c>0).map(([emoji,cnt])=>(
-                    <button key={emoji} onClick={()=>addReaction(msgKey,emoji)} style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.15)',borderRadius:10,padding:'2px 7px',fontSize:12,cursor:'pointer',color:'var(--tx)',display:'flex',alignItems:'center',gap:3}}>
-                      {emoji}{cnt>1&&<span style={{fontSize:10}}>{cnt}</span>}
+                    <button key={emoji} onClick={()=>addReaction(msgKey,emoji)}
+                      className={`bubble-reaction${reactions[msgKey]?.[emoji]?' mine':''}`}>
+                      {emoji}{cnt>1&&<span className="bubble-reaction-count">{cnt}</span>}
                     </button>
                   ))}
                 </div>
@@ -2671,9 +2987,24 @@ function ChatView({msgs,me,onSend,title,onClose,extra,extraPadBot=0,onlineStatus
         })}
         <div ref={bot}/>
       </div>
-      <div className="chat-input" style={{paddingBottom: extraPadBot>0 ? extraPadBot+'px' : 'calc(12px + env(safe-area-inset-bottom,0px))'}}>
-        <input ref={inputRef} className="inp" value={text} onChange={e=>setT(e.target.value)} onKeyDown={handleKey} placeholder="Сообщение…" maxLength={500} style={{marginBottom:0}}/>
-        <button className="chat-send" onClick={send} disabled={!text.trim()}>▶</button>
+      {quoting&&(
+        <div className="chat-quote-bar">
+          <span style={{color:'var(--a)',flexShrink:0}}>↩</span>
+          <span className="chat-quote-bar-text">
+            <b style={{color:'var(--a)'}}>{quoting.from}:</b> {quoting.text}
+          </span>
+          <button className="chat-quote-close" onClick={()=>setQuoting(null)}>✕</button>
+        </div>
+      )}
+      <div className="chat-input" style={{paddingBottom:extraPadBot>0?extraPadBot+'px':'calc(12px + env(safe-area-inset-bottom,0px))'}}>
+        <button className={`chat-voice-btn${recording?' recording':''}`}
+          onPointerDown={startVoice} onPointerUp={stopVoice} onPointerLeave={()=>{if(recording)stopVoice();}}>
+          {recording?`${recDur}s`:'🎤'}
+        </button>
+        <input ref={inputRef} className="inp" value={text} onChange={e=>setT(e.target.value)}
+          onKeyDown={handleKey} placeholder={recording?'Запись...':"Сообщение…"} maxLength={500}
+          disabled={recording} style={{marginBottom:0}}/>
+        <button className="chat-send" onClick={send} disabled={!text.trim()||recording}>▶</button>
       </div>
     </>
   );
@@ -2700,8 +3031,17 @@ function AuthScreen({onLogin,toast}){
         const ex=await DB.getUser(u);if(ex){setL(false);return toast('Имя занято','err');}
         const all=await DB.getAllUsers();const first=Object.keys(all).length===0;
         const displayName=dname.trim()||u;
-        const nu={userId:u,username:u,password:p,displayName:displayName,isAdmin:first,customRank:first?'supreme':null,gamesPlayed:0,gamesWon:0,gamesEliminated:0,elo:1000,eloGames:0,createdAt:Date.now()};
-        await DB.setUser(u,nu);toast('✅ Аккаунт создан!','ok');if(window.triggerGate)window.triggerGate();onLogin(nu);
+        // Реферальный код из URL
+        const urlRef=new URLSearchParams(window.location.search).get('ref');
+        const refCode=u.toUpperCase().slice(0,6);
+        const nu={userId:u,username:u,password:p,displayName:displayName,isAdmin:first,customRank:first?'supreme':null,gamesPlayed:0,gamesWon:0,gamesEliminated:0,elo:1000,eloGames:0,createdAt:Date.now(),coins:50,refCode};
+        await DB.setUser(u,nu);
+        // Начисляем реферальный бонус
+        if(urlRef){
+          const refOwner=await DB.getByRefCode(urlRef.toUpperCase());
+          if(refOwner&&refOwner.username!==u)await DB.addRefBonus(refOwner.username,u);
+        }
+        toast('✅ Аккаунт создан! +50 монет 🪙','ok');if(window.triggerGate)window.triggerGate();onLogin(nu);
       }else{
         const usr=await DB.getUser(u);
         if(!usr||usr.password!==p){setL(false);return toast('Неверный логин или пароль','err');}
@@ -2751,6 +3091,27 @@ const AVATARS=['🧑‍🚀','👩‍⚕️','🧙‍♂️','🦸','🧟','👨
 
 /* ── Тематические паки карточек ── */
 const CARD_PACKS = [
+  {
+    id: 'pack_default',
+    name: 'Стандартный',
+    icon: '🃏',
+    color: '#8e8e99',
+    price: 0,
+    description: 'Базовый набор карточек — профессии, снаряжение и факты из стандартной игры. Доступен бесплатно.',
+    professions: [
+      '👨‍⚕️ Врач','👩‍🔬 Биолог','⚙️ Инженер','👮 Полицейский','🧑‍🍳 Повар',
+      '🧑‍🌾 Фермер','🧑‍💻 Программист','🧑‍🏫 Учитель','🧑‍🔧 Механик','🧑‍✈️ Пилот',
+      '🧑‍⚕️ Медсестра','🧑‍🎨 Художник','🧑‍🎤 Музыкант','📚 Библиотекарь','⚖️ Юрист',
+    ],
+    baggage: [
+      '🎒 Аптечка первой помощи','🔦 Фонарик с батарейками','🍫 Запас еды на неделю',
+      '💧 Фильтр для воды','🔪 Складной нож','📻 Радиоприёмник','🪢 Верёвка 50м',
+    ],
+    facts: [
+      '💪 Отличная физическая форма','🧠 Высокий IQ','🌍 Знает 3 языка',
+      '😷 Хронически болен','🕵️ Бывший агент спецслужб','🎖️ Военный ветеран',
+    ],
+  },
   {
     id: 'zombie',
     name: 'Зомби-апокалипсис',
@@ -2867,52 +3228,198 @@ const CARD_PACKS = [
 
 /* ── Премиум-аватары ── */
 const PREMIUM_AVATARS = [
-  { id: 'av_dragon',    emoji: '🐉', name: 'Дракон',       price: 80,  rarity: 'rare' },
-  { id: 'av_crown',     emoji: '👸', name: 'Принцесса',    price: 60,  rarity: 'common' },
-  { id: 'av_demon',     emoji: '😈', name: 'Демон',        price: 100, rarity: 'epic' },
+  /* Легендарные */
+  { id: 'av_nuclear',   emoji: '☢️', name: 'Ядерный',      price: 200, rarity: 'legendary' },
+  { id: 'av_king',      emoji: '🤴', name: 'Король',       price: 180, rarity: 'legendary' },
+  { id: 'av_grim',      emoji: '💀', name: 'Смерть',       price: 200, rarity: 'legendary' },
+  { id: 'av_phoenix2',  emoji: '🦚', name: 'Жар-птица',    price: 180, rarity: 'legendary' },
+  /* Эпические */
+  { id: 'av_demon',     emoji: '😈', name: 'Демон',        price: 130, rarity: 'epic' },
+  { id: 'av_alien',     emoji: '👾', name: 'Пришелец',     price: 120, rarity: 'epic' },
+  { id: 'av_cyborg',    emoji: '🦾', name: 'Киборг',       price: 120, rarity: 'epic' },
+  { id: 'av_dragon',    emoji: '🐉', name: 'Дракон',       price: 130, rarity: 'epic' },
+  { id: 'av_mage',      emoji: '🧿', name: 'Мистик',       price: 110, rarity: 'epic' },
+  { id: 'av_robot',     emoji: '🤖', name: 'Робот',        price: 110, rarity: 'epic' },
+  /* Редкие */
+  { id: 'av_vampire',   emoji: '🧛', name: 'Вампир',       price: 90,  rarity: 'rare' },
   { id: 'av_angel',     emoji: '😇', name: 'Ангел',        price: 80,  rarity: 'rare' },
-  { id: 'av_ninja',     emoji: '🥷', name: 'Ниндзя',       price: 60,  rarity: 'common' },
-  { id: 'av_vampire',   emoji: '🧛', name: 'Вампир',       price: 80,  rarity: 'rare' },
-  { id: 'av_wizard',    emoji: '🧙', name: 'Волшебник',    price: 60,  rarity: 'common' },
-  { id: 'av_alien',     emoji: '👾', name: 'Пришелец',     price: 100, rarity: 'epic' },
-  { id: 'av_fire',      emoji: '🔥', name: 'Огонь',        price: 50,  rarity: 'common' },
-  { id: 'av_ghost',     emoji: '👻', name: 'Призрак',      price: 50,  rarity: 'common' },
-  { id: 'av_king',      emoji: '🤴', name: 'Король',       price: 120, rarity: 'legendary' },
-  { id: 'av_wolf',      emoji: '🐺', name: 'Волк',         price: 60,  rarity: 'common' },
-  { id: 'av_skull2',    emoji: '🫀', name: 'Сердце',       price: 40,  rarity: 'common' },
-  { id: 'av_cat',       emoji: '🐈‍⬛', name: 'Чёрный кот', price: 70,  rarity: 'rare' },
-  { id: 'av_cyborg',    emoji: '🦾', name: 'Киборг',       price: 90,  rarity: 'rare' },
+  { id: 'av_cat',       emoji: '🐈‍⬛', name: 'Чёрный кот', price: 80,  rarity: 'rare' },
+  { id: 'av_thunder',   emoji: '⚡', name: 'Молния',       price: 90,  rarity: 'rare' },
+  { id: 'av_ice',       emoji: '❄️', name: 'Лёд',          price: 80,  rarity: 'rare' },
+  { id: 'av_wolf',      emoji: '🐺', name: 'Волк',         price: 80,  rarity: 'rare' },
   { id: 'av_phoenix',   emoji: '🦅', name: 'Орёл',         price: 80,  rarity: 'rare' },
-  { id: 'av_bunny',     emoji: '🐰', name: 'Кролик',       price: 40,  rarity: 'common' },
-  { id: 'av_ice',       emoji: '❄️', name: 'Лёд',          price: 60,  rarity: 'rare' },
-  { id: 'av_thunder',   emoji: '⚡', name: 'Молния',       price: 80,  rarity: 'rare' },
-  { id: 'av_nuclear',   emoji: '☢️', name: 'Ядерный',      price: 150, rarity: 'legendary' },
+  { id: 'av_snake',     emoji: '🐍', name: 'Змея',         price: 75,  rarity: 'rare' },
+  { id: 'av_bear',      emoji: '🐻', name: 'Медведь',      price: 75,  rarity: 'rare' },
+  { id: 'av_lion',      emoji: '🦁', name: 'Лев',          price: 85,  rarity: 'rare' },
+  { id: 'av_fox',       emoji: '🦊', name: 'Лиса',         price: 75,  rarity: 'rare' },
+  { id: 'av_octopus',   emoji: '🐙', name: 'Осьминог',     price: 70,  rarity: 'rare' },
+  /* Обычные */
+  { id: 'av_wizard',    emoji: '🧙', name: 'Волшебник',    price: 60,  rarity: 'common' },
+  { id: 'av_ninja',     emoji: '🥷', name: 'Ниндзя',       price: 60,  rarity: 'common' },
+  { id: 'av_ghost',     emoji: '👻', name: 'Призрак',      price: 50,  rarity: 'common' },
+  { id: 'av_fire',      emoji: '🔥', name: 'Огонь',        price: 50,  rarity: 'common' },
+  { id: 'av_crown',     emoji: '👸', name: 'Принцесса',    price: 60,  rarity: 'common' },
+  { id: 'av_bunny',     emoji: '🐰', name: 'Кролик',       price: 45,  rarity: 'common' },
+  { id: 'av_heart',     emoji: '🫀', name: 'Сердце',       price: 40,  rarity: 'common' },
+  { id: 'av_star',      emoji: '⭐', name: 'Звезда',       price: 40,  rarity: 'common' },
+  { id: 'av_mushroom',  emoji: '🍄', name: 'Гриб',         price: 45,  rarity: 'common' },
+  { id: 'av_cactus',    emoji: '🌵', name: 'Кактус',       price: 40,  rarity: 'common' },
+  { id: 'av_bomb',      emoji: '💣', name: 'Бомба',        price: 55,  rarity: 'common' },
+  { id: 'av_crystal',   emoji: '💎', name: 'Кристалл',     price: 60,  rarity: 'common' },
+  { id: 'av_clown',     emoji: '🤡', name: 'Клоун',        price: 50,  rarity: 'common' },
+  { id: 'av_panda',     emoji: '🐼', name: 'Панда',        price: 50,  rarity: 'common' },
+  { id: 'av_penguin',   emoji: '🐧', name: 'Пингвин',      price: 45,  rarity: 'common' },
 ];
 
 /* ── Рамки профиля ── */
 const PROFILE_FRAMES = [
-  { id: 'frame_gold',     name: 'Золотая',       price: 200, color: '#f0a500', gradient: 'linear-gradient(135deg,#f0a500,#ffc235,#f0a500)', rarity: 'legendary' },
-  { id: 'frame_neon',     name: 'Неоновая',      price: 120, color: '#0a84ff', gradient: 'linear-gradient(135deg,#0a84ff,#00f2fe,#0a84ff)', rarity: 'epic' },
-  { id: 'frame_fire',     name: 'Огненная',      price: 150, color: '#ff453a', gradient: 'linear-gradient(135deg,#ff453a,#ff6b35,#ff453a)', rarity: 'epic' },
-  { id: 'frame_cyber',    name: 'Кибер',         price: 100, color: '#30d158', gradient: 'linear-gradient(135deg,#30d158,#38f9d7,#30d158)', rarity: 'rare' },
-  { id: 'frame_purple',   name: 'Мистическая',   price: 100, color: '#bf5af2', gradient: 'linear-gradient(135deg,#bf5af2,#a78bfa,#bf5af2)', rarity: 'rare' },
-  { id: 'frame_bunker',   name: 'Бункерная',     price: 80,  color: '#8e8e99', gradient: 'linear-gradient(135deg,#3a3a4a,#6e6e80,#3a3a4a)', rarity: 'common' },
-  { id: 'frame_ice',      name: 'Ледяная',       price: 90,  color: '#4da6ff', gradient: 'linear-gradient(135deg,#4da6ff,#e0f4ff,#4da6ff)', rarity: 'rare' },
-  { id: 'frame_rainbow',  name: 'Радужная',      price: 300, color: '#ff453a', gradient: 'linear-gradient(135deg,#ff453a,#f0a500,#30d158,#0a84ff,#bf5af2)', rarity: 'legendary' },
+  /* Легендарные */
+  { id: 'frame_rainbow',  name: '🌈 Радужная',      price: 350, color: '#ff453a', gradient: 'linear-gradient(135deg,#ff453a,#f0a500,#30d158,#0a84ff,#bf5af2)', rarity: 'legendary' },
+  { id: 'frame_gold',     name: '✨ Золотая',        price: 250, color: '#f0a500', gradient: 'linear-gradient(135deg,#c8830a,#f0a500,#ffd700,#f0a500,#c8830a)', rarity: 'legendary' },
+  { id: 'frame_diamond',  name: '💎 Бриллиант',     price: 400, color: '#4da6ff', gradient: 'linear-gradient(135deg,#4da6ff,#ffffff,#b0e0ff,#ffffff,#4da6ff)', rarity: 'legendary' },
+  { id: 'frame_nuclear',  name: '☢️ Ядерная',        price: 300, color: '#30d158', gradient: 'linear-gradient(135deg,#0a2e0a,#30d158,#00ff88,#30d158,#0a2e0a)', rarity: 'legendary' },
+  /* Эпические */
+  { id: 'frame_fire',     name: '🔥 Огненная',      price: 180, color: '#ff453a', gradient: 'linear-gradient(135deg,#ff1a00,#ff6b35,#ffd700,#ff6b35,#ff1a00)', rarity: 'epic' },
+  { id: 'frame_cyber',    name: '🤖 Кибер',          price: 160, color: '#30d158', gradient: 'linear-gradient(135deg,#001a00,#30d158,#00ff88,#30d158,#001a00)', rarity: 'epic' },
+  { id: 'frame_royal',    name: '👑 Королевская',   price: 180, color: '#bf5af2', gradient: 'linear-gradient(135deg,#4a0080,#bf5af2,#e8b4ff,#bf5af2,#4a0080)', rarity: 'epic' },
+  { id: 'frame_neon',     name: '💡 Неоновая',      price: 150, color: '#0a84ff', gradient: 'linear-gradient(135deg,#001433,#0a84ff,#00f2fe,#0a84ff,#001433)', rarity: 'epic' },
+  { id: 'frame_galaxy',   name: '🌌 Галактика',     price: 200, color: '#a78bfa', gradient: 'linear-gradient(135deg,#1a0033,#7b2ff7,#e040fb,#00b0ff,#7b2ff7)', rarity: 'epic' },
+  /* Редкие */
+  { id: 'frame_ice',      name: '❄️ Ледяная',       price: 100, color: '#4da6ff', gradient: 'linear-gradient(135deg,#4da6ff,#e0f4ff,#4da6ff)', rarity: 'rare' },
+  { id: 'frame_purple',   name: '🔮 Мистическая',   price: 100, color: '#bf5af2', gradient: 'linear-gradient(135deg,#bf5af2,#a78bfa,#bf5af2)', rarity: 'rare' },
+  { id: 'frame_toxic',    name: '☣️ Токсичная',     price: 110, color: '#a8ff00', gradient: 'linear-gradient(135deg,#1a3300,#a8ff00,#c8ff40,#a8ff00,#1a3300)', rarity: 'rare' },
+  { id: 'frame_lava',     name: '🌋 Лавовая',       price: 120, color: '#ff8c00', gradient: 'linear-gradient(135deg,#3d0000,#ff4500,#ff8c00,#ffd700)', rarity: 'rare' },
+  { id: 'frame_ocean',    name: '🌊 Океан',          price: 100, color: '#00b0ff', gradient: 'linear-gradient(135deg,#001a33,#00b0ff,#00e5ff,#00b0ff)', rarity: 'rare' },
+  { id: 'frame_rose',     name: '🌹 Розовая',       price: 90,  color: '#ff4081', gradient: 'linear-gradient(135deg,#ff4081,#f48fb1,#ff4081)', rarity: 'rare' },
+  /* Обычные */
+  { id: 'frame_silver',   name: '🥈 Серебряная',    price: 70,  color: '#a0a0b0', gradient: 'linear-gradient(135deg,#606070,#c0c0d0,#606070)', rarity: 'common' },
+  { id: 'frame_bunker',   name: '🏚 Бункерная',     price: 60,  color: '#8e8e99', gradient: 'linear-gradient(135deg,#2a2a3a,#6e6e80,#2a2a3a)', rarity: 'common' },
+  { id: 'frame_white',    name: '⬜ Белая',          price: 50,  color: '#e0e0e0', gradient: 'linear-gradient(135deg,#c0c0c0,#ffffff,#c0c0c0)', rarity: 'common' },
 ];
 
 /* ── Эффекты карточек ── */
 const CARD_EFFECTS = [
-  { id: 'fx_gold',    name: 'Золотые карты',   price: 180, desc: 'Карты отображаются в золотом стиле', preview: '✨', color: '#f0a500', rarity: 'legendary' },
-  { id: 'fx_neon',    name: 'Неоновые карты',  price: 120, desc: 'Карты светятся неоновым светом',     preview: '💡', color: '#0a84ff', rarity: 'epic' },
-  { id: 'fx_fire',    name: 'Огненные карты',  price: 140, desc: 'Горящий эффект на картах',           preview: '🔥', color: '#ff6b35', rarity: 'epic' },
-  { id: 'fx_cyber',   name: 'Кибер-карты',     price: 100, desc: 'Матричный стиль оформления',         preview: '🤖', color: '#30d158', rarity: 'rare' },
-  { id: 'fx_royal',   name: 'Королевские',     price: 90,  desc: 'Бархатный стиль с орнаментом',       preview: '👑', color: '#bf5af2', rarity: 'rare' },
-  { id: 'fx_classic', name: 'Классика',        price: 0,   desc: 'Стандартный стиль (бесплатно)',      preview: '🃏', color: '#8e8e99', rarity: 'common' },
+  { id: 'fx_gold',    name: '✨ Золотые',       price: 200, desc: 'Карты в золотом стиле с блеском',    preview: '✨', color: '#f0a500', rarity: 'legendary' },
+  { id: 'fx_galaxy',  name: '🌌 Галактика',    price: 180, desc: 'Карты с космическим фоном',          preview: '🌌', color: '#7b2ff7', rarity: 'legendary' },
+  { id: 'fx_diamond', name: '💎 Бриллиант',    price: 220, desc: 'Карты переливаются как бриллиант',   preview: '💎', color: '#4da6ff', rarity: 'legendary' },
+  { id: 'fx_neon',    name: '💡 Неоновые',     price: 140, desc: 'Карты светятся неоном',              preview: '💡', color: '#0a84ff', rarity: 'epic' },
+  { id: 'fx_fire',    name: '🔥 Огненные',     price: 150, desc: 'Огненное оформление карточек',       preview: '🔥', color: '#ff6b35', rarity: 'epic' },
+  { id: 'fx_toxic',   name: '☣️ Токсичные',    price: 130, desc: 'Ядовито-зелёный стиль',             preview: '☣️', color: '#a8ff00', rarity: 'epic' },
+  { id: 'fx_cyber',   name: '🤖 Кибер',        price: 110, desc: 'Матричный стиль в стиле хакера',    preview: '🤖', color: '#30d158', rarity: 'rare' },
+  { id: 'fx_royal',   name: '👑 Королевские',  price: 100, desc: 'Бархатные карты с орнаментом',      preview: '👑', color: '#bf5af2', rarity: 'rare' },
+  { id: 'fx_ice',     name: '❄️ Ледяные',      price: 90,  desc: 'Заморозка — холодный стиль',        preview: '❄️', color: '#4da6ff', rarity: 'rare' },
+  { id: 'fx_retro',   name: '📟 Ретро',        price: 80,  desc: 'Пиксельный ретро-стиль 8-bit',      preview: '📟', color: '#a8ff00', rarity: 'common' },
+  { id: 'fx_dark',    name: '🌑 Тёмные',       price: 70,  desc: 'Ультра-тёмный минималистичный стиль',preview: '🌑', color: '#555570', rarity: 'common' },
+  { id: 'fx_classic', name: '🃏 Классика',     price: 0,   desc: 'Стандартный стиль (бесплатно)',     preview: '🃏', color: '#8e8e99', rarity: 'common' },
 ];
 
 const RARITY_LABELS = { common: 'Обычный', rare: 'Редкий', epic: 'Эпический', legendary: 'Легендарный' };
 const RARITY_COLORS = { common: '#8e8e99', rare: '#4da6ff', epic: '#bf5af2', legendary: '#f0a500' };
+
+/* ── Визуальные стили для эффектов карточек ── */
+const CARD_EFFECT_STYLES = {
+  fx_classic: {
+    cardBg:   'rgba(255,255,255,0.04)',
+    cardBorder:'rgba(255,255,255,0.08)',
+    revBg:    'rgba(48,209,88,0.06)',
+    revBorder:'rgba(48,209,88,.3)',
+    glow:     null,
+    overlay:  null,
+  },
+  fx_gold: {
+    cardBg:   'linear-gradient(135deg,rgba(240,165,0,0.12),rgba(200,120,0,0.08))',
+    cardBorder:'rgba(240,165,0,0.45)',
+    revBg:    'linear-gradient(135deg,rgba(240,165,0,0.18),rgba(200,120,0,0.12))',
+    revBorder:'rgba(240,165,0,0.7)',
+    glow:     '0 0 12px rgba(240,165,0,0.35)',
+    overlay:  'linear-gradient(135deg,rgba(255,215,0,0.06) 0%,transparent 60%)',
+  },
+  fx_galaxy: {
+    cardBg:   'linear-gradient(135deg,rgba(123,47,247,0.15),rgba(10,50,120,0.12))',
+    cardBorder:'rgba(123,47,247,0.5)',
+    revBg:    'linear-gradient(135deg,rgba(123,47,247,0.22),rgba(10,50,120,0.18))',
+    revBorder:'rgba(123,47,247,0.75)',
+    glow:     '0 0 14px rgba(123,47,247,0.4)',
+    overlay:  'radial-gradient(ellipse at top right,rgba(200,150,255,0.08),transparent 60%)',
+  },
+  fx_diamond: {
+    cardBg:   'linear-gradient(135deg,rgba(77,166,255,0.12),rgba(0,200,255,0.08))',
+    cardBorder:'rgba(77,166,255,0.5)',
+    revBg:    'linear-gradient(135deg,rgba(77,166,255,0.2),rgba(0,200,255,0.12))',
+    revBorder:'rgba(77,166,255,0.75)',
+    glow:     '0 0 14px rgba(77,166,255,0.4)',
+    overlay:  'linear-gradient(135deg,rgba(200,240,255,0.07) 0%,transparent 55%)',
+  },
+  fx_neon: {
+    cardBg:   'linear-gradient(135deg,rgba(10,132,255,0.1),rgba(0,80,200,0.08))',
+    cardBorder:'rgba(10,132,255,0.6)',
+    revBg:    'linear-gradient(135deg,rgba(10,132,255,0.16),rgba(0,80,200,0.12))',
+    revBorder:'rgba(10,132,255,0.85)',
+    glow:     '0 0 16px rgba(10,132,255,0.5)',
+    overlay:  null,
+  },
+  fx_fire: {
+    cardBg:   'linear-gradient(135deg,rgba(255,107,53,0.12),rgba(255,50,0,0.08))',
+    cardBorder:'rgba(255,107,53,0.5)',
+    revBg:    'linear-gradient(135deg,rgba(255,107,53,0.2),rgba(255,50,0,0.12))',
+    revBorder:'rgba(255,107,53,0.75)',
+    glow:     '0 0 14px rgba(255,107,53,0.45)',
+    overlay:  'linear-gradient(180deg,rgba(255,200,0,0.05) 0%,transparent 50%)',
+  },
+  fx_toxic: {
+    cardBg:   'linear-gradient(135deg,rgba(168,255,0,0.1),rgba(50,200,0,0.07))',
+    cardBorder:'rgba(168,255,0,0.45)',
+    revBg:    'linear-gradient(135deg,rgba(168,255,0,0.16),rgba(50,200,0,0.1))',
+    revBorder:'rgba(168,255,0,0.7)',
+    glow:     '0 0 12px rgba(168,255,0,0.35)',
+    overlay:  null,
+  },
+  fx_cyber: {
+    cardBg:   'linear-gradient(135deg,rgba(48,209,88,0.08),rgba(0,180,80,0.06))',
+    cardBorder:'rgba(48,209,88,0.45)',
+    revBg:    'linear-gradient(135deg,rgba(48,209,88,0.14),rgba(0,180,80,0.1))',
+    revBorder:'rgba(48,209,88,0.7)',
+    glow:     '0 0 10px rgba(48,209,88,0.35)',
+    overlay:  'repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(48,209,88,0.03) 4px,rgba(48,209,88,0.03) 5px)',
+  },
+  fx_royal: {
+    cardBg:   'linear-gradient(135deg,rgba(191,90,242,0.12),rgba(120,0,200,0.08))',
+    cardBorder:'rgba(191,90,242,0.5)',
+    revBg:    'linear-gradient(135deg,rgba(191,90,242,0.18),rgba(120,0,200,0.12))',
+    revBorder:'rgba(191,90,242,0.75)',
+    glow:     '0 0 14px rgba(191,90,242,0.4)',
+    overlay:  'linear-gradient(135deg,rgba(220,150,255,0.06) 0%,transparent 55%)',
+  },
+  fx_ice: {
+    cardBg:   'linear-gradient(135deg,rgba(100,200,255,0.1),rgba(0,150,220,0.07))',
+    cardBorder:'rgba(100,200,255,0.45)',
+    revBg:    'linear-gradient(135deg,rgba(100,200,255,0.16),rgba(0,150,220,0.1))',
+    revBorder:'rgba(100,200,255,0.7)',
+    glow:     '0 0 12px rgba(100,200,255,0.35)',
+    overlay:  'linear-gradient(180deg,rgba(220,240,255,0.06) 0%,transparent 50%)',
+  },
+  fx_retro: {
+    cardBg:   'linear-gradient(135deg,rgba(168,255,0,0.07),rgba(0,180,0,0.05))',
+    cardBorder:'rgba(168,255,0,0.35)',
+    revBg:    'linear-gradient(135deg,rgba(168,255,0,0.12),rgba(0,180,0,0.08))',
+    revBorder:'rgba(168,255,0,0.55)',
+    glow:     '0 0 8px rgba(168,255,0,0.25)',
+    overlay:  'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(168,255,0,0.02) 3px,rgba(168,255,0,0.02) 4px)',
+  },
+  fx_dark: {
+    cardBg:   'rgba(10,10,20,0.85)',
+    cardBorder:'rgba(80,80,120,0.4)',
+    revBg:    'rgba(15,15,30,0.9)',
+    revBorder:'rgba(100,100,150,0.55)',
+    glow:     '0 0 8px rgba(80,80,120,0.3)',
+    overlay:  null,
+  },
+};
+
+/* Возвращает стили карточки по id эффекта */
+function getCardEffectStyle(effectId) {
+  return CARD_EFFECT_STYLES[effectId] || CARD_EFFECT_STYLES['fx_classic'];
+}
 
 /* ── DB методы для монет и магазина ── */
 Object.assign(DB, {
@@ -2923,6 +3430,54 @@ Object.assign(DB, {
   addCoins: async (username, amount) => {
     await db.ref(`users/${username}/coins`).transaction(c => (c || 0) + amount);
   },
+  addXP: async (username, amount) => {
+    const ref = db.ref(`users/${username}/xp`);
+    const snap = await ref.once('value');
+    const oldXP = snap.val() || 0;
+    const newXP = oldXP + amount;
+    const oldLvl = getLevel(oldXP).level;
+    const newLvl = getLevel(newXP).level;
+    await ref.set(newXP);
+    // Проверяем награды за новые уровни
+    if (newLvl > oldLvl) {
+      for (let lvl = oldLvl + 1; lvl <= newLvl; lvl++) {
+        const reward = LEVEL_REWARDS.find(r => r.level === lvl);
+        if (reward) {
+          if (reward.coins) await db.ref(`users/${username}/coins`).transaction(c => (c || 0) + reward.coins);
+          if (reward.item) {
+            await db.ref(`users/${username}/purchased/${reward.item.id}`).set(true);
+          }
+        }
+      }
+    }
+    return { oldLvl, newLvl, leveled: newLvl > oldLvl };
+  },
+  getSeasonalEvent: async () => {
+    const snap = await db.ref('settings/seasonalEvent').once('value');
+    return snap.val();
+  },
+  setSeasonalEvent: async (event) => {
+    await db.ref('settings/seasonalEvent').set(event);
+  },
+  /* ── Daily Quests ── */
+  async getDailyQuests(username){const s=await db.ref(`dailyQuests/${username}`).once('value');return s.val()||null;},
+  async saveDailyQuests(username,data){await db.ref(`dailyQuests/${username}`).set(data);},
+  /* ── Referral ── */
+  async getByRefCode(code){const s=await db.ref('users').orderByChild('refCode').equalTo(code).once('value');const v=s.val();return v?Object.values(v)[0]:null;},
+  async addRefBonus(refOwner,newUser){
+    await this.addCoins(refOwner,200);await this.addCoins(newUser,100);
+    await db.ref(`users/${refOwner}/referrals`).transaction(c=>(c||0)+1);
+    await db.ref(`users/${newUser}/refBy`).set(refOwner);
+  },
+  /* ── Game History (user-level) ── */
+  async saveGameHistory(username,entry){
+    const key=db.ref(`gameHistory/${username}`).push().key;
+    await db.ref(`gameHistory/${username}/${key}`).set({...entry,ts:Date.now()});
+    const snap=await db.ref(`gameHistory/${username}`).orderByChild('ts').once('value');
+    const all=snap.val()||{};const keys=Object.keys(all).sort((a,b)=>all[a].ts-all[b].ts);
+    if(keys.length>20)await Promise.all(keys.slice(0,keys.length-20).map(k=>db.ref(`gameHistory/${username}/${k}`).remove()));
+  },
+  async fetchGameHistory(username){const s=await db.ref(`gameHistory/${username}`).orderByChild('ts').limitToLast(10).once('value');const v=s.val()||{};return Object.values(v).sort((a,b)=>b.ts-a.ts);},
   spendCoins: async (username, amount) => {
     let ok = false;
     await db.ref(`users/${username}/coins`).transaction(c => {
@@ -2949,6 +3504,7 @@ Object.assign(DB, {
 
 /* Карта рамок — берётся из SHOP_FRAMES */
 const FRAME_STYLES={
+  /* Ключи без префикса (старые) */
   'none':null,
   'gold':'linear-gradient(135deg,#f5a623,#f0c040,#f5a623)',
   'silver':'linear-gradient(135deg,#a0a0b0,#d0d0e0,#a0a0b0)',
@@ -2957,16 +3513,54 @@ const FRAME_STYLES={
   'fire':'linear-gradient(135deg,#ff4500,#ff8c00,#ffd700,#ff4500)',
   'royal':'linear-gradient(135deg,#7b2ff7,#4facfe,#7b2ff7)',
   'cyber':'linear-gradient(135deg,#00f5ff,#bf00ff,#00f5ff)',
+  /* Ключи с префиксом frame_ (из ShopScreen) */
+  'frame_gold':'linear-gradient(135deg,#c8830a,#f0a500,#ffd700,#f0a500,#c8830a)',
+  'frame_silver':'linear-gradient(135deg,#606070,#c0c0d0,#606070)',
+  'frame_rainbow':'linear-gradient(135deg,#ff453a,#f0a500,#30d158,#0a84ff,#bf5af2)',
+  'frame_neon':'linear-gradient(135deg,#001433,#0a84ff,#00f2fe,#0a84ff,#001433)',
+  'frame_fire':'linear-gradient(135deg,#ff1a00,#ff6b35,#ffd700,#ff6b35,#ff1a00)',
+  'frame_royal':'linear-gradient(135deg,#4a0080,#bf5af2,#e8b4ff,#bf5af2,#4a0080)',
+  'frame_cyber':'linear-gradient(135deg,#001a00,#30d158,#00ff88,#30d158,#001a00)',
+  'frame_bunker':'linear-gradient(135deg,#2a2a3a,#6e6e80,#2a2a3a)',
+  'frame_ice':'linear-gradient(135deg,#4da6ff,#e0f4ff,#4da6ff)',
+  'frame_purple':'linear-gradient(135deg,#bf5af2,#a78bfa,#bf5af2)',
+  'frame_diamond':'linear-gradient(135deg,#4da6ff,#ffffff,#b0e0ff,#ffffff,#4da6ff)',
+  'frame_nuclear':'linear-gradient(135deg,#0a2e0a,#30d158,#00ff88,#30d158,#0a2e0a)',
+  'frame_galaxy':'linear-gradient(135deg,#1a0033,#7b2ff7,#e040fb,#00b0ff,#7b2ff7)',
+  'frame_toxic':'linear-gradient(135deg,#1a3300,#a8ff00,#c8ff40,#a8ff00,#1a3300)',
+  'frame_lava':'linear-gradient(135deg,#3d0000,#ff4500,#ff8c00,#ffd700)',
+  'frame_ocean':'linear-gradient(135deg,#001a33,#00b0ff,#00e5ff,#00b0ff)',
+  'frame_rose':'linear-gradient(135deg,#ff4081,#f48fb1,#ff4081)',
+  'frame_white':'linear-gradient(135deg,#c0c0c0,#ffffff,#c0c0c0)',
 };
 function Avatar({name,size='md',online=false,style={},avatar,frame}){
   const bg=getAvaColor(name);
   const cls=size==='lg'?'ava-lg':size==='sm'?'ava-sm':'ava';
   const isEmoji=avatar&&avatar.length>0;
-  const sz=size==='lg'?52:size==='sm'?20:28;
-  const frameSz=size==='lg'?4:size==='sm'?2:3;
+  const sz=size==='lg'?72:size==='sm'?28:40;
   const frameGrad=frame&&frame!=='none'?FRAME_STYLES[frame]:null;
+  const borderW=size==='lg'?3:size==='sm'?2:2;
 
-  const innerEl=isEmoji?(()=>{
+  // Вычисляем цвет свечения по типу рамки
+  const glowColor=!frame?null:
+    frame.includes('gold')?'rgba(240,180,0,0.7)':
+    frame.includes('diamond')?'rgba(180,230,255,0.6)':
+    frame.includes('rainbow')?'rgba(255,80,120,0.6)':
+    frame.includes('neon')?'rgba(0,200,255,0.6)':
+    frame.includes('fire')||frame.includes('lava')?'rgba(255,80,0,0.6)':
+    frame.includes('royal')||frame.includes('purple')?'rgba(160,80,240,0.6)':
+    frame.includes('cyber')||frame.includes('nuclear')?'rgba(0,220,100,0.6)':
+    frame.includes('galaxy')?'rgba(140,60,250,0.6)':
+    frame.includes('toxic')?'rgba(140,255,0,0.5)':
+    frame.includes('ocean')?'rgba(0,180,255,0.5)':
+    frame.includes('ice')?'rgba(100,200,255,0.5)':
+    frame.includes('rose')?'rgba(255,80,140,0.5)':
+    'rgba(200,200,200,0.4)';
+
+  const isRainbow=frame==='rainbow'||frame==='frame_rainbow';
+  const isNeon=frame==='neon'||frame==='frame_neon';
+
+  const gradBg=isEmoji?(()=>{
     const gradients=[
       'linear-gradient(135deg,#667eea,#764ba2)',
       'linear-gradient(135deg,#f093fb,#f5576c)',
@@ -2977,34 +3571,63 @@ function Avatar({name,size='md',online=false,style={},avatar,frame}){
       'linear-gradient(135deg,#fccb90,#d57eeb)',
       'linear-gradient(135deg,#e0c3fc,#8ec5fc)',
     ];
-    const gradIdx=name?(name.charCodeAt(0)+name.charCodeAt(name.length-1))%gradients.length:0;
-    return(
-      <div className={`${cls}${online?' ava-pulse':''}`} style={{background:gradients[gradIdx],boxShadow:`0 3px 12px rgba(0,0,0,0.4)`,fontSize:sz*0.65,display:'flex',alignItems:'center',justifyContent:'center',filter:'drop-shadow(0 1px 2px rgba(0,0,0,0.3))',...(frameGrad?{}:style)}}>
+    return gradients[(name?(name.charCodeAt(0)+name.charCodeAt(name.length-1))%gradients.length:0)];
+  })():null;
+
+  /* Если нет рамки — простой аватар */
+  if(!frameGrad){
+    return isEmoji?(
+      <div className={`${cls}${online?' ava-pulse':''}`} style={{background:gradBg,boxShadow:'0 3px 12px rgba(0,0,0,0.4)',display:'flex',alignItems:'center',justifyContent:'center',...style}}>
         {avatar}
       </div>
+    ):(
+      <div className={`${cls}${online?' ava-pulse':''}`} style={{background:`linear-gradient(135deg,${bg}cc,${bg}88)`,boxShadow:`0 2px 8px ${bg}44`,...style}}>
+        {(name||'?')[0].toUpperCase()}
+      </div>
     );
-  })():(
-    <div className={`${cls}${online?' ava-pulse':''}`} style={{background:`linear-gradient(135deg,${bg}cc,${bg}88)`,boxShadow:`0 2px 8px ${bg}44`,...(frameGrad?{}:style)}}>
-      {(name||'?')[0].toUpperCase()}
-    </div>
-  );
+  }
 
-  if(!frameGrad) return innerEl;
+  /* С рамкой — используем CSS outline + box-shadow вместо обёртки */
+  const ringStyle={
+    outline:`${borderW+1}px solid transparent`,
+    outlineOffset:2,
+    backgroundImage:frameGrad,
+    backgroundOrigin:'border-box',
+    WebkitBackgroundClip:'border-box',
+    backgroundClip:'border-box',
+    boxShadow:`0 0 0 ${borderW}px transparent, 0 0 ${borderW*6}px ${glowColor}, inset 0 0 0 ${borderW+2}px var(--bg,#0a0a0f)`,
+    animation:isRainbow?'rainbowSpin 3s linear infinite':isNeon?'neonPulse 1.5s ease infinite':undefined,
+  };
 
-  /* Обёртка с градиентной рамкой */
-  const outerSz=sz+(frameSz*2+4);
+  /* Элегантнее через border + padding */
+  const wrapSz=sz+borderW*2+6;
   return(
     <div style={{
       display:'inline-flex',alignItems:'center',justifyContent:'center',
-      background:frameGrad,
+      width:wrapSz,height:wrapSz,minWidth:wrapSz,minHeight:wrapSz,
       borderRadius:'50%',
-      padding:frameSz,
-      boxShadow:`0 0 ${frameSz*4}px rgba(255,200,50,0.5)`,
-      animation:frame==='rainbow'?'rainbowSpin 3s linear infinite':frame==='neon'?'neonPulse 1.5s ease infinite':undefined,
+      background:frameGrad,
+      padding:borderW+2,
+      boxShadow:`0 0 ${borderW*6}px ${glowColor}, 0 2px 8px rgba(0,0,0,0.5)`,
+      animation:isRainbow?'rainbowSpin 3s linear infinite':isNeon?'neonPulse 1.5s ease infinite':undefined,
       flexShrink:0,
       ...style
     }}>
-      {innerEl}
+      <div style={{
+        width:'100%',height:'100%',
+        borderRadius:'50%',
+        background:gradBg||`linear-gradient(135deg,${bg}cc,${bg}88)`,
+        display:'flex',alignItems:'center',justifyContent:'center',
+        overflow:'hidden',
+        boxShadow:'inset 0 1px 3px rgba(0,0,0,0.4)',
+        fontSize:size==='lg'?28:size==='sm'?12:16,
+        fontWeight:700,color:'#fff',
+        flexShrink:0,
+        position:'relative',
+      }}>
+        {isEmoji?avatar:(name||'?')[0].toUpperCase()}
+        {online&&<div className="ava-pulse-dot"/>}
+      </div>
     </div>
   );
 }
@@ -3054,9 +3677,19 @@ function useOnlinePlayers(gameId){
   return online;
 }
 
-function HomeScreen({user,nav,online,announcement}){
+function HomeScreen({user,nav,online,announcement,onUpdate,toast}){
   const rank=getRank(user);
   const stats=[['gamesPlayed','ИГР','var(--a)'],['gamesWon','ПОБЕД','var(--g)'],['gamesEliminated','ВЫБЫЛ','var(--r)'],['elo','ЭЛО','#4da6ff']];
+  const lvlInfo=getLevel(user.xp||0);
+  const[showDailyBonus,setShowDailyBonus]=useState(false);
+  // Auto-show daily bonus if not claimed today
+  useEffect(()=>{
+    const today=new Date().toDateString();
+    if(user.lastDailyBonus!==today){
+      const t=setTimeout(()=>setShowDailyBonus(true),800);
+      return()=>clearTimeout(t);
+    }
+  },[]);
   return(
     <div className="sc">
       <HZ/>
@@ -3072,8 +3705,16 @@ function HomeScreen({user,nav,online,announcement}){
           <div style={{position:'absolute',top:'10%',left:'50%',transform:'translateX(-50%)',width:100,height:100,borderRadius:'50%',background:'radial-gradient(circle,rgba(240,165,0,.15) 0%,transparent 70%)',pointerEvents:'none'}}/>
           <div style={{fontSize:56,marginBottom:6,animation:'glow 3s ease infinite',position:'relative'}}>{rank.icon}</div>
           <div style={{fontFamily:"'Inter',sans-serif",fontSize:26,letterSpacing:3,color:'var(--tx)',marginBottom:2}}>{user.displayName||user.username}</div>
-          <div className="mono" style={{fontSize:9,color:'var(--tx3)',letterSpacing:2,marginBottom:10}}>@{user.username}</div>
+          <div className="mono" style={{fontSize:9,color:'var(--tx3)',letterSpacing:2,marginBottom:6}}>@{user.username}</div>
           <RChip user={user} size={10}/>
+          {/* Уровень */}
+          <div style={{display:'flex',alignItems:'center',gap:8,justifyContent:'center',margin:'10px 0 4px'}}>
+            <div style={{background:'linear-gradient(135deg,var(--a),#ff6b00)',borderRadius:8,padding:'3px 10px',fontSize:12,fontWeight:900,color:'#000'}}>ур. {lvlInfo.level}</div>
+            <div style={{flex:1,maxWidth:120,height:5,background:'rgba(255,255,255,0.08)',borderRadius:3,overflow:'hidden'}}>
+              <div style={{height:'100%',width:`${Math.round(lvlInfo.currentXP/lvlInfo.neededXP*100)}%`,background:'linear-gradient(90deg,var(--a),#ff6b00)',borderRadius:3}}/>
+            </div>
+            <div style={{fontSize:10,color:'var(--tx3)'}}>{lvlInfo.currentXP}/{lvlInfo.neededXP}</div>
+          </div>
           {/* Stats row */}
           <div style={{display:'flex',justifyContent:'center',gap:0,marginTop:18,borderTop:'1px solid var(--ab)',paddingTop:16}}>
             {stats.map(([k,l,c],i)=>(
@@ -3094,8 +3735,15 @@ function HomeScreen({user,nav,online,announcement}){
             <Btn ch="🏆 РЕЙТИНГ" onClick={()=>nav('leaderboard')} cls="btn-c" sm/>
             <Btn ch="👤 ПРОФИЛЬ" onClick={()=>nav('profile')} cls="btn-g" sm/>
           </div>
+          {/* Ежедневный бонус */}
+          <button onClick={()=>setShowDailyBonus(true)} style={{width:'100%',padding:'13px 16px',background:user.lastDailyBonus===new Date().toDateString()?'rgba(255,255,255,0.04)':'linear-gradient(135deg,rgba(240,165,0,0.18),rgba(240,165,0,0.06))',border:`1px solid ${user.lastDailyBonus===new Date().toDateString()?'rgba(255,255,255,0.08)':'rgba(240,165,0,0.4)'}`,borderRadius:'var(--rad)',color:user.lastDailyBonus===new Date().toDateString()?'var(--tx3)':'var(--a)',fontSize:14,fontWeight:700,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,fontFamily:"'Inter',sans-serif",transition:'.2s'}}>
+            <span style={{fontSize:18}}>{user.lastDailyBonus===new Date().toDateString()?'✅':'🎁'}</span>
+            {user.lastDailyBonus===new Date().toDateString()?'Бонус получен сегодня':'Ежедневный бонус — забрать!'}
+            {(user.loginStreak||0)>0&&<span style={{fontSize:11,background:'rgba(240,165,0,0.15)',border:'1px solid rgba(240,165,0,0.3)',borderRadius:8,padding:'2px 7px',color:'var(--a)'}}>🔥{user.loginStreak||0}</span>}
+          </button>
           {user.isAdmin&&<Btn ch="🔐 ПАНЕЛЬ АДМИНИСТРАТОРА" onClick={()=>nav('admin')} cls="btn-pu"/>}
         </div>
+        {showDailyBonus&&<DailyBonusModal user={user} onClose={()=>setShowDailyBonus(false)} onUpdate={onUpdate} toast={toast||((m)=>{})}/>}
 
         <div className="lbl">СИСТЕМА ЗВАНИЯ</div>
         {RANKS.filter(r=>!r.adminOnly||user.isAdmin).map(r=>{
@@ -3254,13 +3902,21 @@ function ShopScreen({user, onBack, toast, onUpdate}){
     Promise.all([
       DB.getPurchased(user.username),
       DB.getEquipped(user.username),
-    ]).then(([pur, eq])=>{
+    ]).then(async ([pur, eq])=>{
+      // fx_classic всегда куплен (бесплатно), сохраняем в БД если ещё нет
+      if(!pur['fx_classic']){
+        await DB.addPurchased(user.username, 'fx_classic');
+        pur = {...pur, fx_classic: true};
+      }
+      // pack_default всегда куплен (бесплатно)
+      if(!pur['pack_default']){
+        await DB.addPurchased(user.username, 'pack_default');
+        pur = {...pur, pack_default: true};
+      }
       setPurchased(pur);
       setEquipped(eq);
       setLoading(false);
     });
-    // fx_classic всегда куплен (бесплатно)
-    setPurchased(p=>({...p, fx_classic:true}));
   },[]);
 
   const refreshCoins = async () => {
@@ -3270,12 +3926,21 @@ function ShopScreen({user, onBack, toast, onUpdate}){
     if(onUpdate) onUpdate({...user, coins: c, purchased: u?.purchased, equipped: u?.equipped});
   };
 
+  const checkShopAchievements = async (newPurchased) => {
+    const ud = await DB.getUser(user.username);
+    if(!ud) return;
+    const count = Object.keys(newPurchased).length;
+    await checkAndAwardAchievements(user.username, {...ud, purchased: newPurchased}, null);
+  };
+
   const buy = async (item, slot) => {
     if(purchased[item.id]){ equip(item, slot); return; }
     if(item.price === 0){ 
       await DB.addPurchased(user.username, item.id);
-      setPurchased(p=>({...p,[item.id]:true}));
+      const np = {...purchased,[item.id]:true};
+      setPurchased(np);
       await equip(item, slot);
+      await checkShopAchievements(np);
       return;
     }
     setConfirmItem({item, slot});
@@ -3288,10 +3953,12 @@ function ShopScreen({user, onBack, toast, onUpdate}){
     const ok = await DB.spendCoins(user.username, item.price);
     if(!ok){ toast('Недостаточно монет ☠️','err'); setBuying(null); return; }
     await DB.addPurchased(user.username, item.id);
-    setPurchased(p=>({...p,[item.id]:true}));
+    const np = {...purchased,[item.id]:true};
+    setPurchased(np);
     await refreshCoins();
     toast(`✅ Куплено: ${item.name}!`,'ok');
     await equip(item, slot);
+    await checkShopAchievements(np);
     setBuying(null);
   };
 
@@ -3309,6 +3976,7 @@ function ShopScreen({user, onBack, toast, onUpdate}){
       toast(`🖼 Рамка применена: ${item.name}`,'ok');
     } else if(slot === 'cardEffect'){
       toast(`🃏 Эффект карт: ${item.name}`,'ok');
+      if(onUpdate) onUpdate({...user, equipped: {...(user.equipped||{}), cardEffect: item.id}});
     } else if(slot === 'pack'){
       toast(`📦 Пак активирован: ${item.name}`,'ok');
     }
@@ -3449,7 +4117,7 @@ function ShopScreen({user, onBack, toast, onUpdate}){
                       fontSize:14,fontWeight:700,cursor: isEquipped?'default':'pointer',
                       fontFamily:"'Inter',sans-serif",transition:'.15s',
                     }}>
-                    {isEquipped?'✓ Активен':owned?`▶ Активировать`:buying===pack.id?'⏳…':`🪙 ${pack.price} — Купить пак`}
+                    {isEquipped?'✓ Активен':owned?`▶ Активировать`:buying===pack.id?'⏳…':pack.price===0?'🆓 Получить бесплатно':`🪙 ${pack.price} — Купить пак`}
                   </button>
                 </div>
               );
@@ -3518,18 +4186,248 @@ function ShopScreen({user, onBack, toast, onUpdate}){
         {tab==='effects'&&(
           <>
             <div style={{fontSize:11,color:'var(--tx3)',marginBottom:12,lineHeight:1.6,background:'rgba(255,255,255,0.03)',borderRadius:'var(--rad-sm)',padding:'10px 12px',border:'1px solid rgba(255,255,255,0.07)'}}>
-              ✨ Эффекты меняют стиль ваших карточек в игре. Видны только вам и вашим соперникам.
+              ✨ Эффекты меняют стиль ваших карточек в игре. Видны вашим соперникам.
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-              {CARD_EFFECTS.map(fx=>(
-                <ItemCard key={fx.id} item={fx} slot="cardEffect"
-                  equipped={equipped.cardEffect===fx.id}
-                  owned={!!purchased[fx.id]}/>
-              ))}
-            </div>
+            {CARD_EFFECTS.map(fx=>{
+              const cfx=getCardEffectStyle(fx.id);
+              const isEquipped=equipped.cardEffect===fx.id;
+              const owned=!!purchased[fx.id];
+              return(
+                <div key={fx.id} style={{marginBottom:10,background:isEquipped?`${fx.color}12`:'rgba(255,255,255,0.03)',border:`1.5px solid ${isEquipped?fx.color+'55':'rgba(255,255,255,0.08)'}`,borderRadius:'var(--rad)',overflow:'hidden',transition:'.2s'}}>
+                  {/* Превью карточки */}
+                  <div style={{padding:'14px 14px 10px',position:'relative'}}>
+                    <div style={{display:'flex',gap:8,marginBottom:10}}>
+                      {/* Мини-превью закрытой карты */}
+                      <div style={{flex:1,height:64,background:cfx.cardBg,border:`1px solid ${cfx.cardBorder}`,borderRadius:8,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:4,boxShadow:cfx.glow||'none',position:'relative',overflow:'hidden'}}>
+                        {cfx.overlay&&<div style={{position:'absolute',inset:0,background:cfx.overlay}}/>}
+                        <div style={{fontSize:16,filter:'blur(4px)',opacity:0.4,position:'relative'}}>💼</div>
+                        <div style={{fontSize:7,color:'rgba(255,255,255,0.4)',fontWeight:600,letterSpacing:0.5,position:'relative'}}>ЗАКРЫТА</div>
+                      </div>
+                      {/* Мини-превью открытой карты */}
+                      <div style={{flex:1,height:64,background:cfx.revBg,border:`1px solid ${cfx.revBorder}`,borderRadius:8,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:4,boxShadow:cfx.glow||'none',position:'relative',overflow:'hidden'}}>
+                        {cfx.overlay&&<div style={{position:'absolute',inset:0,background:cfx.overlay}}/>}
+                        <div style={{fontSize:16,position:'relative'}}>💼</div>
+                        <div style={{fontSize:8,color:'rgba(255,255,255,0.7)',fontWeight:600,position:'relative'}}>Инженер</div>
+                        <div style={{position:'absolute',top:4,right:4,fontSize:7,fontWeight:700,color:'var(--g)',background:'rgba(48,209,88,0.15)',border:'1px solid rgba(48,209,88,0.3)',borderRadius:3,padding:'1px 4px'}}>✓</div>
+                      </div>
+                    </div>
+                    {/* Инфо */}
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <div style={{flex:1}}>
+                        <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:3}}>
+                          <span style={{fontSize:14,fontWeight:700,color:'var(--tx)'}}>{fx.name}</span>
+                          {isEquipped&&<span style={{fontSize:8,fontWeight:700,color:fx.color,background:fx.color+'22',border:`1px solid ${fx.color}44`,borderRadius:6,padding:'1px 5px'}}>АКТИВЕН</span>}
+                        </div>
+                        <div style={{fontSize:11,color:'var(--tx3)',marginBottom:4}}>{fx.desc}</div>
+                        <span style={{fontSize:9,fontWeight:700,color:RARITY_COLORS[fx.rarity],background:RARITY_COLORS[fx.rarity]+'20',border:`1px solid ${RARITY_COLORS[fx.rarity]}40`,borderRadius:6,padding:'1px 6px'}}>{RARITY_LABELS[fx.rarity]}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{padding:'0 14px 14px'}}>
+                    <button onClick={()=>buy(fx,'cardEffect')} disabled={!!buying} style={{width:'100%',padding:'9px',borderRadius:'var(--rad-sm)',border:'none',background:isEquipped?'rgba(255,255,255,0.07)':owned?`${fx.color}22`:`${fx.color}`,color:isEquipped?'var(--tx3)':owned?fx.color:'#000',fontSize:12,fontWeight:700,cursor:isEquipped?'default':'pointer',fontFamily:"'Inter',sans-serif",transition:'.15s'}}>
+                      {isEquipped?'✓ Активен':owned?'▶ Надеть':buying===fx.id?'⏳…':fx.price===0?'🆓 Бесплатно':`🪙 ${fx.price}`}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   DAILY QUESTS HELPERS
+══════════════════════════════════════════════════════════ */
+const QUEST_POOL=[
+  {id:'play1',type:'play',goal:1,icon:'🎮',title:'Сыграй 1 игру',reward:50},
+  {id:'play3',type:'play',goal:3,icon:'🎯',title:'Сыграй 3 игры',reward:150},
+  {id:'win1',type:'win',goal:1,icon:'🏆',title:'Победи в игре',reward:100},
+  {id:'win2',type:'win',goal:2,icon:'👑',title:'Победи 2 раза',reward:200},
+  {id:'reveal',type:'reveal',goal:1,icon:'👁',title:'Раскрой карту',reward:30},
+  {id:'secret',type:'secret',goal:1,icon:'🃏',title:'Активируй секрет',reward:75},
+  {id:'chat',type:'chat',goal:3,icon:'💬',title:'Напиши 3 сообщения',reward:40},
+  {id:'invite',type:'invite',goal:1,icon:'📨',title:'Пригласи друга в игру',reward:60},
+];
+function genDailyQuests(){
+  const pool=[...QUEST_POOL].sort(()=>Math.random()-.5);
+  return pool.slice(0,3).map(q=>({...q,progress:0,done:false}));
+}
+async function ensureDailyQuests(username){
+  const today=new Date().toDateString();
+  let qd=await DB.getDailyQuests(username);
+  if(!qd||qd.date!==today){qd={date:today,quests:genDailyQuests()};await DB.saveDailyQuests(username,qd);}
+  return qd;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DAILY QUESTS COMPONENT
+══════════════════════════════════════════════════════════ */
+function DailyQuestsPanel({user,toast}){
+  const[qd,setQd]=useState(null);
+  const[loading,setLoading]=useState(true);
+  useEffect(()=>{
+    ensureDailyQuests(user.username).then(d=>{setQd(d);setLoading(false);});
+  },[user.username]);
+  const allDone=qd&&qd.quests.every(q=>q.done);
+  if(loading)return <Spin/>;
+  return(
+    <div style={{marginBottom:20}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
+        <div style={{fontSize:18}}>📋</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:14,fontWeight:700,color:'var(--tx)'}}>Ежедневные задания</div>
+          <div style={{fontSize:11,color:'var(--tx3)'}}>Обновляются каждый день в полночь</div>
+        </div>
+        {allDone&&<div style={{fontSize:10,fontWeight:700,color:'var(--g)',background:'rgba(48,209,88,0.12)',border:'1px solid rgba(48,209,88,0.3)',borderRadius:8,padding:'4px 10px'}}>✅ ВСЕ ВЫПОЛНЕНЫ</div>}
+      </div>
+      {qd&&qd.quests.map((q,i)=>{
+        const pct=Math.min(100,Math.round((q.progress||0)/q.goal*100));
+        return(
+          <div key={q.id} style={{background:q.done?'rgba(48,209,88,0.07)':'rgba(255,255,255,0.04)',border:`1px solid ${q.done?'rgba(48,209,88,0.25)':'rgba(255,255,255,0.08)'}`,borderRadius:16,padding:'14px 16px',marginBottom:10,transition:'.3s',animation:`winCard .4s ease ${i*.1}s both`}}>
+            <div style={{display:'flex',alignItems:'center',gap:12}}>
+              <div style={{fontSize:26,width:40,textAlign:'center',flexShrink:0}}>{q.done?'✅':q.icon}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:13,fontWeight:600,color:q.done?'var(--g)':'var(--tx)',marginBottom:4}}>{q.title}</div>
+                <div style={{height:4,background:'rgba(255,255,255,0.08)',borderRadius:4,overflow:'hidden',marginBottom:4}}>
+                  <div style={{height:'100%',width:`${pct}%`,background:q.done?'var(--g)':'var(--a)',borderRadius:4,transition:'width .5s ease'}}/>
+                </div>
+                <div style={{fontSize:10,color:'var(--tx3)'}}>{q.progress||0}/{q.goal} {q.done&&'— выполнено!'}</div>
+              </div>
+              <div style={{flexShrink:0,textAlign:'right'}}>
+                <div style={{fontSize:14,fontWeight:800,color:'var(--a)'}}>+{q.reward}</div>
+                <div style={{fontSize:9,color:'var(--tx3)'}}>монет</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   REFERRAL SECTION
+══════════════════════════════════════════════════════════ */
+function ReferralSection({user,toast}){
+  const refCode=user.refCode||user.username.toUpperCase().slice(0,6);
+  const refLink=`${window.location.origin}${window.location.pathname}?ref=${refCode}`;
+  const [copied,setCopied]=useState(false);
+  const copy=()=>{
+    navigator.clipboard?.writeText(refLink).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2000);}).catch(()=>{
+      const el=document.createElement('textarea');el.value=refLink;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);setCopied(true);setTimeout(()=>setCopied(false),2000);
+    });
+    if(navigator.vibrate)navigator.vibrate(30);
+  };
+  // Сохраняем refCode при первом открытии
+  useEffect(()=>{
+    if(!user.refCode)DB.updateUser(user.username,{refCode});
+  },[]);
+  return(
+    <div style={{background:'linear-gradient(135deg,rgba(240,165,0,0.1),rgba(240,165,0,0.04))',border:'1px solid rgba(240,165,0,0.25)',borderRadius:20,padding:'18px 16px',marginBottom:20}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
+        <div style={{fontSize:22}}>🔗</div>
+        <div>
+          <div style={{fontSize:14,fontWeight:700,color:'var(--a)'}}>Реферальная программа</div>
+          <div style={{fontSize:11,color:'var(--tx3)'}}>Приглашай друзей — получай монеты</div>
+        </div>
+      </div>
+      <div style={{display:'flex',gap:10,marginBottom:14}}>
+        <div style={{flex:1,background:'rgba(0,0,0,0.3)',borderRadius:12,padding:'12px 14px',border:'1px solid rgba(255,255,255,0.1)'}}>
+          <div style={{fontSize:9,color:'var(--tx3)',letterSpacing:1,fontWeight:700,marginBottom:4}}>ВАШ КОД</div>
+          <div style={{fontSize:18,fontWeight:800,color:'var(--a)',letterSpacing:2,fontFamily:'monospace'}}>{refCode}</div>
+        </div>
+        <button onClick={copy} style={{padding:'0 20px',background:copied?'rgba(48,209,88,0.15)':'rgba(240,165,0,0.12)',border:`1px solid ${copied?'rgba(48,209,88,0.4)':'rgba(240,165,0,0.35)'}`,borderRadius:12,color:copied?'var(--g)':'var(--a)',fontWeight:700,fontSize:13,cursor:'pointer',transition:'.2s',flexShrink:0}}>
+          {copied?'✓ Скопировано!':'📋 Копировать'}
+        </button>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+        <div style={{background:'rgba(255,255,255,0.04)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+          <div style={{fontSize:20,fontWeight:800,color:'var(--a)'}}>{user.referrals||0}</div>
+          <div style={{fontSize:10,color:'var(--tx3)',marginTop:2}}>Приглашённых</div>
+        </div>
+        <div style={{background:'rgba(255,255,255,0.04)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+          <div style={{fontSize:20,fontWeight:800,color:'var(--a)'}}>🪙 {(user.referrals||0)*200}</div>
+          <div style={{fontSize:10,color:'var(--tx3)',marginTop:2}}>Заработано</div>
+        </div>
+      </div>
+      <div style={{marginTop:12,fontSize:11,color:'var(--tx3)',lineHeight:1.6,borderTop:'1px solid rgba(255,255,255,0.06)',paddingTop:10}}>
+        <span style={{color:'var(--a)',fontWeight:700}}>+200 монет</span> вам · <span style={{color:'var(--a)',fontWeight:700}}>+100 монет</span> другу при регистрации по вашей ссылке
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   GAME HISTORY PANEL
+══════════════════════════════════════════════════════════ */
+function GameHistoryPanel({user}){
+  const[history,setHistory]=useState(null);
+  useEffect(()=>{
+    DB.fetchGameHistory(user.username).then(setHistory);
+  },[user.username]);
+  if(!history)return <Spin/>;
+  if(history.length===0)return(
+    <div style={{textAlign:'center',padding:'24px 16px',color:'var(--tx3)',fontSize:12}}>
+      <div style={{fontSize:32,marginBottom:8}}>🎮</div>
+      Ещё нет завершённых игр
+    </div>
+  );
+  return(
+    <div>
+      {history.map((g,i)=>{
+        const d=new Date(g.ts);
+        const dateStr=`${d.getDate()} ${['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][d.getMonth()]}`;
+        return(
+          <div key={i} style={{display:'flex',alignItems:'center',gap:12,padding:'13px 14px',background:g.won?'rgba(48,209,88,0.06)':'rgba(255,255,255,0.03)',border:`1px solid ${g.won?'rgba(48,209,88,0.2)':'rgba(255,255,255,0.07)'}`,borderRadius:14,marginBottom:8,animation:`winCard .4s ease ${i*.05}s both`}}>
+            <div style={{fontSize:24,flexShrink:0}}>{g.apocEmoji||'☢️'}</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:600,color:'var(--tx)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{g.apoc||'Бункер'}</div>
+              <div style={{fontSize:10,color:'var(--tx3)',marginTop:2}}>Раунд {g.rounds||1} · {g.players||'?'} игроков · {dateStr}</div>
+            </div>
+            <div style={{flexShrink:0,textAlign:'right'}}>
+              <div style={{fontSize:11,fontWeight:700,color:g.won?'var(--g)':'var(--r)',background:g.won?'rgba(48,209,88,0.12)':'rgba(255,69,58,0.1)',border:`1px solid ${g.won?'rgba(48,209,88,0.3)':'rgba(255,69,58,0.25)'}`,borderRadius:8,padding:'3px 10px'}}>
+                {g.won?'🏆 ПОБЕДА':'💀 ВЫБЫЛ'}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   STATS PANEL
+══════════════════════════════════════════════════════════ */
+function StatsPanel({user}){
+  const total=user.gamesPlayed||0;
+  const wins=user.gamesWon||0;
+  const elim=user.gamesEliminated||0;
+  const winRate=total>0?Math.round(wins/total*100):0;
+  const coins=user.coins||0;
+  const refs=user.referrals||0;
+  const stats=[
+    {icon:'🎮',label:'Игр сыграно',value:total,color:'var(--c)'},
+    {icon:'🏆',label:'Побед',value:wins,color:'var(--g)'},
+    {icon:'💀',label:'Выбываний',value:elim,color:'var(--r)'},
+    {icon:'📊',label:'Винрейт',value:`${winRate}%`,color:'var(--a)'},
+    {icon:'🪙',label:'Монеты',value:coins,color:'#f5a623'},
+    {icon:'⚡',label:'Эло рейтинг',value:user.elo||1000,color:'#4da6ff'},
+    {icon:'🔗',label:'Рефералов',value:refs,color:'var(--p)'},
+    {icon:'🎯',label:'Раскрытий карт',value:user.totalReveals||0,color:'var(--tx2)'},
+  ];
+  return(
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:20}}>
+      {stats.map(s=>(
+        <div key={s.label} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:16,padding:'14px 14px',display:'flex',flexDirection:'column',gap:4}}>
+          <div style={{fontSize:20}}>{s.icon}</div>
+          <div style={{fontSize:22,fontWeight:800,color:s.color,lineHeight:1}}>{s.value}</div>
+          <div style={{fontSize:10,color:'var(--tx3)',fontWeight:600}}>{s.label}</div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -3544,12 +4442,7 @@ function ProfileScreen({user,onBack,toast,onUpdate}){
   const[statusVal,setStatusVal]=useState(user.status||'');
   const[showAvatarPicker,setShowAvatarPicker]=useState(false);
   const[selAvatar,setSelAvatar]=useState(user.avatar||'');
-  const[gameHistory,setGameHistory]=useState(null);
-  const[histLoading,setHistLoading]=useState(true);
-
-  useEffect(()=>{
-    DB.getGameHistory(user.username).then(h=>{setGameHistory(h);setHistLoading(false);}).catch(()=>setHistLoading(false));
-  },[user.username]);
+  const[profTab,setProfTab]=useState('info');
 
   const saveAvatar=async(emoji)=>{
     setSelAvatar(emoji);
@@ -3565,13 +4458,30 @@ function ProfileScreen({user,onBack,toast,onUpdate}){
     setEditStatus(false);
     toast('Статус сохранён','ok');
   };
+  const PROF_TABS=[['info','👤','Профиль'],['stats','📊','Статистика'],['history','🎮','История'],['quests','📋','Задания'],['ref','🔗','Рефералы']];
   return(
     <div className="sc">
-      <div className="tb"><BackBtn onClick={onBack}/><div className="tb-title">ПРОФИЛЬ</div></div>
+      <div className="tb">
+        <BackBtn onClick={onBack}/>
+        <div className="tb-title">ПРОФИЛЬ</div>
+        <div style={{fontSize:12,color:'var(--a)',fontWeight:700}}>🪙 {user.coins||0}</div>
+      </div>
+      {/* Вкладки */}
+      <div style={{display:'flex',gap:0,borderBottom:'1px solid rgba(255,255,255,0.07)',background:'rgba(12,12,20,0.85)',flexShrink:0,overflow:'auto',scrollbarWidth:'none'}}>
+        {PROF_TABS.map(([id,ico,label])=>(
+          <button key={id} onClick={()=>setProfTab(id)} style={{flex:1,minWidth:60,padding:'12px 4px 10px',background:'none',border:'none',borderBottom:`2px solid ${profTab===id?'var(--a)':'transparent'}`,color:profTab===id?'var(--a)':'var(--tx3)',fontSize:9,fontWeight:700,letterSpacing:.5,cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',gap:3,transition:'.15s',flexShrink:0}}>
+            <span style={{fontSize:16}}>{ico}</span>{label}
+          </button>
+        ))}
+      </div>
       <div className="scr">
-        {/* Аватар + имя */}
-        <div style={{textAlign:'center',padding:'28px 0 20px',background:'rgba(255,255,255,0.03)',borderRadius:'var(--rad-lg)',marginBottom:14,border:'1px solid rgba(255,255,255,0.07)'}}>
-          <Avatar name={user.displayName||user.username} size="lg" avatar={selAvatar||user.avatar} frame={user.equipped?.frame}/>
+        {/* ── ПРОФИЛЬ ── */}
+        {profTab==='info'&&(
+          <div>
+            <LevelBar user={user}/>
+            {/* Аватар блок */}
+            <div style={{textAlign:'center',padding:'28px 0 20px',background:'rgba(255,255,255,0.03)',borderRadius:'var(--rad-lg)',marginBottom:14,border:'1px solid rgba(255,255,255,0.07)'}}>
+              <Avatar name={user.displayName||user.username} size="lg" avatar={selAvatar||user.avatar} frame={user.equipped?.frame}/>
           <div style={{marginTop:8}}>
             <button onClick={()=>setShowAvatarPicker(p=>!p)} style={{background:'rgba(240,165,0,0.1)',border:'1px solid rgba(240,165,0,0.3)',color:'var(--a)',borderRadius:8,padding:'5px 12px',fontSize:12,cursor:'pointer',fontFamily:"'Inter',sans-serif"}}>🎨 Сменить аватар</button>
           </div>
@@ -3633,34 +4543,6 @@ function ProfileScreen({user,onBack,toast,onUpdate}){
         {/* Достижения */}
         <div className="lbl">🏅 ДОСТИЖЕНИЯ</div>
         <AchievementsPanel userData={user}/>
-        {/* История игр */}
-        <div className="lbl">📋 ИСТОРИЯ ИГР</div>
-        {histLoading?<Spin/>:!gameHistory||gameHistory.length===0?(
-          <div className="mono" style={{textAlign:'center',color:'var(--tx3)',fontSize:10,letterSpacing:2,padding:'20px 0'}}>ИСТОРИЯ ПУСТА</div>
-        ):(
-          gameHistory.map((g,i)=>{
-            const ap=g.apocalypse||{};
-            const me=g.players?.[user.username];
-            const survived=me&&!me.isEliminated;
-            const dt=g.createdAt?new Date(g.createdAt):null;
-            const dateStr=dt?`${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()}`:'—';
-            const pCount=Object.keys(g.players||{}).length;
-            const eloDelta=g.isRated&&me?.eloDelta;
-            return(
-              <div key={g.id||i} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 14px',background:'rgba(255,255,255,0.03)',border:`1px solid rgba(255,255,255,0.07)`,borderLeft:`3px solid ${survived?'var(--g)':'var(--r)'}`,borderRadius:'var(--rad-sm)',marginBottom:6}}>
-                <div style={{fontSize:22,flexShrink:0}}>{ap.emoji||'☢'}</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--tx)',marginBottom:2,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{ap.name||'Апокалипсис'}</div>
-                  <div style={{fontSize:10,color:'var(--tx3)'}}>{dateStr} · {pCount} игроков</div>
-                </div>
-                <div style={{textAlign:'right',flexShrink:0}}>
-                  <div style={{fontSize:12,fontWeight:700,color:survived?'var(--g)':'var(--r)'}}>{survived?'✅ ВЫЖИЛ':'☠️ ВЫБЫЛ'}</div>
-                  {eloDelta&&<div style={{fontSize:10,fontWeight:600,color:eloDelta>0?'var(--g)':'var(--r)'}}>{eloDelta>0?'+':''}{eloDelta}</div>}
-                </div>
-              </div>
-            );
-          })
-        )}
         {/* Звания */}
         <div className="lbl">СИСТЕМА ЗВАНИЙ</div>
         {RANKS.filter(r=>!r.adminOnly||user.isAdmin).map(r=>{
@@ -3676,6 +4558,29 @@ function ProfileScreen({user,onBack,toast,onUpdate}){
             </div>
           );
         })}
+          </div>
+        )}
+        {/* ── СТАТИСТИКА ── */}
+        {profTab==='stats'&&<StatsPanel user={user}/>}
+        {/* ── ИСТОРИЯ ── */}
+        {profTab==='history'&&(
+          <div>
+            <div className="lbl">ПОСЛЕДНИЕ 10 ИГР</div>
+            <GameHistoryPanel user={user}/>
+          </div>
+        )}
+        {/* ── ЗАДАНИЯ ── */}
+        {profTab==='quests'&&(
+          <div>
+            <DailyQuestsPanel user={user} toast={toast}/>
+          </div>
+        )}
+        {/* ── РЕФЕРАЛЫ ── */}
+        {profTab==='ref'&&(
+          <div>
+            <ReferralSection user={user} toast={toast}/>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -3844,6 +4749,88 @@ function AdminGamesList({games,me,endGame,toggleGameAdult}){
   );
 }
 
+function SeasonalEventPanel({toast}){
+  const EVENTS=[
+    {id:'halloween',name:'🎃 Хеллоуин',color:'#ff6b35',desc:'Специальные карточки и ограниченные аватары',
+     packs:['👻 Призрак','🧙‍♀️ Ведьма','🦇 Вампир','🎃 Тыква-голова','💀 Скелет'],
+     frames:['frame_fire','frame_purple'],avatars:['prem_ghost','prem_witch']},
+    {id:'newyear',name:'🎄 Новый год',color:'#30d158',desc:'Праздничные профессии и золотые рамки',
+     packs:['🎅 Дед Мороз','🦌 Рудольф','⛄ Снеговик','🎁 Дарительница подарков','🧝 Эльф мастерской'],
+     frames:['frame_gold','frame_ice'],avatars:['prem_snowman','prem_santa']},
+    {id:'summer',name:'☀️ Лето',color:'#ffd60a',desc:'Пляжные профессии и летние эффекты',
+     packs:['🏄 Серфингист','🐬 Тренер дельфинов','🍦 Мороженщик','🏖️ Спасатель пляжа','🎪 Аниматор отеля'],
+     frames:['frame_ocean','frame_neon'],avatars:['prem_surfer','prem_mermaid']},
+    {id:'space',name:'🚀 День космонавтики',color:'#4da6ff',desc:'Космические профессии и галактические рамки',
+     packs:['👨‍🚀 Космонавт','🛸 Ксенобиолог','🌌 Астрофизик','🤖 ИИ-навигатор','🌍 Планетолог'],
+     frames:['frame_galaxy','frame_cyber'],avatars:['prem_astronaut','prem_alien']},
+    {id:'none',name:'❌ Нет события',color:'#666',desc:'Отключить сезонное событие',packs:[],frames:[],avatars:[]},
+  ];
+  const[current,setCurrent]=useState(null);
+  const[loading,setLoading]=useState(true);
+  const[saving,setSaving]=useState(false);
+  useEffect(()=>{DB.getSeasonalEvent().then(e=>{setCurrent(e?.id||'none');setLoading(false);});},[]);
+  const apply=async(ev)=>{
+    setSaving(true);
+    if(ev.id==='none'){await DB.setSeasonalEvent(null);}
+    else{await DB.setSeasonalEvent({...ev,active:true,startedAt:Date.now()});}
+    setCurrent(ev.id);setSaving(false);
+    toast(`${ev.name} ${ev.id==='none'?'отключено':'активировано'}!`,'ok');
+  };
+  if(loading)return<Spin/>;
+  return(
+    <div style={{display:'flex',flexDirection:'column',gap:8}}>
+      {EVENTS.map(ev=>{
+        const isActive=current===ev.id;
+        return(
+          <div key={ev.id} style={{background:isActive?`${ev.color}14`:'rgba(255,255,255,0.04)',border:`1px solid ${isActive?ev.color+'55':'rgba(255,255,255,0.08)'}`,borderRadius:'var(--rad)',padding:'14px 16px',display:'flex',alignItems:'center',gap:12,transition:'.2s'}}>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:isActive?ev.color:'var(--tx)',marginBottom:3}}>{ev.name}</div>
+              <div style={{fontSize:11,color:'var(--tx3)',lineHeight:1.4}}>{ev.desc}</div>
+              {ev.packs.length>0&&isActive&&<div style={{fontSize:10,color:ev.color,marginTop:6,lineHeight:1.6}}>{ev.packs.slice(0,3).join(' · ')}</div>}
+            </div>
+            <button disabled={saving||isActive} onClick={()=>apply(ev)} style={{background:isActive?ev.color:'rgba(255,255,255,0.08)',border:'none',borderRadius:'var(--rad-sm)',color:isActive?'#000':'var(--tx)',fontSize:12,fontWeight:700,padding:'8px 14px',cursor:isActive?'default':'pointer',flexShrink:0,opacity:saving?0.5:1}}>
+              {isActive?'✓ Активно':'Включить'}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function LevelBar({user}){
+  const xp=user.xp||0;
+  const{level,currentXP,neededXP}=getLevel(xp);
+  const pct=Math.min(100,Math.round(currentXP/neededXP*100));
+  const nextReward=LEVEL_REWARDS.find(r=>r.level>level);
+  return(
+    <div style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad)',padding:'16px',marginBottom:12}}>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,var(--a),#ff6b00)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <span style={{fontSize:20,fontWeight:900,color:'#000'}}>{level}</span>
+          </div>
+          <div>
+            <div style={{fontSize:14,fontWeight:700,color:'var(--a)'}}>Уровень {level}</div>
+            <div style={{fontSize:10,color:'var(--tx3)',marginTop:1}}>{currentXP} / {neededXP} XP</div>
+          </div>
+        </div>
+        <div style={{fontSize:11,color:'var(--tx3)',textAlign:'right'}}>
+          {nextReward&&<><div style={{fontSize:10,color:'var(--tx3)'}}>Следующая награда</div><div style={{fontSize:11,color:'var(--a)',fontWeight:600,marginTop:2}}>{nextReward.reward}</div><div style={{fontSize:10,color:'var(--tx3)'}}>Ур. {nextReward.level}</div></>}
+        </div>
+      </div>
+      <div style={{height:8,background:'rgba(255,255,255,0.08)',borderRadius:4,overflow:'hidden'}}>
+        <div style={{height:'100%',width:`${pct}%`,background:'linear-gradient(90deg,var(--a),#ff6b00)',borderRadius:4,transition:'width .5s ease'}}/>
+      </div>
+      <div style={{display:'flex',justifyContent:'space-between',marginTop:6}}>
+        <span style={{fontSize:10,color:'var(--tx3)'}}>Ур. {level}</span>
+        <span style={{fontSize:10,color:'var(--tx3)'}}>{pct}%</span>
+        <span style={{fontSize:10,color:'var(--tx3)'}}>Ур. {level+1}</span>
+      </div>
+    </div>
+  );
+}
+
 function AdminScreen({me,onBack,toast}){
   const[tab,setTab]=useState('dash');
   const[users,setU]=useState({});
@@ -3855,6 +4842,7 @@ function AdminScreen({me,onBack,toast}){
   const[editPassword,setEditPassword]=useState('');
   const[editElo,setEditElo]=useState('');
   const[editCoins,setEditCoins]=useState('');
+  const[editXP,setEditXP]=useState('');
   const[showPass,setShowPass]=useState(false);
   const[selected,setSelected]=useState({});
   const[banTarget,setBanTarget]=useState(null);
@@ -4075,11 +5063,16 @@ function AdminScreen({me,onBack,toast}){
               ))}
               <Tog on={!!settings.allowUserCreate} onToggle={async()=>{const nv=!settings.allowUserCreate;await DB.updateSettings({allowUserCreate:nv});setS(p=>({...p,allowUserCreate:nv}));await logA('НАСТРОЙКИ',`allowUserCreate=${nv}`);}} label="👥 Разрешить игрокам создавать игры" sub="Если выкл — только администратор может создавать игры"/>
             </div>
-            <div className="lbl">КОНТЕНТ</div>
+            <div className="lbl">🎃 СЕЗОННЫЕ СОБЫТИЯ</div>
+            <SeasonalEventPanel toast={toast}/>
+            <div className="lbl" style={{marginTop:16}}>КОНТЕНТ</div>
             <Tog on={!!settings.adultMode} onToggle={toggleGlobal}
               label="🔞 ВЗРОСЛЫЙ РЕЖИМ 18+ (ГЛОБАЛЬНО)"
               sub={settings.adultMode?"ВКЛ — все игроки видят переключатель 18+":"ВЫКЛ — 18+ только администраторам"}
               dng/>
+            <Tog on={!!settings.funnyProf} onToggle={async()=>{const nv=!settings.funnyProf;await DB.updateSettings({funnyProf:nv});setS(p=>({...p,funnyProf:nv}));await logA('НАСТРОЙКИ',`funnyProf=${nv}`);toast(nv?'🤡 Смешные профессии включены!':'Смешные профессии выключены','ok');}}
+              label="🤡 СМЕШНЫЕ ПРОФЕССИИ (ГЛОБАЛЬНО)"
+              sub={settings.funnyProf?"ВКЛ — в пул добавлены 100+ юмористических профессий":"ВЫКЛ — только серьёзные профессии"}/>
             <div className="mono" style={{fontSize:9,color:'var(--tx3)',letterSpacing:1,padding:'8px 14px',background:'var(--s1)',border:'1px solid var(--ab)',lineHeight:1.6}}>
               При включении — переключатель 18+ появляется у всех игроков при создании игры.
             </div>
@@ -4245,7 +5238,7 @@ function AdminScreen({me,onBack,toast}){
                 <option value="auto">Авто</option>
                 {RANKS.map(r=><option key={r.id} value={r.id}>{r.icon} {r.name}</option>)}
               </select>
-              <button onClick={()=>{setEditDisplayName(u.displayName||u.username);setEditPassword('');setEditElo(String(u.elo||1000));setEditCoins(String(u.coins||0));setShowPass(false);setEditUser(u);}} style={{background:'rgba(10,132,255,.1)',border:'1px solid rgba(10,132,255,.3)',color:'var(--c)',fontFamily:"'Inter',sans-serif",fontSize:10,padding:'4px 8px',cursor:'pointer',borderRadius:6}}>✏️</button>
+              <button onClick={()=>{setEditDisplayName(u.displayName||u.username);setEditPassword('');setEditElo(String(u.elo||1000));setEditCoins(String(u.coins||0));setEditXP(String(u.xp||0));setShowPass(false);setEditUser(u);}} style={{background:'rgba(10,132,255,.1)',border:'1px solid rgba(10,132,255,.3)',color:'var(--c)',fontFamily:"'Inter',sans-serif",fontSize:10,padding:'4px 8px',cursor:'pointer',borderRadius:6}}>✏️</button>
               {u.username!==me.username&&<>
                 <button onClick={()=>toggleAdmin(u.username)} style={{background:u.isAdmin?'var(--rt)':'rgba(155,89,239,.1)',border:`1px solid ${u.isAdmin?'var(--r)':'rgba(155,89,239,.4)'}`,color:u.isAdmin?'var(--r)':'var(--p)',fontFamily:"'Inter',sans-serif",fontSize:9,padding:'4px 8px',cursor:'pointer',letterSpacing:1}}>
                   {u.isAdmin?'СНЯТЬ':'ADMIN'}
@@ -4313,10 +5306,34 @@ function AdminScreen({me,onBack,toast}){
                 <button onClick={()=>setEditCoins('0')} style={{flex:1,background:'var(--rt)',border:'1px solid var(--r)',color:'var(--r)',fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,padding:'6px',borderRadius:6,cursor:'pointer'}}>🗑 Обнулить</button>
                 <button onClick={()=>setEditCoins(String((parseInt(editCoins)||0)+1000))} style={{flex:1,background:'rgba(240,165,0,0.1)',border:'1px solid rgba(240,165,0,0.4)',color:'var(--a)',fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,padding:'6px',borderRadius:6,cursor:'pointer'}}>+1000 монет</button>
               </div>
+              {/* XP / Уровень */}
+              {(()=>{const lvlInfo=editXP!==''?getLevel(parseInt(editXP)||0):{level:0,currentXP:0,neededXP:100};return(
+              <div style={{marginTop:14}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8}}>
+                  <div className="lbl" style={{margin:0}}>📈 XP / УРОВЕНЬ</div>
+                  <div style={{fontSize:12,color:'var(--a)',fontWeight:700,background:'rgba(240,165,0,0.1)',border:'1px solid rgba(240,165,0,0.3)',borderRadius:8,padding:'3px 10px'}}>⭐ Ур. {lvlInfo.level}</div>
+                </div>
+                <div style={{height:6,background:'rgba(255,255,255,0.08)',borderRadius:3,overflow:'hidden',marginBottom:8}}>
+                  <div style={{height:'100%',width:`${lvlInfo.neededXP>0?Math.round(lvlInfo.currentXP/lvlInfo.neededXP*100):100}%`,background:'linear-gradient(90deg,var(--a),#ff6b00)',borderRadius:3,transition:'.3s'}}/>
+                </div>
+                <div style={{display:'flex',gap:6,alignItems:'center',marginBottom:6}}>
+                  <input className="inp" type="number" min="0" max="999999" placeholder="0" value={editXP} onChange={e=>setEditXP(e.target.value)} style={{flex:1}}/>
+                  <div style={{fontSize:10,color:'var(--tx3)',whiteSpace:'nowrap'}}>{lvlInfo.currentXP}/{lvlInfo.neededXP} XP</div>
+                </div>
+                <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                  <button onClick={()=>setEditXP(String(Math.max(0,(parseInt(editXP)||0)-100)))} style={{flex:1,background:'var(--rt)',border:'1px solid var(--r)',color:'var(--r)',fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,padding:'6px',borderRadius:6,cursor:'pointer'}}>−100</button>
+                  <button onClick={()=>setEditXP(String((parseInt(editXP)||0)+100))} style={{flex:1,background:'var(--gt)',border:'1px solid var(--g)',color:'var(--g)',fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,padding:'6px',borderRadius:6,cursor:'pointer'}}>+100</button>
+                  <button onClick={()=>setEditXP(String((parseInt(editXP)||0)+500))} style={{flex:1,background:'rgba(240,165,0,0.1)',border:'1px solid rgba(240,165,0,0.4)',color:'var(--a)',fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,padding:'6px',borderRadius:6,cursor:'pointer'}}>+500 XP</button>
+                  <button onClick={()=>setEditXP('0')} style={{background:'var(--rt)',border:'1px solid var(--r)',color:'var(--r)',fontFamily:"'Inter',sans-serif",fontSize:11,fontWeight:700,padding:'6px 10px',borderRadius:6,cursor:'pointer'}}>🗑</button>
+                </div>
+              </div>
+              );})()}
               <Btn ch="💾 Сохранить" onClick={async()=>{
                 const patch={};
                 if(editDisplayName.trim()) patch.displayName=editDisplayName.trim();
                 if(editPassword.trim()) patch.password=editPassword.trim();
+                const xpVal=parseInt(editXP);
+                if(!isNaN(xpVal)&&xpVal>=0){patch.xp=xpVal;await logA('ИЗМЕНИЛ XP',`${editUser.username}: ${editUser.xp||0} → ${xpVal}`);}
                 const eloVal=parseInt(editElo);
                 if(!isNaN(eloVal)&&eloVal>=0&&eloVal<=9999) patch.elo=eloVal;
                 const coinsVal=parseInt(editCoins);
@@ -4742,9 +5759,10 @@ function LobbyScreen({gameId,user,onBack,onStarted,toast,onViewProfile}){
     const settings=await DB.getSettings();
     const useAdult=!!(g.adultMode&&settings.adultMode);
     const usePackId=g.cardPack||'default';
+    const useFunny=!!settings.funnyProf;
     const up={};
     // Если у игрока уже есть карты (применены читы заранее) — не перезаписываем
-    pl.forEach(p=>{up[p.username]={...p,cards:p.cards&&typeof p.cards==='object'&&Object.keys(p.cards).length>1?p.cards:mkCards(useAdult,usePackId),revealed:[],isEliminated:false};});
+    pl.forEach(p=>{up[p.username]={...p,cards:p.cards&&typeof p.cards==='object'&&Object.keys(p.cards).length>1?p.cards:mkCards(useAdult,usePackId,useFunny),revealed:[],isEliminated:false};});
     // Раздача ролей если включено
     if(g.roles){
       const rolePool=[...ROLES.filter(r=>r.id!=='civilian')];
@@ -4760,12 +5778,20 @@ function LobbyScreen({gameId,user,onBack,onStarted,toast,onViewProfile}){
       const rooms=[...BUNKER_ROOMS].sort(()=>Math.random()-.5).slice(0,Math.min(BUNKER_ROOMS.length,pl.length));
       pl.forEach((p,i)=>{ roomAssignData[p.username]=rooms[i%rooms.length].id; });
     }
-    const newGame={...g,players:up,bunkerSpots:Math.ceil(pl.length/2),phase:'playing',round:1,votes:{},revealedThisRound:{},eliminated:[],lastEliminated:null,chat:g.chat||null,voteLog:g.voteLog||{},roomAssign:roomAssignData,roundTimerStart:g.roundTimerSeconds?Date.now():null};
+    // B3: Сохраняем данные пользователей (аватары, рамки, эффекты карточек) в игру
+    const allUsersSnap = await DB.getAllUsers();
+    const _allUsers = {};
+    pl.forEach(p => {
+      const ud = allUsersSnap[p.username];
+      if (ud) _allUsers[p.username] = { avatar: ud.avatar||'', equipped: ud.equipped||{} };
+    });
+    const newGame={...g,players:up,bunkerSpots:Math.ceil(pl.length/2),phase:'playing',round:1,votes:{},revealedThisRound:{},eliminated:[],lastEliminated:null,chat:g.chat||null,voteLog:g.voteLog||{},roomAssign:roomAssignData,roundTimerStart:g.roundTimerSeconds?Date.now():null,_allUsers};
     await DB.setGame(gameId,newGame);
     DB.logEvent(gameId,'start',`Игра началась! Участники: ${pl.map(p=>p.name||p.username).join(', ')}`,user.username);
     await Promise.all(pl.map(p=>DB.updateUser(p.username,{gamesPlayed:firebase.database.ServerValue.increment(1)})));
-    // Начисляем монеты за участие в игре (+30)
+    // Начисляем монеты и XP за участие в игре
     await Promise.all(pl.map(p=>DB.addCoins(p.username, 30)));
+    await Promise.all(pl.map(p=>DB.addXP(p.username, XP_REWARDS.game)));
     // Award achievements after game starts
     await Promise.all(pl.map(async p=>{const ud=await DB.getUser(p.username);if(ud)await checkAndAwardAchievements(p.username,{...ud,gamesPlayed:(ud.gamesPlayed||0)+1},null);}));
   };
@@ -4781,12 +5807,33 @@ function LobbyScreen({gameId,user,onBack,onStarted,toast,onViewProfile}){
     }
     onBack();
   };
+  const kickPlayer=async(pid)=>{
+    if(!window.confirm(`Кикнуть ${pid} из лобби?`))return;
+    const g=await DB.getGame(gameId);if(!g)return;
+    await DB.updateGame(gameId,{[`players/${pid}`]:null});
+    toast(`👢 ${pid} кикнут из лобби`,'ok');
+  };
   const copy=()=>{navigator.clipboard?.writeText(gameId).catch(()=>{});setCop(true);setTimeout(()=>setCop(false),2000);toast('Код скопирован!','ok');};
   const invite=async(fid)=>{
     if(sent[fid])return;
     if(game?.players?.[fid])return toast('Уже в лобби','err');
     await DB.sendGameInvite(user.username,user.displayName||user.username,fid,gameId);
     setSent(p=>({...p,[fid]:true}));toast('Приглашение отправлено!','ok');
+    // B4: Инкремент квеста 'invite'
+    const todayStr=new Date().toDateString();
+    const qd=await DB.getDailyQuests(user.username);
+    if(qd&&qd.date===todayStr){
+      let earned=0;
+      const upd={...qd,quests:qd.quests.map(q=>{
+        if(q.done||q.type!=='invite')return q;
+        const np=Math.min((q.progress||0)+1,q.goal);
+        const done=np>=q.goal;
+        if(done&&!q.done)earned+=q.reward;
+        return{...q,progress:np,done};
+      })};
+      await DB.saveDailyQuests(user.username,upd);
+      if(earned>0)await DB.addCoins(user.username,earned);
+    }
   };
 
   if(!game)return<div className="sc"><Spin/></div>;
@@ -4821,11 +5868,14 @@ function LobbyScreen({gameId,user,onBack,onStarted,toast,onViewProfile}){
         {players.map(p=>{
           const isMe=p.username===user.username,isCr=p.username===game.creatorId;
           return(
-            <div key={p.username} className={`prow${isMe?' me':' hot'}`} onClick={()=>!isMe&&onViewProfile&&onViewProfile(p.username)}>
+            <div key={p.username} className={`prow${isMe?' me':''}`} style={{cursor:!isMe&&onViewProfile?'pointer':'default'}} onClick={()=>!isMe&&onViewProfile&&onViewProfile(p.username)}>
               <Avatar name={p.name||p.username} size="sm" avatar={allUsers?.[p.username]?.avatar} frame={allUsers?.[p.username]?.equipped?.frame}/>
               <div style={{flex:1,fontSize:14,fontWeight:600}}>{p.name}</div>
               {isCr&&<span className="bdg bdg-a">СОЗДАТЕЛЬ</span>}
               {isMe&&<span className="bdg bdg-c">ВЫ</span>}
+              {isCreator&&!isMe&&!isCr&&(
+                <button onClick={e=>{e.stopPropagation();kickPlayer(p.username);}} style={{background:'rgba(255,69,58,0.12)',border:'1px solid rgba(255,69,58,0.3)',color:'var(--r)',borderRadius:8,padding:'4px 10px',fontSize:12,cursor:'pointer',flexShrink:0,transition:'.15s'}} title="Кикнуть">👢</button>
+              )}
             </div>
           );
         })}
@@ -4948,6 +5998,33 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
               await Promise.all([...surv.map(uid=>DB.updateUser(uid,{gamesWon:firebase.database.ServerValue.increment(1)})),...all.filter(u=>!surv.includes(u)).map(uid=>DB.updateUser(uid,{gamesEliminated:firebase.database.ServerValue.increment(1)}))]);
               // Монеты за победу (+100) и за участие в финале (+20)
               await Promise.all([...surv.map(uid=>DB.addCoins(uid,100)),...all.filter(u=>!surv.includes(u)).map(uid=>DB.addCoins(uid,20))]);
+              // Сохраняем историю игры для каждого игрока
+              const histEntry={apoc:g.apocalypse?.name||'Бункер',apocEmoji:g.apocalypse?.emoji||'☢️',rounds:g.round||1,players:all.length,pack:g.cardPack||'default'};
+              await Promise.all(all.map(uid=>DB.saveGameHistory(uid,{...histEntry,won:surv.includes(uid)})));
+              // ── Ежедневные задания (авто-tally) ──
+              const todayStr=new Date().toDateString();
+              await Promise.all(all.map(async uid=>{
+                const qd=await DB.getDailyQuests(uid);
+                if(!qd||qd.date!==todayStr)return;
+                const isSurv=surv.includes(uid);
+                const pp=copy.players[uid];
+                const revsCount=(pp?.revealed||[]).length;
+                const secretUsed=!!(copy.usedSecrets||{})[uid];
+                let coinsEarned=0;
+                const upd={...qd,quests:qd.quests.map(q=>{
+                  if(q.done)return q;
+                  let np=q.progress||0;
+                  if(q.type==='play') np=Math.min(np+1,q.goal);
+                  else if(q.type==='win'&&isSurv) np=Math.min(np+1,q.goal);
+                  else if(q.type==='reveal') np=Math.min(np+revsCount,q.goal);
+                  else if(q.type==='secret'&&secretUsed) np=Math.min(np+1,q.goal);
+                  const done=np>=q.goal;
+                  if(done&&!q.done)coinsEarned+=q.reward;
+                  return{...q,progress:np,done};
+                })};
+                await DB.saveDailyQuests(uid,upd);
+                if(coinsEarned>0)await DB.addCoins(uid,coinsEarned);
+              }));
               // Log game end
               DB.logEvent(gameId,'end',`Игра завершена! Выжившие: ${surv.map(u=>copy.players[u]?.name||u).join(', ')}`,user.username);
               // Эло рейтинг
@@ -5244,6 +6321,9 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
     setSecretModalOpen(false);
     setTappedCard(null);
     setSub('round');
+    // B2/Feature13: Достижение за использование секретной карты
+    const ud=await DB.getUser(user.username);
+    if(ud) await checkAndAwardAchievements(user.username,ud,{usedSecret:true});
   };
 
   const doReveal=async(k)=>{
@@ -5255,6 +6335,27 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
     await DB.updateGame(gameId,{[`players/${user.username}/revealed`]:nr,[`revealedThisRound/${user.username}`]:revDone+1});
     DB.logEvent(gameId,'reveal',`${user.displayName||user.username} раскрыл карту: ${cardLabel}`,user.username);
     toast('✅ Карта раскрыта!','ok');setSub('round');
+    // B2/Feature13: Достижение за раскрытие всех карт
+    const totalNonSecret=CARDS.filter(c=>c.key!=='secret').length;
+    if(nr.length>=totalNonSecret){
+      const ud=await DB.getUser(user.username);
+      if(ud) await checkAndAwardAchievements(user.username,ud,{revealedAll:true});
+    }
+    // Квест за раскрытие карты
+    const todayStr=new Date().toDateString();
+    const qd=await DB.getDailyQuests(user.username);
+    if(qd&&qd.date===todayStr){
+      let earned=0;
+      const upd={...qd,quests:qd.quests.map(q=>{
+        if(q.done||q.type!=='reveal')return q;
+        const np=Math.min((q.progress||0)+1,q.goal);
+        const done=np>=q.goal;
+        if(done&&!q.done)earned+=q.reward;
+        return{...q,progress:np,done};
+      })};
+      await DB.saveDailyQuests(user.username,upd);
+      if(earned>0){await DB.addCoins(user.username,earned);toast(`🎯 Задание выполнено! +${earned} монет`,'ok');}
+    }
   };
   const startVote=async()=>{
     if(game.phase!=='playing')return;
@@ -5288,8 +6389,9 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
           ...surv.map(uid=>DB.updateUser(uid,{gamesWon:firebase.database.ServerValue.increment(1)})),
           ...all.filter(u=>!surv.includes(u)).map(uid=>DB.updateUser(uid,{gamesEliminated:firebase.database.ServerValue.increment(1)}))
         ]);
-        // Монеты за победу (+100) и проигрыш (+20)
+        // Монеты и XP за победу (+100/+20)
         await Promise.all([...surv.map(uid=>DB.addCoins(uid,100)),...all.filter(u=>!surv.includes(u)).map(uid=>DB.addCoins(uid,20))]);
+        await Promise.all([...surv.map(uid=>DB.addXP(uid,XP_REWARDS.win)),...all.filter(u=>!surv.includes(u)).map(uid=>DB.addXP(uid,15))]);
         // Расчёт Эло для рейтинговой игры
         if(copy.isRated&&all.length>=2){
           const K=32;
@@ -5312,6 +6414,34 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
           const totalRevd=(pp?.revealed||[]).length;
           const totalCards=CARDS.filter(c=>c.key!=='secret').length;
           await checkAndAwardAchievements(uid,{...ud,gamesWon:(ud.gamesWon||0)+(isSurv?1:0),gamesEliminated:(ud.gamesEliminated||0)+(!isSurv?1:0)},{wonWithoutAllCards:isSurv&&totalRevd<totalCards});
+        }));
+        // ── История игр ──
+        const histEntry={apoc:g.apocalypse?.name||'Бункер',apocEmoji:g.apocalypse?.emoji||'☢️',rounds:g.round||1,players:all.length,pack:g.cardPack||'default'};
+        await Promise.all(all.map(uid=>DB.saveGameHistory(uid,{...histEntry,won:surv.includes(uid)})));
+        // ── Ежедневные задания ──
+        const today=new Date().toDateString();
+        await Promise.all(all.map(async uid=>{
+          const qd=await DB.getDailyQuests(uid);
+          if(!qd)return;
+          if(qd.date!==today)return; // если задания не от сегодня — не обновляем
+          const isSurv=surv.includes(uid);
+          const pp=copy.players[uid];
+          const revsCount=(pp?.revealed||[]).length;
+          const secretUsed=!!(copy.usedSecrets||{})[uid];
+          let coinsEarned=0;
+          const upd={...qd,quests:qd.quests.map(q=>{
+            if(q.done)return q;
+            let np=q.progress||0;
+            if(q.type==='play') np=Math.min(np+1,q.goal);
+            else if(q.type==='win'&&isSurv) np=Math.min(np+1,q.goal);
+            else if(q.type==='reveal') np=Math.min(np+revsCount,q.goal);
+            else if(q.type==='secret'&&secretUsed) np=Math.min(np+1,q.goal);
+            const done=np>=q.goal;
+            if(done&&!q.done)coinsEarned+=q.reward;
+            return{...q,progress:np,done};
+          })};
+          await DB.saveDailyQuests(uid,upd);
+          if(coinsEarned>0)await DB.addCoins(uid,coinsEarned);
         }));
         DB.logEvent(gameId,'end',`Игра завершена! Выжившие: ${surv.map(u=>copy.players[u]?.name||u).join(', ')}`,user.username);
       }
@@ -5364,25 +6494,30 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
             )
           ))}
           <div className="cgrid">
-            {me?.cards?CARDS.filter(c=>c.key!=='secret').map(({key,icon,label})=>{
+            {me?.cards?(()=>{
+              const cfxId = allUsersData[user.username]?.equipped?.cardEffect || user.equipped?.cardEffect || 'fx_classic';
+              const cfx = getCardEffectStyle(cfxId);
+              return CARDS.filter(c=>c.key!=='secret').map(({key,icon,label})=>{
               const rev=(me.revealed||[]).includes(key);
               const isFlipped=rev;
               return(
                 <div key={key} className={`card-flip-wrap${isFlipped?' flipped':''}${key==='fact'?' full':''}`} style={{height:key==='fact'?90:110}}>
                 <div className="card-flip-inner">
-                <div className="card-face" style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6}}>
-                  <div style={{fontSize:24,filter:'blur(6px)',opacity:.4}}>{icon}</div>
-                  <div style={{fontSize:10,color:'var(--tx3)',fontWeight:600,letterSpacing:1,textTransform:'uppercase'}}>{label}</div>
-                  <div style={{fontSize:9,color:'var(--tx3)',opacity:.6}}>🔒 закрыто</div>
+                <div className="card-face" style={{background:cfx.cardBg,border:`1px solid ${cfx.cardBorder}`,boxShadow:cfx.glow||'none',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6,position:'relative',overflow:'hidden'}}>
+                  {cfx.overlay&&<div style={{position:'absolute',inset:0,background:cfx.overlay,pointerEvents:'none'}}/>}
+                  <div style={{fontSize:24,filter:'blur(6px)',opacity:.4,position:'relative'}}>{icon}</div>
+                  <div style={{fontSize:10,color:'var(--tx3)',fontWeight:600,letterSpacing:1,textTransform:'uppercase',position:'relative'}}>{label}</div>
+                  <div style={{fontSize:9,color:'var(--tx3)',opacity:.6,position:'relative'}}>🔒 закрыто</div>
                 </div>
-                <div className={`card-face card-back${rev?' rev':''}`} style={{background:rev?'rgba(48,209,88,0.06)':'rgba(255,255,255,0.04)',border:`1px solid ${rev?'rgba(48,209,88,.3)':'rgba(255,255,255,0.08)'}`,display:'flex',flexDirection:'column',gap:4}}>
+                <div className={`card-face card-back${rev?' rev':''}`} style={{background:rev?cfx.revBg:cfx.cardBg,border:`1px solid ${rev?cfx.revBorder:cfx.cardBorder}`,boxShadow:cfx.glow||'none',display:'flex',flexDirection:'column',gap:4,position:'relative',overflow:'hidden'}}>
+                  {cfx.overlay&&<div style={{position:'absolute',inset:0,background:cfx.overlay,pointerEvents:'none'}}/>}
                   {rev&&<div className="rev-bdg">РАСКРЫТА</div>}
-                  <div style={{fontSize:22,marginBottom:5}}>{icon}</div>
-                  <div className="mono" style={{fontSize:8,letterSpacing:2,color:'var(--tx3)',textTransform:'uppercase'}}>{label}</div>
-                  <div style={{fontSize:12,color:'var(--tx)',marginTop:5,lineHeight:1.4}}>{me.cards[key]||'—'}</div>
+                  <div style={{fontSize:22,marginBottom:5,position:'relative'}}>{icon}</div>
+                  <div className="mono" style={{fontSize:8,letterSpacing:2,color:'var(--tx3)',textTransform:'uppercase',position:'relative'}}>{label}</div>
+                  <div style={{fontSize:12,color:'var(--tx)',marginTop:5,lineHeight:1.4,position:'relative'}}>{me.cards[key]||'—'}</div>
                 </div></div></div>
               );
-            }):<div style={{color:'var(--tx3)',padding:24,textAlign:'center'}}>Карты не назначены</div>}
+            });})():<div style={{color:'var(--tx3)',padding:24,textAlign:'center'}}>Карты не назначены</div>}
           </div>
         </div>
       </div>
@@ -5454,7 +6589,28 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
                     </div>
                     {(iSel||iVot)&&<div style={{marginLeft:'auto',fontSize:18}}>🎯</div>}
                   </div>
-                  {p.cards?.profession&&<div style={{fontSize:11,color:'var(--tx2)',background:'rgba(255,255,255,.05)',borderRadius:6,padding:'4px 8px'}}>{p.cards.profession}</div>}
+                  {/* Раскрытые карты игрока */}
+                  {(()=>{
+                    const revealed=p.revealed||[];
+                    if(revealed.length===0) return <div style={{fontSize:10,color:'var(--tx3)',marginTop:6,fontStyle:'italic'}}>Карты не раскрыты</div>;
+                    return(
+                      <div style={{marginTop:8,display:'flex',flexDirection:'column',gap:4}}>
+                        {revealed.map(k=>{
+                          const m=CARDS.find(c=>c.key===k)||{};
+                          const val=p.cards?.[k]||'—';
+                          return(
+                            <div key={k} style={{display:'flex',alignItems:'center',gap:6,background:'rgba(255,255,255,0.04)',borderRadius:8,padding:'5px 8px',border:'1px solid rgba(255,255,255,0.07)'}}>
+                              <span style={{fontSize:14,flexShrink:0}}>{m.icon||'•'}</span>
+                              <div style={{flex:1,minWidth:0}}>
+                                <div style={{fontSize:8,color:'var(--tx3)',fontWeight:700,letterSpacing:1,textTransform:'uppercase'}}>{m.label||k}</div>
+                                <div style={{fontSize:11,color:'var(--tx)',fontWeight:500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{val}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
                 </div>
               );
             })}
@@ -6055,9 +7211,66 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
 
       {/* ── ИГРОВАЯ ОБЛАСТЬ С КАРТАМИ ── */}
       {me?.isEliminated?(
-        <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:10,color:'rgba(255,69,58,0.5)'}}>
-          <div style={{fontSize:48}}>💀</div>
-          <div style={{fontSize:13,fontWeight:700,letterSpacing:3}}>ВЫ ВЫБЫЛИ</div>
+        /* ── РЕЖИМ СПЕКТАТОРА ── */
+        <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+          <div style={{background:'rgba(255,69,58,0.08)',border:'1px solid rgba(255,69,58,0.2)',borderRadius:'var(--rad)',margin:'8px 16px 4px',padding:'10px 14px',display:'flex',alignItems:'center',gap:10,flexShrink:0}}>
+            <div style={{fontSize:22}}>👁</div>
+            <div>
+              <div style={{fontSize:12,fontWeight:700,color:'var(--r)',letterSpacing:1}}>РЕЖИМ СПЕКТАТОРА</div>
+              <div style={{fontSize:10,color:'rgba(255,255,255,0.4)'}}>Вы выбыли — наблюдайте за игрой</div>
+            </div>
+          </div>
+          <div className="scr" style={{padding:'8px 16px 80px'}}>
+            {Object.values(game.players||{}).filter(p=>!p.isEliminated).map(p=>{
+              const cfxId=allUsersData[p.username]?.equipped?.cardEffect||'fx_classic';
+              const cfx=getCardEffectStyle(cfxId);
+              const pRevd=p.revealed||[];
+              return(
+                <div key={p.username} style={{background:cfx.cardBg,border:`1px solid ${cfx.cardBorder}`,boxShadow:cfx.glow||'none',borderRadius:'var(--rad)',padding:14,marginBottom:10,position:'relative',overflow:'hidden'}}>
+                  {cfx.overlay&&<div style={{position:'absolute',inset:0,background:cfx.overlay,pointerEvents:'none',zIndex:0}}/>}
+                  <div style={{position:'relative',zIndex:1}}>
+                    <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+                      <Avatar name={p.name||p.username} size="sm" avatar={allUsersData?.[p.username]?.avatar} frame={allUsersData?.[p.username]?.equipped?.frame}/>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:14,fontWeight:700,color:'var(--tx)'}}>{p.name||p.username}</div>
+                        <div style={{fontSize:10,color:'var(--tx3)'}}>{pRevd.length} из {CARDS.filter(c=>c.key!=='secret').length} карт раскрыто</div>
+                      </div>
+                      <div style={{fontSize:10,color:'var(--g)',background:'rgba(48,209,88,0.1)',border:'1px solid rgba(48,209,88,0.25)',borderRadius:8,padding:'3px 8px',fontWeight:700}}>✅ В ИГРЕ</div>
+                    </div>
+                    {pRevd.length===0?(
+                      <div style={{fontSize:11,color:'var(--tx3)',fontStyle:'italic',textAlign:'center',padding:'8px 0'}}>Карты ещё не раскрыты</div>
+                    ):(
+                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>
+                        {pRevd.map(k=>{
+                          const m=CARDS.find(c=>c.key===k)||{};
+                          return(
+                            <div key={k} style={{background:'rgba(255,255,255,0.06)',borderRadius:8,padding:'8px 10px',border:`1px solid ${cfx.revBorder||'rgba(48,209,88,0.2)'}`}}>
+                              <div style={{fontSize:9,color:'var(--tx3)',fontWeight:700,letterSpacing:1,textTransform:'uppercase',marginBottom:3}}>{m.icon} {m.label}</div>
+                              <div style={{fontSize:12,color:'var(--tx)',fontWeight:500,lineHeight:1.3}}>{p.cards?.[k]||'—'}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            {Object.values(game.players||{}).filter(p=>p.isEliminated&&p.username!==user.username).length>0&&(
+              <>
+                <div style={{fontSize:9,color:'var(--tx3)',fontWeight:700,letterSpacing:2,textTransform:'uppercase',marginBottom:8,marginTop:4}}>☠ ВЫБЫЛИ</div>
+                {Object.values(game.players||{}).filter(p=>p.isEliminated&&p.username!==user.username).map(p=>(
+                  <div key={p.username} style={{opacity:0.5,background:'rgba(255,69,58,0.04)',border:'1px solid rgba(255,69,58,0.12)',borderRadius:'var(--rad)',padding:12,marginBottom:6,display:'flex',alignItems:'center',gap:10}}>
+                    <div style={{fontSize:18}}>💀</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:13,color:'rgba(255,255,255,0.4)',textDecoration:'line-through'}}>{p.name||p.username}</div>
+                      <div style={{fontSize:11,color:'rgba(255,255,255,0.25)'}}>{p.cards?.profession||'—'}</div>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
         </div>
       ):me?.cards?(
         <div className="game-hand-area">
@@ -6438,59 +7651,108 @@ function PlayerProfileScreen({uid, me, onBack, online}){
   const winRate=games>0?Math.round(wins/games*100):0;
   const isOnline=!!(online&&online[uid]);
   const isMe=me&&me.username===uid;
+  const lvlInfo=getLevel(pUser.xp||0);
+  const earnedAchs=Object.keys(pUser.achievements||{}).length;
+  // Рамка профиля
+  const frameData=PROFILE_FRAMES.find(f=>f.id===pUser.equipped?.frame);
   return(
     <div className="sc" style={{position:'fixed',inset:0,zIndex:500,background:'var(--bg)'}}>
       <div className="tb"><BackBtn onClick={onBack}/><div className="tb-title">ПРОФИЛЬ</div>{isMe&&<span className="bdg bdg-c">ВЫ</span>}</div>
-      <div className="scr">
-        <div style={{textAlign:'center',padding:'28px 0 20px',background:'rgba(255,255,255,0.03)',borderRadius:'var(--rad-lg)',marginBottom:14,border:'1px solid rgba(255,255,255,0.07)',position:'relative'}}>
-          <Avatar name={pUser.displayName||pUser.username} size="lg" avatar={pUser.avatar} frame={pUser.equipped?.frame}/>
-          <div style={{fontSize:20,fontWeight:700,color:'var(--tx)',marginBottom:4}}>{pUser.displayName||pUser.username}</div>
-          <div style={{fontSize:12,color:'var(--tx3)',marginBottom:6,display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>
-            <span>@{pUser.username}</span>
-            {isOnline ? <span style={{display:'inline-flex',alignItems:'center',gap:4,color:'var(--g)',fontSize:11,fontWeight:600}}><span style={{width:7,height:7,borderRadius:'50%',background:'var(--g)',boxShadow:'0 0 6px var(--g)',display:'inline-block'}}/>В сети</span> : <span style={{color:'var(--tx3)',fontSize:11}}>Офлайн</span>}
-          </div>
-          <div style={{display:'inline-flex',alignItems:'center',gap:6,background:`${rank.color}18`,border:`1px solid ${rank.color}44`,borderRadius:20,padding:'4px 14px'}}>
-            <span style={{fontSize:16}}>{rank.icon}</span>
-            <span style={{fontSize:12,fontWeight:700,color:rank.color}}>{rank.name}</span>
-          </div>
-          {pUser.isAdmin&&<div style={{marginTop:8}}><span className="bdg bdg-p">ADMIN</span></div>}
-          {pUser.status&&<div style={{marginTop:8,fontSize:12,color:'var(--tx2)',fontStyle:'italic'}}>"{pUser.status}"</div>}
-        </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:14}}>
-          {[['☢',games,'Игр','var(--a)'],['🏆',wins,'Побед','var(--g)'],['💀',elims,'Выбыл','var(--r)']].map(([ico,val,lbl,col])=>(
-            <div key={lbl} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad-sm)',padding:'14px 8px',textAlign:'center'}}>
-              <div style={{fontSize:22,marginBottom:4}}>{ico}</div>
-              <div style={{fontSize:24,fontWeight:700,color:col,lineHeight:1}}>{val}</div>
-              <div style={{fontSize:10,color:'var(--tx3)',marginTop:4}}>{lbl}</div>
-            </div>
-          ))}
-        </div>
-        {games>0&&(
-          <div style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad-sm)',padding:16,marginBottom:14}}>
-            <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
-              <span style={{fontSize:12,color:'var(--tx3)'}}>Процент побед</span>
-              <span style={{fontSize:12,fontWeight:700,color:'var(--g)'}}>{winRate}%</span>
-            </div>
-            <div style={{height:6,background:'rgba(255,255,255,.08)',borderRadius:3,overflow:'hidden'}}>
-              <div style={{height:'100%',width:`${winRate}%`,background:'linear-gradient(90deg,var(--g),#30d158)',borderRadius:3,transition:'width .6s ease'}}/>
-            </div>
-          </div>
-        )}
-        <div className="lbl">ЗВАНИЕ</div>
-        {RANKS.filter(r=>!r.adminOnly||pUser.isAdmin).map(r=>{
-          const cur=getRank(pUser).id===r.id;
-          return(
-            <div key={r.id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 14px',background:cur?`${r.color}12`:'rgba(255,255,255,0.03)',border:`1px solid ${cur?r.color+'44':'rgba(255,255,255,0.07)'}`,borderRadius:'var(--rad-sm)',marginBottom:6,opacity:cur?1:.5,transition:'.2s'}}>
-              <span style={{fontSize:20}}>{r.icon}</span>
-              <div style={{flex:1}}>
-                <div style={{fontSize:13,fontWeight:600,color:cur?r.color:'var(--tx)'}}>{r.name}</div>
-                <div style={{fontSize:11,color:'var(--tx3)'}}>{r.adminOnly?'Только администраторы':r.min===0?'Начальное звание':`от ${r.min} игр`}</div>
+      <div className="scr" style={{paddingBottom:40}}>
+
+        {/* ═══ КРАСИВАЯ КАРТОЧКА ИГРОКА (Feature 23) ═══ */}
+        <div style={{position:'relative',borderRadius:'var(--rad-lg)',overflow:'hidden',marginBottom:16,animation:'winFadeIn .35s ease'}}>
+          {/* Градиентный фон карточки на основе цвета ранга */}
+          <div style={{position:'absolute',inset:0,background:`linear-gradient(145deg,${rank.color}22 0%,rgba(10,10,15,0.97) 55%,${rank.color}08 100%)`,zIndex:0}}/>
+          {/* Декоративные лучи */}
+          <div style={{position:'absolute',top:'-40%',left:'-20%',width:'160%',height:'200%',background:`conic-gradient(from 220deg at 30% 50%,transparent 0deg,${rank.color}06 30deg,transparent 60deg)`,zIndex:0,pointerEvents:'none'}}/>
+          {/* Рамка */}
+          <div style={{position:'absolute',inset:0,border:`1.5px solid ${rank.color}35`,borderRadius:'var(--rad-lg)',zIndex:2,pointerEvents:'none'}}/>
+          {/* Сканлайны (тонкие) */}
+          <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px)',zIndex:1,pointerEvents:'none'}}/>
+
+          <div style={{position:'relative',zIndex:3,padding:'24px 20px 20px'}}>
+            {/* Верхняя строка: онлайн + ранг */}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
+              <div style={{display:'flex',alignItems:'center',gap:6}}>
+                <div style={{width:8,height:8,borderRadius:'50%',background:isOnline?'var(--g)':'rgba(255,255,255,0.2)',boxShadow:isOnline?'0 0 8px var(--g)':'none',flexShrink:0}}/>
+                <span style={{fontSize:10,color:isOnline?'var(--g)':'var(--tx3)',fontWeight:600}}>{isOnline?'В СЕТИ':'ОФЛАЙН'}</span>
               </div>
-              {cur&&<span style={{fontSize:10,fontWeight:700,color:r.color,background:`${r.color}20`,border:`1px solid ${r.color}40`,borderRadius:10,padding:'2px 8px'}}>ТЕКУЩЕЕ</span>}
+              <div style={{display:'flex',alignItems:'center',gap:5,background:`${rank.color}15`,border:`1px solid ${rank.color}40`,borderRadius:20,padding:'4px 12px'}}>
+                <span style={{fontSize:14}}>{rank.icon}</span>
+                <span style={{fontSize:10,fontWeight:700,color:rank.color}}>{rank.name}</span>
+              </div>
             </div>
-          );
-        })}
-        <div className="lbl" style={{marginTop:14}}>🏅 ДОСТИЖЕНИЯ</div>
+
+            {/* Центр: аватар + имя */}
+            <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:20}}>
+              {/* Аватар с рамкой */}
+              <div style={{position:'relative',marginBottom:12}}>
+                {frameData&&<div style={{position:'absolute',inset:-4,borderRadius:'50%',background:frameData.gradient,zIndex:0,filter:'blur(0px)'}}/>}
+                <div style={{position:'relative',zIndex:1,width:80,height:80,borderRadius:'50%',background:frameData?'var(--bg)':'rgba(255,255,255,0.08)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:32,border:frameData?'none':'2px solid rgba(255,255,255,0.12)'}}>
+                  {pUser.avatar||pUser.displayName?.[0]||pUser.username?.[0]||'?'}
+                </div>
+                {pUser.isAdmin&&<div style={{position:'absolute',bottom:-2,right:-2,zIndex:2,background:'linear-gradient(135deg,#f0a500,#ffd700)',borderRadius:'50%',width:22,height:22,display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,border:'2px solid var(--bg)'}}>👑</div>}
+              </div>
+              <div style={{fontSize:22,fontWeight:800,color:'var(--tx)',letterSpacing:0.5,marginBottom:3}}>{pUser.displayName||pUser.username}</div>
+              <div style={{fontSize:11,color:'var(--tx3)',marginBottom:6}}>@{pUser.username}</div>
+              {pUser.status&&(
+                <div style={{fontSize:12,color:'rgba(255,255,255,0.5)',fontStyle:'italic',textAlign:'center',maxWidth:220,background:'rgba(255,255,255,0.04)',borderRadius:8,padding:'5px 12px',border:'1px solid rgba(255,255,255,0.07)'}}>
+                  "{pUser.status}"
+                </div>
+              )}
+            </div>
+
+            {/* Уровень */}
+            <div style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'var(--rad-sm)',padding:'10px 14px',marginBottom:14}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:7}}>
+                <div style={{background:'linear-gradient(135deg,var(--a),#ff6b00)',borderRadius:6,padding:'3px 10px',fontSize:11,fontWeight:900,color:'#000',flexShrink:0}}>УР. {lvlInfo.level}</div>
+                <div style={{flex:1,height:5,background:'rgba(255,255,255,0.08)',borderRadius:3,overflow:'hidden'}}>
+                  <div style={{height:'100%',width:`${Math.round(lvlInfo.currentXP/lvlInfo.neededXP*100)}%`,background:'linear-gradient(90deg,var(--a),#ff6b00)',borderRadius:3,transition:'width .6s ease'}}/>
+                </div>
+                <div style={{fontSize:9,color:'var(--tx3)',flexShrink:0}}>{lvlInfo.currentXP}/{lvlInfo.neededXP} XP</div>
+              </div>
+              {/* Достижения */}
+              <div style={{display:'flex',alignItems:'center',gap:6}}>
+                <span style={{fontSize:10,color:'var(--tx3)'}}>🏅 Достижений:</span>
+                <span style={{fontSize:11,fontWeight:700,color:'var(--a)'}}>{earnedAchs}</span>
+                <span style={{fontSize:10,color:'var(--tx3)'}}>/ {ACHIEVEMENTS.length}</span>
+                {(pUser.loginStreak||0)>0&&<span style={{marginLeft:'auto',fontSize:10,color:'#ff9f0a',background:'rgba(255,159,10,0.1)',border:'1px solid rgba(255,159,10,0.3)',borderRadius:8,padding:'2px 7px',fontWeight:600}}>🔥 {pUser.loginStreak}д стрик</span>}
+              </div>
+            </div>
+
+            {/* Статистика — горизонтальные плашки */}
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:12}}>
+              {[
+                {ico:'☢️',val:games,lbl:'Игр',col:'var(--a)',bg:'rgba(240,165,0,0.08)',brd:'rgba(240,165,0,0.2)'},
+                {ico:'🏆',val:wins,lbl:'Побед',col:'var(--g)',bg:'rgba(48,209,88,0.08)',brd:'rgba(48,209,88,0.2)'},
+                {ico:'💀',val:elims,lbl:'Выбываний',col:'var(--r)',bg:'rgba(255,69,58,0.08)',brd:'rgba(255,69,58,0.2)'},
+                {ico:'📊',val:`${winRate}%`,lbl:'Побед %',col:'#4da6ff',bg:'rgba(77,166,255,0.08)',brd:'rgba(77,166,255,0.2)'},
+              ].map(({ico,val,lbl,col,bg,brd})=>(
+                <div key={lbl} style={{background:bg,border:`1px solid ${brd}`,borderRadius:'var(--rad-sm)',padding:'12px 10px',textAlign:'center'}}>
+                  <div style={{fontSize:18,marginBottom:4}}>{ico}</div>
+                  <div style={{fontSize:22,fontWeight:800,color:col,lineHeight:1}}>{val}</div>
+                  <div style={{fontSize:9,color:'var(--tx3)',marginTop:3,fontWeight:600,letterSpacing:0.5}}>{lbl}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Прогресс-бар побед */}
+            {games>0&&(
+              <div style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.07)',borderRadius:'var(--rad-sm)',padding:'10px 14px',marginBottom:4}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:7}}>
+                  <span style={{fontSize:11,color:'var(--tx3)',fontWeight:500}}>Процент побед</span>
+                  <span style={{fontSize:12,fontWeight:800,color:winRate>=50?'var(--g)':'var(--r)'}}>{winRate}%</span>
+                </div>
+                <div style={{height:6,background:'rgba(255,255,255,.06)',borderRadius:3,overflow:'hidden'}}>
+                  <div style={{height:'100%',width:`${winRate}%`,background:`linear-gradient(90deg,${winRate>=50?'var(--g)':'#ff9f0a'},${winRate>=50?'#30d158':'var(--r)'})`,borderRadius:3,transition:'width .8s cubic-bezier(.34,1.56,.64,1)'}}/>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="lbl">🏅 ДОСТИЖЕНИЯ</div>
         <AchievementsPanel userData={pUser}/>
       </div>
     </div>
@@ -6772,7 +8034,7 @@ function App(){
       <FirebaseStatus/>
       <div id="screen-area" className={screenDir==='left'?'sc-back':''}>
         {screen==='auth'&&<AuthScreen onLogin={u=>{setUser(u);nav('home');}} toast={showToast}/>}
-        {screen==='home'&&user&&<HomeScreen user={user} nav={nav} online={online} announcement={announcement}/>}
+        {screen==='home'&&user&&<HomeScreen user={user} nav={nav} online={online} announcement={announcement} onUpdate={u=>setUser(u)} toast={showToast}/>}
         {screen==='friends'&&user&&<FriendsScreen user={user} onBack={()=>nav('home')} toast={showToast} gameInvites={invites} onAcceptInvite={handleAcceptInvite} onViewProfile={uid=>setViewProfile(uid)} online={online}/>}
         {screen==='profile'&&user&&<ProfileScreen user={user} onBack={()=>nav('home')} toast={showToast} onUpdate={u=>setUser(u)}/>}
         {screen==='shop'&&user&&<ShopScreen user={user} onBack={()=>nav('home')} toast={showToast} onUpdate={u=>setUser(u)}/>}
