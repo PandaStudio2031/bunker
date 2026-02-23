@@ -491,8 +491,8 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 }
 
 /* ──────────────── SCROLLER ──────────────── */
-.scr     { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:16px 16px calc(76px + 32px); }
-.scr-raw { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:16px 16px 108px; }
+.scr     { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:20px 18px calc(76px + 40px); }
+.scr-raw { flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:20px 18px 120px; }
 
 /* ──────────────── GLASS CARD (Glassmorphism) ──────────────── */
 .glass-card {
@@ -512,11 +512,12 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 
 /* ──────────────── TOPBAR ──────────────── */
 .tb {
-  display:flex; align-items:center; gap:10px; padding:13px 16px; flex-shrink:0; z-index:10;
+  display:flex; align-items:center; gap:12px; padding:14px 18px; flex-shrink:0; z-index:10;
   background:rgba(12,12,20,0.85); backdrop-filter:var(--bl); -webkit-backdrop-filter:var(--bl);
   border-bottom:1px solid rgba(255,255,255,0.06);
+  min-height:56px;
 }
-.tb-title { font-family:'Inter',sans-serif; font-size:17px; font-weight:700; color:var(--tx); flex:1; letter-spacing:-0.2px; }
+.tb-title { font-family:'Inter',sans-serif; font-size:18px; font-weight:700; color:var(--tx); flex:1; letter-spacing:-0.3px; }
 
 /* ──────────────── HAZARD STRIPE ──────────────── */
 .hz     { height:1px; flex-shrink:0; background:rgba(240,165,0,0.25); }
@@ -525,13 +526,14 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 /* ──────────────── BUTTONS ──────────────── */
 .btn {
   display:flex; align-items:center; justify-content:center; gap:8px;
-  width:100%; padding:14px 20px; border:none; cursor:pointer;
-  font-family:'Inter',sans-serif; font-size:15px; font-weight:600; letter-spacing:-0.1px;
+  width:100%; padding:16px 22px; border:none; cursor:pointer;
+  font-family:'Inter',sans-serif; font-size:16px; font-weight:600; letter-spacing:-0.1px;
   transition:all .18s; border-radius:var(--rad); position:relative; overflow:hidden;
+  min-height:52px;
 }
 .btn:disabled { opacity:.3; cursor:not-allowed; }
 .btn:not(:disabled):active { transform:scale(.97); opacity:.9; }
-.btn-sm { padding:10px 16px; font-size:13px; border-radius:var(--rad-sm); }
+.btn-sm { padding:11px 18px; font-size:14px; border-radius:var(--rad-sm); min-height:44px; }
 
 .btn-p { background:linear-gradient(135deg,#d4940a,var(--a)); color:#000; font-weight:700; }
 .btn-p:not(:disabled):hover { filter:brightness(1.08); }
@@ -548,49 +550,51 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 
 /* ──────────────── INPUTS ──────────────── */
 .inp {
-  width:100%; padding:13px 16px; outline:none; transition:.2s; margin-bottom:10px;
+  width:100%; padding:15px 18px; outline:none; transition:.2s; margin-bottom:12px;
   background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
-  border-radius:var(--rad-sm); color:var(--tx); font-family:'Inter',sans-serif; font-size:16px; font-weight:500;
+  border-radius:var(--rad); color:var(--tx); font-family:'Inter',sans-serif; font-size:16px; font-weight:500;
+  min-height:52px;
 }
 .inp:focus { border-color:var(--a); box-shadow:0 0 0 3px rgba(240,165,0,.12); }
 .inp::placeholder { color:var(--tx3); }
 .sel {
-  width:100%; padding:12px 16px; outline:none; margin-bottom:10px; -webkit-appearance:none;
+  width:100%; padding:14px 18px; outline:none; margin-bottom:12px; -webkit-appearance:none;
   background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
-  border-radius:var(--rad-sm); color:var(--tx); font-family:'Inter',sans-serif; font-size:15px;
+  border-radius:var(--rad); color:var(--tx); font-family:'Inter',sans-serif; font-size:16px;
+  min-height:52px;
 }
 
 /* ──────────────── LABELS ──────────────── */
 .lbl {
-  display:flex; align-items:center; gap:8px; margin:20px 0 10px;
-  font-family:'Inter',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--tx2); text-transform:uppercase;
+  display:flex; align-items:center; gap:10px; margin:24px 0 12px;
+  font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; color:var(--tx2); text-transform:uppercase;
 }
 .lbl::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
-.lbl:first-child { margin-top:4px; }
+.lbl:first-child { margin-top:6px; }
 
 /* ──────────────── GLASS CARD ──────────────── */
 .card {
   background:rgba(255,255,255,0.04); backdrop-filter:var(--bl-sm); -webkit-backdrop-filter:var(--bl-sm);
-  border:1px solid rgba(255,255,255,0.08); border-radius:var(--rad); padding:18px; margin-bottom:10px; position:relative;
+  border:1px solid rgba(255,255,255,0.08); border-radius:var(--rad-lg); padding:20px; margin-bottom:12px; position:relative;
 }
 .card::before,.card::after { display:none; }
 
 /* ──────────────── STAT BOX ──────────────── */
 .stat-box {
   background:rgba(255,255,255,0.04); backdrop-filter:var(--bl-sm); -webkit-backdrop-filter:var(--bl-sm);
-  border:1px solid rgba(255,255,255,0.08); border-radius:var(--rad); padding:18px; text-align:center;
+  border:1px solid rgba(255,255,255,0.08); border-radius:var(--rad-lg); padding:22px; text-align:center;
 }
-.sv { font-family:'Inter',sans-serif; font-size:34px; font-weight:700; color:var(--a); line-height:1; }
-.sl { font-family:'Inter',sans-serif; font-size:10px; font-weight:500; letter-spacing:0.3px; color:var(--tx2); margin-top:5px; }
+.sv { font-family:'Inter',sans-serif; font-size:36px; font-weight:700; color:var(--a); line-height:1; }
+.sl { font-family:'Inter',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.5px; color:var(--tx2); margin-top:6px; text-transform:uppercase; }
 
 /* ──────────────── PLAYER ROW ──────────────── */
 .prow {
-  display:flex; align-items:center; gap:10px; padding:12px 16px;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:var(--rad-sm); margin-bottom:6px; transition:.18s;
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:var(--rad); margin-bottom:8px; transition:.18s;
 }
 .prow.me  { border-color:rgba(240,165,0,.3); background:rgba(240,165,0,0.06); }
 .prow.hot { cursor:pointer; }
-.prow.hot:hover { border-color:rgba(240,165,0,.25); background:rgba(240,165,0,0.05); }
+.prow.hot:active { border-color:rgba(240,165,0,.25); background:rgba(240,165,0,0.05); }
 
 /* ──────────────── BADGES ──────────────── */
 .bdg { font-family:'Inter',sans-serif; font-size:9px; font-weight:600; letter-spacing:0.3px; padding:3px 8px; border:1px solid; border-radius:20px; text-transform:uppercase; flex-shrink:0; }
@@ -819,7 +823,7 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 .secret-tile-used { opacity: .5; pointer-events: none; }
 
 /* ══════════════════════════════════════════════════════════
-   PLAYING CARDS — карточки игрока
+   HAND CARDS — карточки игрока (стопка внизу)
 ══════════════════════════════════════════════════════════ */
 .game-field {
   display: flex;
@@ -842,8 +846,8 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  gap: 8px;
+  height: 58px;
+  gap: 10px;
 }
 .game-apoc-badge {
   display: flex;
@@ -878,8 +882,8 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   gap: 8px;
 }
 .game-icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
@@ -887,7 +891,7 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
   transition: .15s;
   position: relative;
   flex-shrink: 0;
@@ -930,55 +934,59 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   padding: 16px 24px;
   transition: opacity .25s;
 }
-.game-card-detail-icon { font-size: 52px; margin-bottom: 10px; }
+.game-card-detail-icon { font-size: 56px; margin-bottom: 12px; line-height: 1; }
 .game-card-detail-label {
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--tx3);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .game-card-detail-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--tx);
   text-align: center;
-  line-height: 1.35;
+  line-height: 1.4;
+  padding: 0 8px;
 }
 .game-card-detail-hint {
   font-size: 11px;
   color: var(--tx3);
-  margin-top: 8px;
+  margin-top: 10px;
   text-align: center;
+  line-height: 1.5;
 }
 .game-card-detail-reveal {
-  margin-top: 16px;
+  margin-top: 20px;
   background: rgba(240,165,0,0.12);
   border: 1.5px solid rgba(240,165,0,0.4);
-  border-radius: 14px;
+  border-radius: 16px;
   color: var(--a);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  padding: 12px 28px;
+  padding: 14px 32px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: .15s;
+  letter-spacing: 0.3px;
 }
-.game-card-detail-reveal:active { background: rgba(240,165,0,0.22); }
+.game-card-detail-reveal:active { background: rgba(240,165,0,0.22); transform: scale(.97); }
 .game-card-detail-revealed {
-  margin-top: 16px;
-  font-size: 12px;
+  margin-top: 20px;
+  font-size: 13px;
   font-weight: 700;
-  color: rgba(48,209,88,0.7);
-  letter-spacing: 1px;
+  color: rgba(48,209,88,0.8);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 /* Стопка карт внизу */
 .game-hand {
   flex-shrink: 0;
   position: relative;
-  height: 130px;
+  height: 150px;
   margin: 0 12px;
   margin-bottom: 10px;
 }
@@ -987,19 +995,20 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 .hand-card {
   position: absolute;
   bottom: 0;
-  width: 72px;
-  height: 108px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(255,255,255,0.14);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.07) inset;
+  width: 78px;
+  height: 118px;
+  border-radius: 11px;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.1) inset;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: transform .22s cubic-bezier(.34,1.4,.64,1), box-shadow .2s, z-index 0s;
+  transition: transform .25s cubic-bezier(.34,1.5,.64,1), box-shadow .2s;
   user-select: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   transform-origin: center bottom;
+  will-change: transform;
 }
 
 /* Уголок TL */
@@ -1039,12 +1048,12 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 /* Полосочка снизу карты — цвет типа */
 .hand-card-strip {
-  height: 4px;
+  height: 3px;
   width: 100%;
   flex-shrink: 0;
 }
@@ -1052,22 +1061,29 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 /* Бейдж ✓ раскрытой */
 .hand-card-check {
   position: absolute;
-  top: -6px; right: -6px;
-  width: 18px; height: 18px;
+  top: -5px; right: -5px;
+  width: 15px; height: 15px;
   background: #30d158;
   border-radius: 50%;
   border: 2px solid #0a0a0f;
   display: flex; align-items: center; justify-content: center;
-  font-size: 9px;
+  font-size: 7px;
   font-weight: 900;
   color: #000;
   z-index: 2;
 }
 
-/* Выбранная карта — поднята */
+/* Выбранная карта — поднята и сияет */
 .hand-card.selected {
   z-index: 50 !important;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.8), 0 0 0 2px rgba(240,165,0,0.55);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 0 2px rgba(240,165,0,0.7), 0 0 20px rgba(240,165,0,0.2);
+}
+
+/* Использованная секретная карта */
+.secret-card-used {
+  opacity: 0.35 !important;
+  filter: grayscale(0.8);
+  pointer-events: none;
 }
 
 /* Цвета по типу карты */
@@ -1106,9 +1122,9 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 /* Полоска игроков */
 .game-players-strip {
   flex-shrink: 0;
-  padding: 10px 16px 8px;
+  padding: 12px 18px 10px;
   display: flex;
-  gap: 8px;
+  gap: 12px;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -1124,13 +1140,13 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   -webkit-tap-highlight-color: transparent;
 }
 .game-player-avatar {
-  width: 40px;
-  height: 40px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 22px;
   background: rgba(255,255,255,0.06);
   border: 2px solid rgba(255,255,255,0.1);
   transition: .15s;
@@ -1390,19 +1406,19 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
 .game-actions-row {
   flex-shrink: 0;
   display: flex;
-  gap: 8px;
-  padding: 0 16px max(12px, env(safe-area-inset-bottom));
+  gap: 10px;
+  padding: 8px 16px max(16px, env(safe-area-inset-bottom));
 }
 .game-action-btn {
   flex: 1;
-  height: 46px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.05);
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.11);
+  background: rgba(255,255,255,0.06);
   color: var(--tx);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1411,7 +1427,7 @@ body.theme-mipt .bottom-nav-btn.active { color:#4da6ff; }
   transition: .15s;
   -webkit-tap-highlight-color: transparent;
 }
-.game-action-btn:active { background: rgba(255,255,255,0.1); transform: scale(.97); }
+.game-action-btn:active { background: rgba(255,255,255,0.12); transform: scale(.97); }
 .game-action-btn.primary {
   background: rgba(240,165,0,0.12);
   border-color: rgba(240,165,0,0.35);
@@ -4899,6 +4915,8 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
   const[sub,setSub]=useState('round');
   const[confirmReveal,setConfirmReveal]=useState(null);
   const[tappedCard,setTappedCard]=useState(null);
+  const[secretTargetModal,setSecretTargetModal]=useState(null);
+  const[showApocModal,setShowApocModal]=useState(false);
   const allUsersData=game?._allUsers||{};
   const[selVote,setSelVote]=useState(undefined);
   const[showChat,setShowChat]=useState(false);
@@ -5121,40 +5139,110 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
 
   // debateTimeLeft обновляется выше (до early return)
 
-  const useSecretCard=async(sc)=>{
+  const useSecretCard=async(sc,targetUsername=null)=>{
     if(!me||me.isEliminated)return toast('Вы выбыли','err');
     if((game.usedSecrets||{})[user.username])return toast('Карта уже использована','err');
     const effect=sc.effect;
+    // Эффекты требующие выбора цели — показываем модал
+    const needsTarget=['swap_card','steal_reveal','truth_serum','lie_detector','amnesia','sabotage','mirror','redirect_vote','shield'];
+    if(needsTarget.includes(effect)&&!targetUsername){
+      setSecretTargetModal({sc});
+      setTappedCard(null);
+      setSecretModalOpen(false);
+      return;
+    }
     const upd={[`usedSecrets/${user.username}`]:true};
-    // Применяем эффект
     if(effect==='extra_reveal'){
       upd[`extraReveals/${user.username}`]=(game.extraReveals?.[user.username]||0)+1;
       toast(`✨ ${sc.name}: +1 раскрытие в этом раунде!`,'ok');
     } else if(effect==='double_vote'){
       upd[`doubleVote/${user.username}`]=true;
-      toast(`⚡ ${sc.name}: твой голос удвоен!`,'ok');
+      toast(`⚡ ${sc.name}: твой голос удвоен в следующем голосовании!`,'ok');
     } else if(effect==='no_vote'){
-      toast(`🔇 ${sc.name}: ты потерял голос в этом раунде.`,'');
+      upd[`noVote/${user.username}`]=true;
+      toast(`🔇 ${sc.name}: ты добровольно отказался от голоса.`,'');
     } else if(effect==='immunity'){
       upd[`immunity/${user.username}`]=true;
-      toast(`🛡️ ${sc.name}: ты под защитой в этом раунде!`,'ok');
+      toast(`🛡️ ${sc.name}: ты под защитой в этом голосовании!`,'ok');
     } else if(effect==='secret_vote'){
       upd[`secretVote/${user.username}`]=true;
       toast(`🕵️ ${sc.name}: твой голос будет тайным!`,'ok');
     } else if(effect==='hide_card'){
       const revealed=me.revealed||[];
-      if(revealed.length>0){
-        const toHide=revealed[Math.floor(Math.random()*revealed.length)];
-        const newRev=revealed.filter(k=>k!==toHide);
-        upd[`players/${user.username}/revealed`]=newRev;
-        const cardLabel=CARDS.find(c=>c.key===toHide)?.label||toHide;
-        toast(`🌫️ ${sc.name}: карта "${cardLabel}" снова скрыта!`,'ok');
-      } else { toast('🌫️ Нет раскрытых карт для скрытия','err'); return; }
+      if(!revealed.length){toast('🌫️ Нет раскрытых карт для скрытия','err');return;}
+      const toHide=revealed[Math.floor(Math.random()*revealed.length)];
+      upd[`players/${user.username}/revealed`]=revealed.filter(k=>k!==toHide);
+      toast(`🌫️ ${sc.name}: карта "${CARDS.find(c=>c.key===toHide)?.label||toHide}" снова скрыта!`,'ok');
+    } else if(effect==='random_elim'){
+      upd[`tiebreaker/${user.username}`]=true;
+      toast(`🎲 ${sc.name}: при ничье — ты выбираешь кто выбывает!`,'ok');
+    } else if(effect==='swap_card'&&targetUsername){
+      // Меняем случайную карту с целью
+      const targetPlayer=game.players[targetUsername];
+      if(!targetPlayer?.cards)return toast('Цель не имеет карт','err');
+      const myCardKeys=CARDS.filter(c=>c.key!=='secret').map(c=>c.key);
+      const targetCardKeys=CARDS.filter(c=>c.key!=='secret').map(c=>c.key);
+      const myKey=myCardKeys[Math.floor(Math.random()*myCardKeys.length)];
+      const theirKey=targetCardKeys[Math.floor(Math.random()*targetCardKeys.length)];
+      const myVal=me.cards[myKey];
+      const theirVal=targetPlayer.cards[theirKey];
+      upd[`players/${user.username}/cards/${myKey}`]=theirVal;
+      upd[`players/${targetUsername}/cards/${theirKey}`]=myVal;
+      const myLabel=CARDS.find(c=>c.key===myKey)?.label||myKey;
+      const theirLabel=CARDS.find(c=>c.key===theirKey)?.label||theirKey;
+      toast(`🔄 ${sc.name}: твой "${myLabel}" ↔ "${theirLabel}" ${targetPlayer.name||targetUsername}!`,'ok');
+    } else if(effect==='steal_reveal'&&targetUsername){
+      // Видим одну случайную нераскрытую карту цели (только тебе)
+      const targetPlayer=game.players[targetUsername];
+      const unrevKeys=CARDS.filter(c=>c.key!=='secret'&&!(targetPlayer?.revealed||[]).includes(c.key));
+      if(!unrevKeys.length)return toast('У цели нет скрытых карт','err');
+      const peekCard=unrevKeys[Math.floor(Math.random()*unrevKeys.length)];
+      const peekVal=targetPlayer?.cards?.[peekCard.key]||'—';
+      // Показываем тост — только этот игрок видит
+      toast(`👁️ ${sc.name}: ${targetPlayer.name||targetUsername} → ${peekCard.label}: ${peekVal}`,'ok');
+    } else if(effect==='truth_serum'&&targetUsername){
+      // Форсируем раскрытие профессии цели
+      const targetPlayer=game.players[targetUsername];
+      if(!targetPlayer?.cards)return toast('Цель не имеет карт','err');
+      const curRevealed=targetPlayer.revealed||[];
+      if(!curRevealed.includes('profession')){
+        upd[`players/${targetUsername}/revealed`]=[...curRevealed,'profession'];
+      }
+      upd[`secretEffect/${targetUsername}/truth_serum`]=user.username;
+      toast(`💉 ${sc.name}: ${targetPlayer.name||targetUsername} обязан раскрыть профессию!`,'ok');
+    } else if(effect==='lie_detector'&&targetUsername){
+      const targetPlayer=game.players[targetUsername];
+      const unrevKeys=CARDS.filter(c=>c.key!=='secret'&&!(targetPlayer?.revealed||[]).includes(c.key));
+      if(!unrevKeys.length)return toast('У цели нет скрытых карт','err');
+      const peekCard=unrevKeys[Math.floor(Math.random()*unrevKeys.length)];
+      const peekVal=targetPlayer?.cards?.[peekCard.key]||'—';
+      toast(`📡 ${sc.name}: тебе тайно сообщают — ${targetPlayer.name||targetUsername} → ${peekCard.label}: ${peekVal}`,'ok');
+    } else if(effect==='amnesia'&&targetUsername){
+      const targetPlayer=game.players[targetUsername];
+      const revKeys=targetPlayer?.revealed||[];
+      if(!revKeys.length)return toast('У цели нет раскрытых карт','err');
+      const toHide=revKeys[Math.floor(Math.random()*revKeys.length)];
+      upd[`players/${targetUsername}/revealed`]=revKeys.filter(k=>k!==toHide);
+      toast(`🧠 ${sc.name}: "${CARDS.find(c=>c.key===toHide)?.label||toHide}" у ${game.players[targetUsername]?.name||targetUsername} снова скрыта!`,'ok');
+    } else if(effect==='sabotage'&&targetUsername){
+      upd[`sabotaged/${targetUsername}`]=user.username;
+      toast(`💣 ${sc.name}: раскрытия ${game.players[targetUsername]?.name||targetUsername} не учитываются этот раунд!`,'ok');
+    } else if(effect==='mirror'&&targetUsername){
+      upd[`mirror/${user.username}`]=targetUsername;
+      toast(`🪞 ${sc.name}: если ${game.players[targetUsername]?.name||targetUsername} голосует против тебя — он получает штрафной голос!`,'ok');
+    } else if(effect==='redirect_vote'&&targetUsername){
+      upd[`redirectVote/${user.username}`]=targetUsername;
+      toast(`🔀 ${sc.name}: твой голос будет перенаправлен на ${game.players[targetUsername]?.name||targetUsername}!`,'ok');
+    } else if(effect==='shield'&&targetUsername){
+      upd[`shield/${user.username}`]=true;
+      toast(`🪖 ${sc.name}: щит активирован — если 3+ голосов против тебя, один аннулируется!`,'ok');
     } else {
-      // Остальные эффекты требуют взаимодействия — информируем
-      toast(`${sc.icon} ${sc.name} активирована! Расскажи всем об эффекте.`,'ok');
+      toast(`${sc.icon} ${sc.name} активирована!`,'ok');
     }
     await DB.updateGame(gameId,upd);
+    setSecretTargetModal(null);
+    setSecretModalOpen(false);
+    setTappedCard(null);
     setSub('round');
   };
 
@@ -5263,7 +5351,7 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
               React.createElement('div',{style:{fontSize:32,marginBottom:6}},mySecret.icon),
               React.createElement('div',{style:{fontSize:16,fontWeight:700,color:'#fff',marginBottom:4}},'🃏 ',mySecret.name),
               React.createElement('div',{style:{fontSize:12,color:'rgba(255,255,255,.7)',lineHeight:1.5}},mySecret.desc),
-              !secretUsed&&isCreator===false&&React.createElement('button',{onClick:(e)=>{e.stopPropagation();useSecretCard(mySecret);},style:{marginTop:12,background:mySecret.color,border:'none',borderRadius:'var(--rad-sm)',color:'#000',fontWeight:700,fontSize:12,padding:'8px 16px',cursor:'pointer',width:'100%'}},'⚡ Активировать карту')
+              !secretUsed&&isCreator===false&&React.createElement('button',{onClick:(e)=>{e.stopPropagation();useSecretCard(mySecretCard);},style:{marginTop:12,background:mySecretCard.color,border:'none',borderRadius:'var(--rad-sm)',color:'#000',fontWeight:700,fontSize:12,padding:'8px 16px',cursor:'pointer',width:'100%'}},'⚡ Активировать карту')
             ),
             secretModalOpen&&React.createElement('div',{className:'secret-modal-bg',onClick:()=>setSecretModalOpen(false)},
               React.createElement('div',{className:'secret-modal-card',onClick:(e)=>e.stopPropagation()},
@@ -5858,11 +5946,57 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
 
   return(
     <div className="game-field">
+      {/* Модал апокалипсиса */}
+      {showApocModal&&(
+        <div className="modal-overlay" onClick={()=>setShowApocModal(false)}>
+          <div className="modal-box" onClick={e=>e.stopPropagation()} style={{textAlign:'center',padding:'32px 24px'}}>
+            <div style={{fontSize:64,marginBottom:12}}>{ap.emoji}</div>
+            <div style={{fontFamily:"'Inter',sans-serif",fontSize:20,fontWeight:800,letterSpacing:1,color:'var(--a)',marginBottom:8}}>{ap.name}</div>
+            <div style={{fontSize:14,color:'var(--tx2)',lineHeight:1.65,marginBottom:20}}>{ap.description||ap.desc||'Апокалипсис случился. Выжившие должны попасть в бункер.'}</div>
+            <div style={{background:'rgba(240,165,0,0.08)',border:'1px solid rgba(240,165,0,0.2)',borderRadius:12,padding:'12px 16px',marginBottom:20}}>
+              <div style={{fontSize:11,color:'var(--tx3)',marginBottom:4,letterSpacing:1}}>МЕСТ В БУНКЕРЕ</div>
+              <div style={{fontSize:28,fontWeight:800,color:'var(--a)'}}>{game.bunkerSpots||1}</div>
+            </div>
+            <button className="btn btn-g" onClick={()=>setShowApocModal(false)}>Закрыть</button>
+          </div>
+        </div>
+      )}
       {confirmReveal&&<ConfirmDialog
         msg={<><div style={{fontSize:13,color:'var(--tx3)',marginBottom:8}}>Раскрыть карту всем?</div><div style={{fontSize:17,fontWeight:700,color:'var(--a)',marginBottom:4}}>{confirmReveal.label}</div><div style={{fontSize:14,color:'var(--tx)',lineHeight:1.5}}>{confirmReveal.value}</div><div style={{fontSize:11,color:'var(--tx3)',marginTop:8}}>Все игроки увидят эту карту</div></>}
         onYes={()=>{doReveal(confirmReveal.key);setConfirmReveal(null);DB.addCoins(user.username,10);}}
         onNo={()=>setConfirmReveal(null)}
       />}
+
+      {/* Модал выбора цели для секретной карты */}
+      {secretTargetModal&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',zIndex:300,display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 0 max(20px,env(safe-area-inset-bottom)) 0'}} onClick={()=>setSecretTargetModal(null)}>
+          <div style={{background:'#16161e',borderRadius:'20px 20px 0 0',padding:'20px 16px',width:'100%',maxWidth:480}} onClick={e=>e.stopPropagation()}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
+              <span style={{fontSize:28}}>{secretTargetModal.sc.icon}</span>
+              <div>
+                <div style={{fontSize:15,fontWeight:700,color:'var(--tx)'}}>{secretTargetModal.sc.name}</div>
+                <div style={{fontSize:11,color:'var(--tx3)',marginTop:2}}>{secretTargetModal.sc.desc}</div>
+              </div>
+            </div>
+            <div style={{fontSize:11,fontWeight:700,letterSpacing:1,color:'var(--tx3)',margin:'16px 0 8px',textTransform:'uppercase'}}>Выбери цель:</div>
+            {alive.filter(p=>p.username!==user.username).map(p=>(
+              <div key={p.username}
+                style={{display:'flex',alignItems:'center',gap:10,padding:'11px 14px',background:'rgba(255,255,255,0.05)',borderRadius:12,marginBottom:6,cursor:'pointer',border:'1px solid rgba(255,255,255,0.08)',WebkitTapHighlightColor:'transparent',transition:'.15s'}}
+                onClick={()=>useSecretCard(secretTargetModal.sc,p.username)}>
+                <div style={{fontSize:22,width:36,height:36,background:'rgba(255,255,255,0.07)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  {allUsersData[p.username]?.avatar||p.name?.[0]||'?'}
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--tx)'}}>{p.name||p.username}</div>
+                  <div style={{fontSize:10,color:'var(--tx3)'}}>раскрыто карт: {(p.revealed||[]).length}</div>
+                </div>
+                <div style={{fontSize:18,color:'var(--a)'}}>›</div>
+              </div>
+            ))}
+            <button style={{width:'100%',marginTop:8,padding:'12px',background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:12,color:'var(--tx3)',fontSize:13,cursor:'pointer'}} onClick={()=>setSecretTargetModal(null)}>Отмена</button>
+          </div>
+        </div>
+      )}
 
       {/* ── ШАПКА ── */}
       <div className="game-field-header">
@@ -5893,22 +6027,30 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
       </div>
 
       {/* ── ПОЛОСКА ИГРОКОВ ── */}
-      <div className="game-players-strip">
-        {Object.values(game.players||{}).map(p=>{
-          const isMe=p.username===user.username;
-          const isElim=p.isEliminated;
-          const pRevd=p.revealed||[];
-          const avatarEmoji=allUsersData[p.username]?.avatar||p.name?.[0]||'?';
-          return(
-            <div key={p.username} className="game-player-chip" onClick={()=>onViewProfile&&onViewProfile(p.username)}>
-              <div className={`game-player-avatar${isMe?' me':''}${isElim?' elim':''}`} style={{fontSize:typeof avatarEmoji==='string'&&avatarEmoji.length>2?14:20}}>
-                {avatarEmoji}
-                {pRevd.length>0&&!isElim&&<div style={{position:'absolute',bottom:-2,right:-2,background:'var(--g)',borderRadius:'50%',width:12,height:12,border:'2px solid #0a0a0f',fontSize:7,display:'flex',alignItems:'center',justifyContent:'center',color:'#000',fontWeight:700}}>{pRevd.length}</div>}
+      <div style={{display:'flex',alignItems:'center',gap:0,flexShrink:0}}>
+        <div className="game-players-strip" style={{flex:1}}>
+          {Object.values(game.players||{}).map(p=>{
+            const isMe=p.username===user.username;
+            const isElim=p.isEliminated;
+            const pRevd=p.revealed||[];
+            const avatarEmoji=allUsersData[p.username]?.avatar||p.name?.[0]||'?';
+            return(
+              <div key={p.username} className="game-player-chip" onClick={()=>onViewProfile&&onViewProfile(p.username)}>
+                <div className={`game-player-avatar${isMe?' me':''}${isElim?' elim':''}`} style={{fontSize:typeof avatarEmoji==='string'&&avatarEmoji.length>2?14:20}}>
+                  {avatarEmoji}
+                  {pRevd.length>0&&!isElim&&<div style={{position:'absolute',bottom:-2,right:-2,background:'var(--g)',borderRadius:'50%',width:12,height:12,border:'2px solid #0a0a0f',fontSize:7,display:'flex',alignItems:'center',justifyContent:'center',color:'#000',fontWeight:700}}>{pRevd.length}</div>}
+                </div>
+                <div className={`game-player-name${isMe?' me':''}`}>{p.name?.split(' ')[0]||p.username}</div>
               </div>
-              <div className={`game-player-name${isMe?' me':''}`}>{p.name?.split(' ')[0]||p.username}</div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        {/* Апокалипсис — всегда виден справа */}
+        <div onClick={()=>setShowApocModal(true)} style={{flexShrink:0,display:'flex',flexDirection:'column',alignItems:'center',padding:'8px 14px',cursor:'pointer',borderLeft:'1px solid rgba(255,255,255,0.07)',gap:3,background:'rgba(240,165,0,0.04)',WebkitTapHighlightColor:'transparent'}}>
+          <div style={{fontSize:26}}>{ap.emoji}</div>
+          <div style={{fontSize:7,fontWeight:800,letterSpacing:1,color:'var(--a)',textAlign:'center',maxWidth:60,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{ap.name}</div>
+          <div style={{fontSize:6,color:'var(--tx3)',letterSpacing:1}}>ЦЕЛЬ ℹ️</div>
+        </div>
       </div>
 
       {/* ── ИГРОВАЯ ОБЛАСТЬ С КАРТАМИ ── */}
@@ -5972,7 +6114,7 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
                 {desc&&<div className="game-card-detail-hint">{desc}</div>}
                 {isSec?(
                   !mySecretUsed&&!me.isEliminated&&(
-                    <button className="game-card-detail-reveal" style={{background:'rgba(191,90,242,0.12)',borderColor:'rgba(191,90,242,0.4)',color:'#bf5af2'}} onClick={()=>setSecretModalOpen(true)}>✨ Применить</button>
+                    <button className="game-card-detail-reveal" style={{background:'rgba(191,90,242,0.12)',borderColor:'rgba(191,90,242,0.4)',color:'#bf5af2'}} onClick={()=>{setTappedCard(null);useSecretCard(mySecretCard);}}>✨ Применить</button>
                   )
                 ):isRev?(
                   <div className="game-card-detail-revealed">✓ Раскрыта всем</div>
@@ -5996,7 +6138,7 @@ function GameWrapper({gameId,user,onExit,toast,onViewProfile,online}){
             // Все карты: 6 основных + секретная
             const allCards=[...myCards,...(mySecretCard?[{key:'secret',icon:mySecretCard.icon,label:'Секрет'}]:[])];
             const n=allCards.length;
-            const cardW=72;
+            const cardW=78;
             const overlap=36; // перекрытие между картами
             const totalW=cardW+(n-1)*(cardW-overlap);
             return(
