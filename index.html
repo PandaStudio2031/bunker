@@ -2023,8 +2023,8 @@ const DB = {
   async markRead(u1,u2,uid){await db.ref(`privateChatRead/${this.chatId(u1,u2)}/${uid}`).set(Date.now())},
   async sendGameMsg(gid,from,fromName,text){await db.ref(`games/${gid}/chat`).push({from,fromName,text,ts:Date.now()})},
   watchGameChat(gid,cb){const r=db.ref(`games/${gid}/chat`);r.on('value',s=>{const v=s.val()||{};cb(Object.entries(v).map(([id,m])=>({id,...m})).sort((a,b)=>a.ts-b.ts))});return()=>r.off('value')},
-  setOnline(uid){const r=db.ref(`presence/${uid}`);r.set(true);r.onDisconnect().remove();},
-  watchOnline(cb){const r=db.ref('presence');r.on('value',s=>cb(s.val()||{}));return()=>r.off('value')},
+  setOnline(uid){const r=db.ref(`presence/${uid}`);r.set({ts:Date.now(),online:true});r.onDisconnect().remove();const t=setInterval(()=>r.update({ts:Date.now()}),15000);return()=>{clearInterval(t);r.remove();};},
+  watchOnline(cb){const r=db.ref('presence');r.on('value',s=>{const d=s.val()||{};const now=Date.now();const alive={};Object.entries(d).forEach(([u,v])=>{if(v&&typeof v==='object'?now-(v.ts||0)<35000:false)alive[u]=true;});cb(alive);});return()=>r.off('value')},
   async logEvent(gid,type,text,username){const k=db.ref(`games/${gid}/eventLog`).push().key;await db.ref(`games/${gid}/eventLog/${k}`).set({type,text,ts:Date.now(),username:username||''});},
   watchEventLog(gid,cb){const r=db.ref(`games/${gid}/eventLog`);r.on('value',s=>{const v=s.val()||{};cb(Object.values(v).sort((a,b)=>a.ts-b.ts));});return()=>r.off('value')},
   async setReaction(gid,targetUser,cardKey,emoji,reactorUsername){await db.ref(`games/${gid}/cardReactions/${targetUser}/${cardKey}`).set({emoji,reactorUsername});},
@@ -8338,7 +8338,7 @@ function App(){
   // Watch notifications
   useEffect(()=>{
     if(!user)return;
-    DB.setOnline(user.username);
+    const u0=DB.setOnline(user.username);
     const u1=DB.watchFriendReqs(user.username,r=>setReqCnt(Object.keys(r).length));
     const u2=DB.watchGameInvites(user.username,inv=>{
       const ids=Object.keys(inv);
@@ -8362,7 +8362,7 @@ function App(){
     const u6=db.ref(`users/${user.username}/isBanned`).on('value',s=>{
       if(s.val()===true){setUser(null);setScreen('auth');}
     });
-    return()=>{u1();u2();u3();u4();u5();db.ref(`users/${user.username}/isBanned`).off('value',u6);};
+    return()=>{if(u0)u0();u1();u2();u3();u4();u5();db.ref(`users/${user.username}/isBanned`).off('value',u6);};
   },[user?.username]);
 
   // Re-join active game
